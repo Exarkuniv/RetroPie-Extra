@@ -1,6 +1,7 @@
 #!/bin/bash
 scriptdir="$(dirname "$0")"
 
-cd "$scriptdir"
+pushd "$scriptdir"
 git pull origin
 ./install-extras.sh
+popd
