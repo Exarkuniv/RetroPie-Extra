@@ -19,7 +19,7 @@ rp_module_flags="!mali"
 
 # abuse-lib & abuse-sfx will pull in the older abuse package which only works under X
 function depends_abuse() {
-    getDepends cmake libsdl1.2-dev libsdl-mixer1.2-dev
+    getDepends cmake libsdl1.2-dev libsdl-mixer1.2-dev xorg
 }
 
 function sources_abuse() {

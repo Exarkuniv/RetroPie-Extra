@@ -16,6 +16,10 @@ rp_module_licence="GPL2 https://sourceforge.net/p/lgames/code/HEAD/tree/trunk/lb
 rp_module_section="exp"
 rp_module_flags="!mali"
 
+function depends_lbreakout2() {
+    getDepends xorg
+}
+
 function install_bin_lbreakout2() {
     
     aptInstall lbreakout2

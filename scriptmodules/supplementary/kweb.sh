@@ -17,7 +17,7 @@ rp_module_section="exp"
 rp_module_flags="!mali !x86"
 
 function depends_kweb() {
-    getDepends evince vlc tint2 lxterminal uget git xterm
+    getDepends evince vlc tint2 lxterminal uget git xterm xorg
 }
 
 function sources_kweb() {

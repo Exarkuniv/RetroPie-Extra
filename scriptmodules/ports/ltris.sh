@@ -16,6 +16,10 @@ rp_module_licence="GPL2 https://sourceforge.net/p/lgames/code/HEAD/tree/trunk/lt
 rp_module_section="exp"
 rp_module_flags="!mali"
 
+function depends_ltris() {
+    getDepends xorg
+}
+
 function install_bin_ltris() {
      aptInstall ltris
 }
