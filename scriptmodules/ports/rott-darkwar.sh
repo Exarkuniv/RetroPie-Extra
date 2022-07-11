@@ -18,7 +18,11 @@ rp_module_section="exp"
 rp_module_flags="!mali !x86"
 
 function depends_rott-darkwar() {
+<<<<<<< xinit
     getDepends libsdl1.2-dev libsdl-mixer1.2-dev automake xorg
+=======
+    getDepends libsdl1.2-dev libsdl-mixer1.2-dev automake xorg 
+>>>>>>> master
 }
 
 function sources_rott-darkwar() {

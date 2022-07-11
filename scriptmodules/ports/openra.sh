@@ -14,11 +14,12 @@ rp_module_id="openra"
 rp_module_desc="Open RA - Real Time Strategy game engine supporting early Westwood classics"
 rp_module_licence="GPL3 https://github.com/OpenRA/OpenRA/blob/bleed/COPYING"
 rp_module_help="Currently working on how to pull the Data files No ETA"
+rp_module_repo="file https://github.com/OpenRA/OpenRA/releases/download/release-20210321/OpenRA-release-20210321-source.tar.bz2"
 rp_module_section="exp"
 rp_module_flags="!mali"
 
 function depends_openra() {
-    getDepends libfreetype6 libopenal1 liblua5.1-0 libsdl2-2.0-0 xdg-utils zenity wget dbus-x11 apt-transport-https dirmngr gnupg ca-certificates xorg
+    getDepends libfreetype6 libopenal1 liblua5.1-0 libsdl2-2.0-0 xdg-utils zenity wget dbus-x11 apt-transport-https dirmngr gnupg ca-certificates xorg 
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
     echo "deb https://download.mono-project.com/repo/debian stable-raspbianbuster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
     apt update
@@ -26,11 +27,7 @@ function depends_openra() {
 }
 
 function sources_openra() {
-    
-       mkdir -p openra
-
-	wget https://github.com/OpenRA/OpenRA/releases/download/release-20210321/OpenRA-release-20210321-source.tar.bz2
-	tar xvjf OpenRA-release-20210321-source.tar.bz2 -C /home/pi/RetroPie-Setup/tmp/build/openra/openra 	
+    downloadAndExtract "$md_repo_url" "$md_build" 
 }
 
 function build_openra() {

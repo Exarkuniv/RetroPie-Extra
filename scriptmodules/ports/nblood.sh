@@ -12,25 +12,11 @@
 rp_module_id="nblood"
 rp_module_desc="Nblood - Blood source port"
 rp_module_licence="GPL3 https://github.com/OpenMW/osg/blob/3.4/LICENSE.txt"
-rp_module_help="you need to put the 
-BLOOD.INI, 
-BLOOD.RFF, 
-BLOOD000.DEM, ..., BLOOD003.DEM (optional), 
-GUI.RFF, 
-SOUNDS.RFF, 
-SURFACE.DAT, 
-TILES000.ART, ..., TILES017.ART, 
-VOXEL.DAT in $romdir/ports/Nblood
+rp_module_help="you need to put the \n\BLOOD.INI, \n\BLOOD.RFF, \n\BLOOD000.DEM, ..., BLOOD003.DEM (optional), \n\GUI.RFF, \n\SOUNDS.RFF, \n\SURFACE.DAT, \n\TILES000.ART, ..., TILES017.ART, \n\VOXEL.DAT in $romdir/ports/Nblood
 
 Cryptic Passage
-CP01.MAP, ..., CP09.MAP,
-CPART07.AR_, 
-CPART15.AR_, 
-CPBB01.MAP, ..., CPBB04.MAP, 
-CPSL.MAP, 
-CRYPTIC.INI 
-CRYPTIC.SMK 
-CRYPTIC.WAV "
+CP01.MAP, ..., CP09.MAP,\n\CPART07.AR_,\n\CPART15.AR_,\n\CPBB01.MAP, ..., CPBB04.MAP,\n\CPSL.MAP,\n\CRYPTIC.INI\n\CRYPTIC.SMK \n\CRYPTIC.WAV"
+rp_module_repo="git https://github.com/Exarkuniv/NBlood.git"
 rp_module_section="exp"
 rp_module_flags=""
 
@@ -41,7 +27,7 @@ function depends_nblood() {
 }
 
 function sources_nblood() {
-	gitPullOrClone "$md_build" https://github.com/Exarkuniv/NBlood.git
+	gitPullOrClone 
 }
 
 function build_nblood() {
@@ -57,6 +43,13 @@ function install_nblood() {
 		'nblood.cfg'
     )
 }
+
+function game_data_nblood() {
+    if [[ ! -f "$romdir/ports/nblood/BLOOD.EXE" ]]; then
+        downloadAndExtract "https://archive.org/download/Blood_64/BLOOD.zip" "$romdir/ports/nblood/"
+    chown -R $user:$user "$romdir/ports/nblood"
+    fi
+}
 	
 function configure_nblood() {
 	mkdir "$home/.config/nblood"
@@ -68,7 +61,7 @@ function configure_nblood() {
 	#mkRomDir "ports/nblood/CP"
 	
 	addPort "$md_id" "nblood" "Nblood - Blood source port" "XINIT: $md_inst/nblood  -j=/home/pi/RetroPie/roms/ports/nblood"	
-	#addPort "$md_id" "nbloodcp" "Nblood - Cryptic Passage " "XINIT: $md_inst/nblood -ini CRYPTIC.INI -j=/home/pi/RetroPie/roms/ports/Nblood/CP"
-	
+	#addPort "$md_id" "nbloodcp" "Nblood - Cryptic Passage " "XINIT: $md_inst/nblood -ini CRYPTIC.INI -j=/home/pi/RetroPie/roms/ports/nblood/CP"
 
+	[[ "$md_mode" == "install" ]] && game_data_nblood
 }

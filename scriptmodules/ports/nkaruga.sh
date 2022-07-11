@@ -13,6 +13,7 @@
 rp_module_id="nkaruga"
 rp_module_desc="nKaruga - Ikaruga demake"
 rp_module_licence="MIT https://github.com/gameblabla/nKaruga/blob/master/COPYING"
+rp_module_repo="git https://github.com/gameblabla/nKaruga.git"
 rp_module_section="exp"
 rp_module_flags="!mali !kms"
 
@@ -21,7 +22,7 @@ function depends_nkaruga() {
 }
 
 function sources_nkaruga() {
-    gitPullOrClone "$md_build" https://github.com/gameblabla/nKaruga.git
+    gitPullOrClone
 }
 
 function build_nkaruga() {

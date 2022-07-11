@@ -21,7 +21,6 @@ function depends_lbreakout2() {
 }
 
 function install_bin_lbreakout2() {
-    
     aptInstall lbreakout2
 }
 

@@ -126,8 +126,8 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `bermudasyndrome.sh` - Bermuda Syndrome engine - **Installs, plays fine, cant exit, but thats the desine of the engine not the script**
 - [X] - `bloboats.sh` - Fun physics game - **Installs play fine**
 - [X] - `breaker.sh` - Arkanoid clone - **Installs, plays fine, need to drop the resolutions to 640-480**
-- [X] - `burgerspace.sh` - BurgerTime clone - **Installs, plays fine, need to drop the resolutions to 640-480**
 - [X] - `bstone.sh` - Blake Stone - BStone A source port of Blake Stone: Aliens of Gold and Blake Stone: Planet Strike **Installs, Plays great**
+- [X] - `burgerspace.sh` - BurgerTime clone - **Installs, plays fine, need to drop the resolutions to 640-480**
 - [X] - `chocolate-doom.sh`- DOOM source port - **Installs, plays great**
 - [X] - `chocolate-doom-system.sh`- For setting up DOOM as an emulated system, not port. - **Installs Plays great**
 - [X] - `chopper258.sh` - Chopper Commando Revisited - A modern port of Chopper Commando (DOS, 1990) - **Installs, Plays fine, needs keyboard**
@@ -159,9 +159,7 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `hhexen.sh` - Hexen GL-port - **Installs**
 - [X] - `hurrican.sh` - Turrican clone. - **Installs**
 - [X] - `julius.sh` - Julius - Caesar III source port - **Installs**
-- [X] - `iceweasel.sh` - Rebranded Firefox Web Browser - **Installs**
 - [X] - `kaiten-patissier.sh` - Japanese 2D Platformer - **Installs**
-- [ ] - `kaiten-patissier-cs.sh` - Japanese 2D Platformer - **Failed**
 - [X] - `kaiten-patissier-ura.sh` - Japanese 2D Platformer - **Installs**
 - [X] - `kraptor.sh` - Shoot em up scroller game - **Installs Runs fine**
 - [X] - `lbreakout2.sh` - Open Source Breakout game - **Installs**
@@ -175,7 +173,6 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `nblood.sh` - Blood source port - **Installs**
 - [ ] - `nkaruga.sh` - Ikaruga demake. - ** Blocked from installing on Pi4**
 - [X] - `nxengine-evo.sh` - The standalone version of the open-source clone/rewrite of Cave Story - **Installs Plays fine on Pi4. Need to bind controller in options**
-- [X] - `openjazz.sh` - Jazz Jackrabbit source port. - **Installs**
 - [X] - `openjazz.sh` - An enhanced Jazz Jackrabbit source port - **Installs**
 - [X] - `openjk_ja.sh` - OpenJK: JediAcademy (SP + MP) - **Installs**
 - [X] - `openjk_jo.sh` - OpenJK: Jedi Outcast (SP) - **Installs**
@@ -186,9 +183,9 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `pcexhumed.sh` - PCExhumed - Powerslave source port - **Installs Runs fine**
 - [X] - `piegalaxy.sh` - Pie Galaxy - Download and install GOG.com games in RetroPie - **Installs Runs, Cant login to test**
 - [X] - `pingus.sh` - Lemmings clone - **Installs**
-- [X] - `prototype.sh` - Free R-Type remake by Ron Bunce - Gamepad support incomplete. **Installs, Plays fine, needs keyboard**
 - [X] - `pokerth.sh` - open source online poker  - **Installs**
 - [X] - `prboom-plus.sh` - Enhanced DOOM source port - **Installs**
+- [X] - `prototype.sh` - Free R-Type remake by Ron Bunce - Gamepad support incomplete. **Installs, Plays fine, needs keyboard**
 - [X] - `pydance.sh` - Open Source Dancing Game  - **Installs**
 - [X] - `quakespasm.sh` - Another enhanced engine for quake  - **Installs**
 - [X] - `rawgl.sh` - Another World Engine  - **Installs**
@@ -204,15 +201,14 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `sdl-bomber.sh` - Simple Bomberman clone - **Installs**
 - [X] - `shadowwarrior.sh` - Jfsw - Shadow warrior port
 - [X] - `shiromino.sh` - Tetris the Grand Master Clone - Requires keyboard to restart/quit.  - **Installs**
-- [X] - `sorr.sh` - Streets of Rage Remake port - **Installs**
 - [X] - `sm64ex.sh` - Super Mario 64 PC Port for Pi4 - Works extremely well on Pi 4. **Installs Plays great**
+- [X] - `sorr.sh` - Streets of Rage Remake port - **Installs**
 - [X] - `texmaster2009.sh` - Tetris TGM clone - **Installs**
 - [X] - `tinyfugue.sh` - MUD client - **Installs**
 - [X] - `ulmos-adventure.sh` - Simple Adventure Game - **Installs**
 - [X] - `vanillacc.sh` - Vanilla-Command and Conquer - **Installs**
 - [X] - `vorton.sh` - Highway Encounter Remake in Spanish - **Installs**
 - [X] - `warmux.sh` - Worms Clone - **Installs**
-- [X] - `weechat.sh` - Console IRC Client - **Installs**
 - [X] - `wizznic.sh` - Puzznic clone - **Installs**
 - [X] - `xash3d-fwgs.sh` - Half-Life engine source port. - **Installs**
 - [X] - `zeldansq.sh` - Zelda: Navi's Quest fangame - **Installs**
@@ -222,30 +218,34 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `openmwdriver.sh` - The OpenSceneGraph is an open source high performance 3D graphics toolkit. - **Installs works as needed**
 
 #### Supplementary
+- [X] - `audacity.sh` - Audacity open-source digital audio editor - **Installs Runs fine**
 - [X] - `bezelproject.sh` - Easily set up the Bezel Project
 - [X] - `bgm123.sh` - Straighforward background music player using mpg123. **Currently limited to RPi into HDMI. Testers / collaborators welcome to help expand this functionality.**
-- [X] - `gparted.sh` - partition editing application
-- [ ] - `fun-facts-splashscreens.sh` - Set up some loading splashscreens with fun facts. **Cant test dont have the right system x86**
-- [X] - `joystick-selection.sh` - Set controllers for RetroArch players 1-4.
-- [ ] - `mame-tools.sh` - Additional tools for MAME/MESS **Failed**
-- [X] - `screenshot.sh` - Take screenshots remotely through SSH - **Tested and works well.**
-- [X] - `audacity.sh` - Audacity open-source digital audio editor - **Installs Runs fine**
 - [X] - `chromium.sh` - Open Source Web Browser - **Installs, Work well**
 - [X] - `deadbeef.sh` - Music and ripped game music player - **Installs**
 - [X] - `epiphany-browser.sh` - epiphany lightweight web browser - **Installs Runs fine **
 - [X] - `filezilla.sh` - A cross platform FTP application - **Installs**
 - [X] - `firefox-esr.sh` - FireFox-ESR - Formally known as IceWeasel, the Rebranded Firefox Web Browser - **Installs**
+- [ ] - `fun-facts-splashscreens.sh` - Set up some loading splashscreens with fun facts. **Cant test dont have the right system x86**
+- [X] - `gparted.sh` - partition editing application
+- [X] - `joystick-selection.sh` - Set controllers for RetroArch players 1-4.
 - [X] - `kodi-extra.sh` - Kodi Media Player 16 with controller support as a separate system - **Installs**
 - [X] - `kweb.sh` - Minimal kiosk web browser - **Installs**
 - [X] - `librecad.sh` - librecad open-source 2d cad - **Installs Runs fine**
 - [X] - `libreoffice.sh` - Open source office suite - **Installs Runs fine**
+- [ ] - `mame-tools.sh` - Additional tools for MAME/MESS **Failed**
 - [X] - `mixx.sh` - Mixxx DJ Mixing Software App - **Installs Runs fine**
 - [X] - `mypaint.sh` - mypaint easy-to-use painting program - **Installs Runs fine**
 - [X] - `omxplayer.sh` - Video Player - **Installs**
 - [X] - `putty.sh` - SSH and telnet client - **Installs Runs fine**
+- [X] - `screenshot.sh` - Take screenshots remotely through SSH - **Tested and works well.**
 - [X] - `thunderbird.sh` - Thunderbird — Software made to make email easier - **Installs Runs fine**
-- [X] - `videolan.sh` - VLC media player - **Installs Runs fine**
 - [X] - `vgmplay.sh` - Music Player - **Installs**
+- [X] - `videolan.sh` - VLC media player - **Installs Runs fine**
+- [X] - `weechat.sh` - Console IRC Client - **Installs**
+
+
+>>>>>>> Stashed changes
 
 ### My Future To-Do List 
 

@@ -13,6 +13,7 @@
 rp_module_id="relive"
 rp_module_desc="R.E.L.I.V.E - Oddworld: Abe's Oddysee and Oddworld: Abe's Exoddus"
 rp_module_licence="GNU https://github.com/lethal-guitar/RigelEngine/blob/master/LICENSE.md"
+rp_module_repo="git https://github.com/AliveTeam/alive_reversing.git"
 rp_module_section="exp"
 rp_module_flags="noinstclean"
 
@@ -23,8 +24,7 @@ function depends_relive() {
 }
 
 function sources_relive() {
-
-   git clone https://github.com/AliveTeam/alive_reversing.git --recursive
+    gitPullOrClone
 }
 
 function build_relive() {

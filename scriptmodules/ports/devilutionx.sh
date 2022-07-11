@@ -38,9 +38,18 @@ dpkg -i ./devilutionx_1.4.0_armhf.deb
 		devilutionx-linux-armhf/LICENSE.OFL.txt)
 }
 
+function game_data_devilutionx() {
+    if [[ ! -f "$romdir/ports/devilutionx/diablo.exe" ]]; then
+        downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/diablo.zip" "$romdir/ports/devilutionx"
+    chown -R $user:$user "$romdir/ports/devilutionx"
+    fi
+}
+
 function configure_devilutionx() {
     mkRomDir "ports"
     mkRomDir "ports/devilutionx"
     cp -r "$md_inst/devilutionx.mpq" "$romdir/ports/$md_id"
     addPort "$md_id" "devilutionx" "devilutionx - Diablo Engine" "$md_inst/devilutionx --data-dir $romdir/ports/devilutionx --save-dir $md_conf_root/devilutionx"
+
+    [[ "$md_mode" == "install" ]] && game_data_devilutionx
 }

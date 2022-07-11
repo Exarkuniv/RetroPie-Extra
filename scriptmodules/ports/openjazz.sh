@@ -14,6 +14,7 @@ rp_module_id="openjazz"
 rp_module_desc="OpenJazz - An enhanced Jazz Jackrabbit source port"
 rp_module_licence="GPL2 https://raw.githubusercontent.com/AlisterT/openjazz/master/COPYING"
 rp_module_help="For playing the registered version, replace the shareware files by adding your full version game files to $romdir/ports/openjazz/."
+rp_module_repo="git https://github.com/AlisterT/openjazz.git"
 rp_module_section="exp"
 
 function depends_openjazz() {
@@ -21,7 +22,7 @@ function depends_openjazz() {
 }
 
 function sources_openjazz() {
-    gitPullOrClone "$md_build" https://github.com/AlisterT/openjazz.git
+    gitPullOrClone
 }
 
 function build_openjazz() {
@@ -37,16 +38,18 @@ function install_openjazz() {
     )
 }
 
-function configure_openjazz() {
-    mkRomDir "ports/openjazz"
-
-    moveConfigDir "$home/.openjazz" "$md_conf_root/openjazz"
-    moveConfigFile "$home/openjazz.cfg" "$md_conf_root/openjazz/openjazz.cfg"
-
-    if [[ ! -f "$romdir/ports/jazz/JAZZ.EXE" ]]; then
+function game_data_openjazz() {
+      if [[ ! -f "$romdir/ports/jazz/JAZZ.EXE" ]]; then
         downloadAndExtract "https://image.dosgamesarchive.com/games/jazz.zip" "$romdir/ports/openjazz"
         chown -R $user:$user "$romdir/ports/openjazz"
     fi
+}
 
+function configure_openjazz() {
+    mkRomDir "ports/openjazz"
+    moveConfigDir "$home/.openjazz" "$md_conf_root/openjazz"
+    moveConfigFile "$home/openjazz.cfg" "$md_conf_root/openjazz/openjazz.cfg"
     addPort "$md_id" "openjazz" "OpenJazz - An enhanced Jazz Jackrabbit source port" "$md_inst/OpenJazz HOMEDIR $romdir/ports/openjazz"
+
+    [[ "$md_mode" == "install" ]] && game_data_openjazz
 }

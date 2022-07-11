@@ -13,6 +13,7 @@
 rp_module_id="quakespasm"
 rp_module_desc="Quakespasm - Another enhanced engine for quake"
 rp_module_licence="GNU https://sourceforge.net/p/quakespasm/quakespasm/ci/master/tree/LICENSE.txt"
+rp_module_repo="git git://git.code.sf.net/p/quakespasm/quakespasm.git"
 rp_module_section="exp"
 rp_module_flags="noinstclean"
 
@@ -23,13 +24,12 @@ function depends_quakespasm() {
 
 
 function sources_quakespasm() {
-
-    gitPullOrClone "$md_build" git://git.code.sf.net/p/quakespasm/quakespasm.git
+    gitPullOrClone
 }
 
 function build_quakespasm() {
-  	cd Quake
-	  make USE_SDL2=1 DO_USERDIRS=1
+    cb Quake
+    make USE_SDL2=1 DO_USERDIRS=1
 	
     md_ret_require=(
       )

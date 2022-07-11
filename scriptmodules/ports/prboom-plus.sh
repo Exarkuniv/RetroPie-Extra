@@ -13,6 +13,7 @@
 rp_module_id="prboom-plus"
 rp_module_desc="Doom/Doom II engine - Enhanced PRBoom Port"
 rp_module_licence="https://github.com/coelckers/prboom-plus"
+rp_module_repo="git https://github.com/coelckers/prboom-plus.git"
 rp_module_section="exp"
 
 function depends_prboom-plus() {
@@ -21,7 +22,7 @@ function depends_prboom-plus() {
 
 
 function sources_prboom-plus() {
-    gitPullOrClone "$md_build" https://github.com/coelckers/prboom-plus.git
+    gitPullOrClone
 }
 
 function build_prboom-plus() {
