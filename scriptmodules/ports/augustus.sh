@@ -28,7 +28,7 @@ function sources_augustus() {
 
 function build_augustus() {
     cd "$md_build"
-    cmake .
+    cmake -DCMAKE_BUILD_TYPE="Release" .
     make
 
     md_ret_require="$md_build"
