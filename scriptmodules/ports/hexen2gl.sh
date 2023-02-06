@@ -52,7 +52,7 @@ function configure_hexen2gl() {
     mkRomDir "ports/hexen2"
     mkRomDir "ports/hexen2/portals"
 
-    moveConfigDir "$home/.hexen2" "$romdir/ports/hexen2"
+    moveConfigDir "$home/.hexen2" "$md_conf_root/hexen2gl"
 
     [[ "$md_mode" == "install" ]] && game_data_hexen2gl
 }
