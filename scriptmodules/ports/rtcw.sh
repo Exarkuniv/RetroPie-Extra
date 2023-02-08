@@ -103,24 +103,24 @@ function build_rtcw() {
 
 function install_rtcw() {
     md_ret_files=(
-        "SP/build/release-linux-$(_arch_iortcw)/iowolfsp.$(_arch_iortcw)"
-        "SP/build/release-linux-$(_arch_iortcw)/main/cgame.sp.$(_arch_iortcw).so"
-        "SP/build/release-linux-$(_arch_iortcw)/main/qagame.sp.$(_arch_iortcw).so"
-        "SP/build/release-linux-$(_arch_iortcw)/main/ui.sp.$(_arch_iortcw).so"
-        "MP/build/release-linux-$(_arch_iortcw)/iowolfded.$(_arch_iortcw)"
-        "MP/build/release-linux-$(_arch_iortcw)/iowolfmp.$(_arch_iortcw)"
-        "MP/build/release-linux-$(_arch_iortcw)/main/cgame.mp.$(_arch_iortcw).so"
-        "MP/build/release-linux-$(_arch_iortcw)/main/qagame.mp.$(_arch_iortcw).so"
-        "MP/build/release-linux-$(_arch_iortcw)/main/ui.mp.$(_arch_iortcw).so"
-        "MP/build/release-linux-$(_arch_iortcw)/main/vm/"
+        "SP/build/release-linux-$(_arch_rtcw)/iowolfsp.$(_arch_rtcw)"
+        "SP/build/release-linux-$(_arch_rtcw)/main/cgame.sp.$(_arch_rtcw).so"
+        "SP/build/release-linux-$(_arch_rtcw)/main/qagame.sp.$(_arch_rtcw).so"
+        "SP/build/release-linux-$(_arch_rtcw)/main/ui.sp.$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/iowolfded.$(_arch_rtcw)"
+        "MP/build/release-linux-$(_arch_rtcw)/iowolfmp.$(_arch_rtcw)"
+        "MP/build/release-linux-$(_arch_rtcw)/main/cgame.mp.$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/main/qagame.mp.$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/main/ui.mp.$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/main/vm/"
     )
 
     if isPlatform "x86"; then
         md_ret_files+=(
-            "SP/build/release-linux-$(_arch_iortcw)/renderer_sp_opengl1_$(_arch_iortcw).so"
-            "SP/build/release-linux-$(_arch_iortcw)/renderer_sp_rend2_$(_arch_iortcw).so"
-            "MP/build/release-linux-$(_arch_iortcw)/renderer_mp_opengl1_$(_arch_iortcw).so"
-            "MP/build/release-linux-$(_arch_iortcw)/renderer_mp_rend2_$(_arch_iortcw).so"
+            "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_opengl1_$(_arch_rtcw).so"
+            "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_rend2_$(_arch_rtcw).so"
+            "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_opengl1_$(_arch_rtcw).so"
+            "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_rend2_$(_arch_rtcw).so"
         )
     fi
 }
@@ -138,8 +138,8 @@ function game_data_rtcw() {
 function configure_rtcw() {
     rm -R "$home/RetroPie/roms/ports/rtcw/vm"
 
-    addPort "rtcw-sp" "rtcw-sp" "Return to Castle Wolfenstein (SP)" "$md_inst/iowolfsp.$(_arch_iortcw)"
-    addPort "rtcw-mp" "rtcw-mp" "Return to Castle Wolfenstein (MP)" "$md_inst/iowolfmp.$(_arch_iortcw)"
+    addPort "rtcw-sp" "rtcw-sp" "Return to Castle Wolfenstein (SP)" "$md_inst/iowolfsp.$(_arch_rtcw)"
+    addPort "rtcw-mp" "rtcw-mp" "Return to Castle Wolfenstein (MP)" "$md_inst/iowolfmp.$(_arch_rtcw)"
 
     mkRomDir "ports/rtcw"
 
