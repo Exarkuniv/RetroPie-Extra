@@ -18,14 +18,19 @@ rp_module_repo="git https://github.com/iortcw/iortcw.git"
 rp_module_section="exp"
 rp_module_flags=""
 
-function depends_rtcw() {
-	local depends=(cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev timidity freepats)
+function _arch_rtcw() {
+    # exact parsing from Makefile
+    echo "$(uname -m | sed -e 's/i.86/x86/' | sed -e 's/^arm.*/arm/')"
+}
 
-	if compareVersions "$__os_debian_ver" lt 10; then
+function depends_rtcw() {
+    local depends=(cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev timidity freepats)
+
+    if compareVersions "$__os_debian_ver" lt 10; then
         depends+=(libgles1-mesa-dev)
     fi
 
-	getDepends "${depends[@]}"
+    getDepends "${depends[@]}"
 }
 
 function sources_rtcw() {
@@ -34,53 +39,107 @@ function sources_rtcw() {
 
 function build_rtcw() {
     cd "$md_build/SP"
-    USE_CODEC_VORBIS=0 USE_CODEC_OPUS=0 USE_CURL=0 USE_CURL_DLOPEN=0 USE_OPENAL=1 USE_OPENAL_DLOPEN=1 USE_RENDERER_DLOPEN=0 USE_VOIP=0 \
-	USE_LOCAL_HEADERS=1 USE_INTERNAL_JPEG=1 USE_INTERNAL_OPUS=1 USE_INTERNAL_ZLIB=1 USE_OPENGLES=1 USE_BLOOM=0 USE_MUMBLE=0 BUILD_GAME_SO=1 \
-	BUILD_RENDERER_REND2=0 ARCH=armv7l PLATFORM=linux COMPILE_ARCH=arm COMPILE_PLATFORM=linux \
-	make
+
+    # Use Case switch to allow future expansion to other potential platforms
+    if isPlatform "rpi"; then
+        USE_CODEC_VORBIS=0\
+                        USE_CODEC_OPUS=0\
+                        USE_CURL=0\
+                        USE_CURL_DLOPEN=0\
+                        USE_OPENAL=1\
+                        USE_OPENAL_DLOPEN=1\
+                        USE_RENDERER_DLOPEN=0\
+                        USE_VOIP=0\
+                        USE_LOCAL_HEADERS=1\
+                        USE_INTERNAL_JPEG=1\
+                        USE_INTERNAL_OPUS=1\
+                        USE_INTERNAL_ZLIB=1\
+                        USE_OPENGLES=1\
+                        USE_BLOOM=0\
+                        USE_MUMBLE=0\
+                        BUILD_GAME_SO=1\
+                        BUILD_RENDERER_REND2=0\
+                        ARCH=arm\
+                        PLATFORM=linux\
+                        COMPILE_ARCH=arm\
+                        COMPILE_PLATFORM=linux\
+                        make
+    else
+        make
+    fi
+
     cd "$md_build/MP"
-    USE_CODEC_VORBIS=0 USE_CODEC_OPUS=0 USE_CURL=0 USE_CURL_DLOPEN=0 USE_OPENAL=1 USE_OPENAL_DLOPEN=1 USE_RENDERER_DLOPEN=0 USE_VOIP=0 \
-	USE_LOCAL_HEADERS=1 USE_INTERNAL_JPEG=1 USE_INTERNAL_OPUS=1 USE_INTERNAL_ZLIB=1 USE_OPENGLES=1 USE_BLOOM=0 USE_MUMBLE=0 BUILD_GAME_SO=1 \
-	BUILD_RENDERER_REND2=0 ARCH=armv7l PLATFORM=linux COMPILE_ARCH=arm COMPILE_PLATFORM=linux \
-	make
+
+    if isPlatform "rpi"; then
+        USE_CODEC_VORBIS=0 \
+                        USE_CODEC_OPUS=0\
+                        USE_CURL=1\
+                        USE_CURL_DLOPEN=1\
+                        USE_OPENAL=1\
+                        USE_OPENAL_DLOPEN=1\
+                        USE_RENDERER_DLOPEN=0\
+                        USE_VOIP=0\
+                        USE_LOCAL_HEADERS=1\
+                        USE_INTERNAL_JPEG=1\
+                        USE_INTERNAL_OPUS=1\
+                        USE_INTERNAL_ZLIB=1\
+                        USE_OPENGLES=1\
+                        USE_BLOOM=0\
+                        USE_MUMBLE=0\
+                        BUILD_GAME_SO=1\
+                        BUILD_RENDERER_REND2=0\
+                        ARCH=arm\
+                        PLATFORM=linux\
+                        COMPILE_ARCH=arm\
+                        COMPILE_PLATFORM=linux\
+                        make
+    else
+        make
+    fi
+
     md_ret_require="$md_build/SP"
     md_ret_require="$md_build/MP"
 }
 
 function install_rtcw() {
     md_ret_files=(
-        'SP/build/release-linux-armv7l/iowolfsp.armv7l'
-        'SP/build/release-linux-armv7l/main/cgame.sp.armv7l.so'
-		'SP/build/release-linux-armv7l/main/qagame.sp.armv7l.so'
-		'SP/build/release-linux-armv7l/main/ui.sp.armv7l.so'
-        'MP/build/release-linux-armv7l/iowolfded.armv7l'
-		'MP/build/release-linux-armv7l/iowolfmp.armv7l'
-        'MP/build/release-linux-armv7l/main/cgame.mp.armv7l.so'
-		'MP/build/release-linux-armv7l/main/qagame.mp.armv7l.so'
-		'MP/build/release-linux-armv7l/main/ui.mp.armv7l.so'
-		'MP/build/release-linux-armv7l/main/vm/'
+        "SP/build/release-linux-$(_arch_iortcw)/iowolfsp.$(_arch_iortcw)"
+        "SP/build/release-linux-$(_arch_iortcw)/main/cgame.sp.$(_arch_iortcw).so"
+        "SP/build/release-linux-$(_arch_iortcw)/main/qagame.sp.$(_arch_iortcw).so"
+        "SP/build/release-linux-$(_arch_iortcw)/main/ui.sp.$(_arch_iortcw).so"
+        "MP/build/release-linux-$(_arch_iortcw)/iowolfded.$(_arch_iortcw)"
+        "MP/build/release-linux-$(_arch_iortcw)/iowolfmp.$(_arch_iortcw)"
+        "MP/build/release-linux-$(_arch_iortcw)/main/cgame.mp.$(_arch_iortcw).so"
+        "MP/build/release-linux-$(_arch_iortcw)/main/qagame.mp.$(_arch_iortcw).so"
+        "MP/build/release-linux-$(_arch_iortcw)/main/ui.mp.$(_arch_iortcw).so"
+        "MP/build/release-linux-$(_arch_iortcw)/main/vm/"
     )
+
+    if isPlatform "x86"; then
+        md_ret_files+=(
+            "SP/build/release-linux-$(_arch_iortcw)/renderer_sp_opengl1_$(_arch_iortcw).so"
+            "SP/build/release-linux-$(_arch_iortcw)/renderer_sp_rend2_$(_arch_iortcw).so"
+            "MP/build/release-linux-$(_arch_iortcw)/renderer_mp_opengl1_$(_arch_iortcw).so"
+            "MP/build/release-linux-$(_arch_iortcw)/renderer_mp_rend2_$(_arch_iortcw).so"
+        )
+    fi
 }
 
 function game_data_rtcw() {
     mkdir "$home/.wolf/main"
-	cp -v /opt/retropie/ports/rtcw/*.so /opt/retropie/ports/rtcw/main
-	cp -Rv /opt/retropie/ports/rtcw/vm /opt/retropie/ports/rtcw/main
-	rm /opt/retropie/ports/rtcw/*.so
-	rm -R /opt/retropie/ports/rtcw/vm
-    wget "https://raw.githubusercontent.com/tpo1990/RTCW-RPI/master/wolfconfig.cfg"
-    mv wolfconfig.cfg "$home/.wolf/main"
-    wget "https://raw.githubusercontent.com/tpo1990/RTCW-RPI/master/wolfconfig_mp.cfg"
-    mv wolfconfig_mp.cfg "$home/.wolf/main"
+    mv /opt/retropie/ports/rtcw/[^render*]*.so /opt/retropie/ports/rtcw/main
+    mv /opt/retropie/ports/rtcw/vm /opt/retropie/ports/rtcw/main
+    cp "$md_data/wolfconfig.cfg" "$home/.wolf/main"
+    cp "$md_data/wolfconfig_mp.cfg" "$home/.wolf/main"
     chown -R $user:$user "$romdir/ports/rtcw"
     chown -R $user:$user "$md_conf_root/rtcw-sp"
 }
 
 function configure_rtcw() {
-    rm -R /home/pi/RetroPie/roms/ports/rtcw/vm
+    rm -R "$home/RetroPie/roms/ports/rtcw/vm"
 
-    addPort "rtcw-sp" "rtcw-sp" "Return to Castle Wolfenstein SP" "$md_inst/iowolfsp.armv7l"
-    addPort "rtcw-mp" "rtcw-mp" "Return to Castle Wolfenstein MP" "$md_inst/iowolfmp.armv7l"
+    addPort "rtcw-sp" "rtcw-sp" "Return to Castle Wolfenstein (SP)" "$md_inst/iowolfsp.$(_arch_iortcw)"
+    addPort "rtcw-mp" "rtcw-mp" "Return to Castle Wolfenstein (MP)" "$md_inst/iowolfmp.$(_arch_iortcw)"
 
     mkRomDir "ports/rtcw"
 
@@ -90,7 +149,7 @@ function configure_rtcw() {
     [[ "$md_mode" == "install" ]] && game_data_rtcw
 }
 function remove_rtcw() {
-    rm /home/pi/.wolf
-	rm /home/pi/RetroPie/roms/ports/rtcw/*.so
-	rm -R /home/pi/RetroPie/roms/ports/rtcw/vm
+    rm "$home/.wolf"
+    rm "$home/RetroPie/roms/ports/rtcw/*.so"
+    rm -R "$home/RetroPie/roms/ports/rtcw/vm"
 }
