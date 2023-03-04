@@ -13,8 +13,6 @@
 # Microsoft DirectX dependency https://github.com/microsoft/DirectXShaderCompiler which only supports
 # nvidia, amd, and intel GPUs (Not available for rpi)
 
-# NOTE vulkan support is available, currently disabled.
-
 rp_module_id="rbdoom3_bfg"
 rp_module_desc="rbdoom3_bfg - Doom 3: BFG Edition"
 rp_module_licence="GPL3 https://raw.githubusercontent.com/RobertBeckebans/RBDOOM-3-BFG/master/LICENSE.md"
