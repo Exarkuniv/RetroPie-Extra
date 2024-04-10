@@ -48,14 +48,17 @@ function build_rbdoom3_bfg() {
     cd $md_build/build
 
     if isPlatform "rpi"; then
-        # NOTE: I am guessing on DCPU_TYPE for 32bit and 64bit.
+        # DCPU_TYPE is the only value to change: armhf for 32bit and aarch64 for 64bit  Is there a
+        # variable that responds with those two values and only those values?  Might be a way to simplify this.
+        # NOTE: I am guessing on DCPU_TYPE for 64bit
         if isPlatform "64bit"; then
             # This is a 64-bit rpi build
+            # NOTE: This is from the rasbian rules file.  I have no idea what DEB_HOST_MULTIARCH
+            # returns.  Since this isn't being cross-compiled, I hope it doesn't matter.
+            #-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
+
             cmake -G "Unix Makefiles" \
 	                -DSDL2=ON \
-                  # NOTE: This is from the rasbian rules file.  I have no idea what DEB_HOST_MULTIARCH
-                  # returns.  Since this isn't being cross-compiled, I hope it doesn't matter.
-                  #-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
 	                -DUSE_SYSTEM_ZLIB=ON \
                   -DUSE_SYSTEM_LIBPNG=ON \
 	                -DUSE_SYSTEM_LIBJPEG=ON \
@@ -69,11 +72,12 @@ function build_rbdoom3_bfg() {
                   ../neo
         else
             # This is a 32-bit rpi build
+            # NOTE: This is from the rasbian rules file.  I have no idea what DEB_HOST_MULTIARCH
+            # returns.  Since this isn't being cross-compiled, I hope it doesn't matter.
+            #-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
+
             cmake -G "Unix Makefiles" \
                   -DSDL2=ON \
-                  # NOTE: This is from the rasbian rules file.  I have no idea what DEB_HOST_MULTIARCH
-                  # returns.  Since this isn't being cross-compiled, I hope it doesn't matter.
-                  #-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH) \
                   -DUSE_SYSTEM_ZLIB=ON \
                   -DUSE_SYSTEM_LIBPNG=ON \
                   -DUSE_SYSTEM_LIBJPEG=ON \
