@@ -82,6 +82,14 @@ function startCmd() {
         exit
     fi
 
+    pushd $RPS_HOME
+    if ! git log --format=format:%H | grep 18c2b43000ec54d74ba016e0b8de654122377dba; then
+        echo -e "Error: Your RetroPie-Setup directory is too old.  Please update your RetroPie-Setup by running 'git pull origin master' inside your RetroPie-Setup directory."
+        popd
+        exit
+    fi
+    popd
+
     case "$MODE" in
         auto) runAuto ;;
         remove) removeAll ;;
