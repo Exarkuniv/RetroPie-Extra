@@ -13,7 +13,16 @@ rp_module_id="xash3d-fwgs"
 rp_module_desc="xash3d-fwgs - Half-Life Engine Port"
 rp_module_help="Please add your full version Half-Life data files (folders /valve, /bshift and /gearbox) to $romdir/ports/xash3d-fwgs/ to play."
 rp_module_section="exp"
-rp_module_flags="!mali !x86 !all rpi4 rpi3"
+rp_module_flags="!mali !x86 !all rpi5"
+
+
+function _arch_xash3d() {
+    if isPlatform "rpi5"; then
+        echo arm64
+    else
+        echo armv8_32hf
+   fi
+}
 
 function depends_xash3d-fwgs() {
     getDepends libsdl2-dev libfontconfig1-dev libfreetype6-dev
@@ -28,17 +37,17 @@ function sources_xash3d-fwgs() {
 
 function build_xash3d-fwgs() {
     cd "$md_build/$md_id"
-    ./waf configure -T release
+    ./waf configure -T release 
     ./waf build
     cd "$md_build/hlsdk"
-    ./waf configure -T release
-    ./waf build
+    ./waf configure -T release 
+    ./waf build 
     cd "$md_build/bshiftsdk"
     ./waf configure -T release
-    ./waf build
+    ./waf build 
     cd "$md_build/opforsdk"
-    ./waf configure -T release
-    ./waf build
+    ./waf configure -T release 
+    ./waf build 
     md_ret_require=(
         "$md_build/$md_id/build/game_launch/xash3d"
         "$md_build/$md_id/build/engine/libxash.so"
@@ -72,18 +81,18 @@ function configure_xash3d-fwgs() {
 	moveConfigDir "$md_inst/valve" "$romdir/ports/$md_id/valve"
 	moveConfigDir "$md_inst/bshift" "$romdir/ports/$md_id/bshift"
 	moveConfigDir "$md_inst/gearbox" "$romdir/ports/$md_id/gearbox"
-    cp "$md_build/hlsdk/build/cl_dll/client_armv8_32hf.so" "$romdir/ports/$md_id/valve/cl_dlls/client.so"
-    cp "$md_build/hlsdk/build/dlls/hl_armv8_32hf.so" "$romdir/ports/$md_id/valve/dlls/hl.so"
-    cp "$md_build/bshiftsdk/build/cl_dll/client_armv8_32hf.so" "$romdir/ports/$md_id/bshift/cl_dlls/client.so"
-    cp "$md_build/bshiftsdk/build/dlls/bshift_armv8_32hf.so" "$romdir/ports/$md_id/bshift/dlls/hl.so"
-    cp "$md_build/opforsdk/build/cl_dll/client_armv8_32hf.so" "$romdir/ports/$md_id/gearbox/cl_dlls/client.so"
-    cp "$md_build/opforsdk/build/dlls/opfor_armv8_32hf.so" "$romdir/ports/$md_id/gearbox/dlls/hl.so"
+    cp "$md_build/hlsdk/build/cl_dll/client_$(_arch_xash3d).so" "$romdir/ports/$md_id/valve/cl_dlls/client.so"
+    cp "$md_build/hlsdk/build/dlls/hl_$(_arch_xash3d).so" "$romdir/ports/$md_id/valve/dlls/hl.so"
+    cp "$md_build/bshiftsdk/build/cl_dll/client_$(_arch_xash3d).so" "$romdir/ports/$md_id/bshift/cl_dlls/client.so"
+    cp "$md_build/bshiftsdk/build/dlls/bshift_$(_arch_xash3d).so" "$romdir/ports/$md_id/bshift/dlls/hl.so"
+    cp "$md_build/opforsdk/build/cl_dll/client_$(_arch_xash3d).so" "$romdir/ports/$md_id/gearbox/cl_dlls/client.so"
+    cp "$md_build/opforsdk/build/dlls/opfor_$(_arch_xash3d).so" "$romdir/ports/$md_id/gearbox/dlls/hl.so"
 	cp "$md_build/$md_id/build/3rdparty/extras/extras.pk3" "$romdir/ports/$md_id/valve/"
 	cp "$md_build/$md_id/build/3rdparty/extras/extras.pk3" "$romdir/ports/$md_id/bshift/"
 	cp "$md_build/$md_id/build/3rdparty/extras/extras.pk3" "$romdir/ports/$md_id/gearbox/"
 	chown -R $user:$user "$romdir/ports/$md_id/"
 
-    addPort "$md_id" "xash3d-fwgs" "Half-Life" "pushd $romdir/ports/$md_id/; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "valve"
-	addPort "$md_id" "xash3d-fwgs" "Half-Life - Blue Shift" "pushd $romdir/ports/$md_id/; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "bshift"
-	addPort "$md_id" "xash3d-fwgs" "Half-Life - Opposing Force" "pushd $romdir/ports/$md_id/; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "gearbox"
+    addPort "$md_id" "xash3d-fwgs" "Half-Life" "export XASH3D_BASEDIRR=/opt/retropie/ports/xash3d-fwgs; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "valve"
+    addPort "$md_id" "xash3d-fwgs" "Half-Life - Blue Shift" "export XASH3D_BASEDIRR=/opt/retropie/ports/xash3d-fwgs; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "bshift"
+    addPort "$md_id" "xash3d-fwgs" "Half-Life - Opposing Force" "export XASH3D_BASEDIRR=/opt/retropie/ports/xash3d-fwgs; LD_LIBRARY_PATH=$md_inst $md_inst/xash3d -game %ROM% -clientlib cl_dlls/client.so -dll dlls/hl.so; popd" "gearbox"
 }

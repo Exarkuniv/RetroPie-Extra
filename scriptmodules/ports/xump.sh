@@ -14,7 +14,7 @@ rp_module_desc="Xump - The Final Run"
 rp_module_help="Xump - The Final Run is a simple multi-platform puzzler by Retroguru. Help Holger to clean up deserted space fields. As this is a very dangerous task for a human being a headbot named Xump will be the one who has to suffer."
 rp_module_licence="Retroguru http://www.retroguru.com/legal/"
 rp_module_section="opt"
-rp_module_flags="!x86 !mali !all rpi4 rpi3"
+rp_module_flags="!x86 !mali"
 
 function depends_xump() {
     getDepends libsdl1.2-dev libsdl-mixer1.2 libraspberrypi-dev xorg

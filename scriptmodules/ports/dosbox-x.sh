@@ -19,7 +19,7 @@ rp_module_flags=""
 
 function depends_dosbox-x() {
     local depends=(
-        automake libncurses-dev nasm libsdl-net1.2-dev
+        automake whiptail kdialog libncurses-dev nasm libsdl-net1.2-dev
         libpcap-dev libfluidsynth-dev ffmpeg libavformat-dev 
         libswscale-dev libavcodec-dev xorg matchbox)
     isPlatform "64bit" && depends+=(libavdevice59)
