@@ -42,7 +42,8 @@ function depends_lr-applewin() {
 function sources_lr-applewin() {
     if [[ "$__os_debian_ver" -le 10 ]]; then
         # no libslirp-dev package in Buster
-        gitPullOrClone $md_build/../libslirp https://gitlab.freedesktop.org/slirp/libslirp.git
+        rm -rf "$md_build/../libslirp"
+        gitPullOrClone "$md_build/../libslirp" https://gitlab.freedesktop.org/slirp/libslirp.git
     fi
     gitPullOrClone
     # make sure resources/ will be looked up at /opt/retropie/libretrocores/lr-applewin/
@@ -53,7 +54,7 @@ function sources_lr-applewin() {
 function build_lr-applewin() {
     if [[ "$__os_debian_ver" -le 10 ]]; then
         # for libslirp
-        pushd $md_build/../libslirp
+        pushd "$md_build/../libslirp"
         # downgrade meson requirement to match Buster latest version
         sed -i s,"meson_version : .*","meson_version : \'>= 0.56\'", meson.build
         meson build
