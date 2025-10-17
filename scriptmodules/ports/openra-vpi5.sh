@@ -10,7 +10,7 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
-rp_module_id="openra"
+rp_module_id="openra-vpi5"
 rp_module_desc="Open RA - Real Time Strategy game engine supporting early Westwood classics"
 rp_module_licence="GPL3 https://github.com/OpenRA/OpenRA/blob/bleed/COPYING"
 rp_module_help="Currently working on how to pull the Data files No ETA"
@@ -148,8 +148,8 @@ function configure_openra() {
     create_launch_script "OTS.sh" "ts" "Open Tiberian Sun" "opents"
     
     # Add ports to EmulationStation
-    addPort "$md_id" "openra" "Open Red Alert" "XINIT: /opt/retropie/ports/openra/ORA.sh"
-    addPort "$md_id" "opentd" "Open Tiberian Dawn" "XINIT: /opt/retropie/ports/openra/OTD.sh"
-    addPort "$md_id" "opend2k" "Open Dune2000" "XINIT: /opt/retropie/ports/openra/OD2K.sh"
-    addPort "$md_id" "opents" "Open Tiberian Sun" "XINIT: /opt/retropie/ports/openra/OTS.sh"
+    addPort "openra" "openra" "Open Red Alert" "XINIT: /opt/retropie/ports/openra/ORA.sh"
+    addPort "openra" "opentd" "Open Tiberian Dawn" "XINIT: /opt/retropie/ports/openra/OTD.sh"
+    addPort "openra" "opend2k" "Open Dune2000" "XINIT: /opt/retropie/ports/openra/OD2K.sh"
+    addPort "openra" "opents" "Open Tiberian Sun" "XINIT: /opt/retropie/ports/openra/OTS.sh"
 }
