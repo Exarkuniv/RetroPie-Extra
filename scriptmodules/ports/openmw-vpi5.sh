@@ -3,7 +3,7 @@
 # OpenMW RetroPie Scriptmodule - Complete with Config File Handling
 # Includes proper config setup and controller mappings
 
-rp_module_id="openmw"
+rp_module_id="openmw-vpi5"
 rp_module_desc="OpenMW - Open-source Morrowind engine reimplementation"
 rp_module_licence="GPL3 https://github.com/OpenMW/openmw/blob/stable/LICENSE"
 rp_module_repo="git https://github.com/OpenMW/openmw.git stable"
@@ -175,7 +175,7 @@ _EOF_
 
     # Add port using our launch script
     addPort "omwm" "omwm" "OpenMW - Setting menu" "XINIT: $script"
-    addPort "$md_id" "$md_id" "OpenMW - Morrowind Engine" "XINIT: $scripts"
+    addPort "openmw" "openmw" "OpenMW - Morrowind Engine" "XINIT: $scripts"
 
     # Set permissions
     chown -R $user:$user "$romdir/ports/$md_id"
@@ -199,7 +199,7 @@ OpenMW Installation Guide:
    - find the missing file
    - run OpenMW - Setting menu and it will configure the settings.cfg to see the files you have
 _EOF_
-    chown $user:$user "$romdir/ports/$md_id/README.txt"
+    chown $user:$user "$romdir/ports/openmw/README.txt"
 
 	[[ "$md_mode" == "install" ]] && config_data_openmw
 }
