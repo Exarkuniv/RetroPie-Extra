@@ -10,7 +10,7 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
-rp_module_id="prototype"
+rp_module_id="prototype-vpi5"
 rp_module_desc="ProtoType - an R-Type remake by Ron Bunce"
 rp_module_help="A keyboard is required to exit the game."
 rp_module_licence="freeware https://web.archive.org/web/20160507085617/http://xout.blackened-interactive.com/ProtoType/Prototype.html"
