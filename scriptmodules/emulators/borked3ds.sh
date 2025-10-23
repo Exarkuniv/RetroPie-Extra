@@ -135,7 +135,7 @@ function build_menu_borked3ds() {
             joy2keyStart 0x00 0x00 kich1 kdch1 0x20 0x71
             clear
 			if [[ $choice == HELP* ]];then
-			run="$(set ${csv[$(echo $choice|cut -d ' ' -f2)]};echo $9)"
+			run="$(set ${csv[${choice/* /}]};echo $9)"
 			else
 			run="$(set ${csv[$choice]};echo $4)"
 			fi
