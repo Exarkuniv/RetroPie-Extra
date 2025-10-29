@@ -11,6 +11,8 @@ Most of the scripts do work as is.
 
 **Starting 1-3-25 RetroPie version 4.8.9 or higher is needed**
 
+**I have not tested any of these on Trixie. Till i do, you are on your own. I have not have answers for you**
+
 This needed since the RetroPie helpers that will now being used will not work on older versions of RetroPie
 
 And no I will not be working on ways to make it work with all versions, Please dont ask and if issues are opened and you are using a old version. They will just be closed
