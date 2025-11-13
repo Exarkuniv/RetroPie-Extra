@@ -10,7 +10,8 @@
 # See the LICENSE file distributed with this source and at
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
- 
+
+#Version 0.2
 rp_module_id="borked3ds"
 rp_module_desc="3DS Emulator borked3ds"
 rp_module_help="ROM Extension: .3ds .3dsx .elf .axf .cci .cxi .app\n\nCopy your 3DS roms to $romdir/3ds"
@@ -23,15 +24,22 @@ function depends_borked3ds() {
         md_ret_errors+=("Sorry, you need an OS with gcc 7.0 or newer to compile borked3ds")
         return 1
     fi
- 
-    # Additional libraries required for running
-	#local depends=(build-essential cmake clang clang-format libc++-dev libsdl2-dev libssl-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools  qt6-base-dev qt6-base-private-dev libxcb-cursor-dev libvulkan-dev qt6-multimedia-dev libqt6sql6 libqt6core6 libasound2-dev xorg-dev libx11-dev libxext-dev libpipewire-0.3-dev libsndio-dev libfdk-aac-dev ffmpeg libgl-dev libswscale-dev libavformat-dev libavcodec-dev libavdevice-dev libglut3.12 libglut-dev freeglut3-dev mesa-vulkan-drivers libinput-dev) 
-	if isPlatform "aarch64"; then
-		local depends=(build-essential cmake clang clang-format libc++-dev libsdl2-dev libssl-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools  qt6-base-dev qt6-base-private-dev libxcb-cursor-dev libvulkan-dev qt6-multimedia-dev libqt6sql6 libqt6core6 libasound2-dev xorg-dev libx11-dev libxext-dev libpipewire-0.3-dev libsndio-dev libfdk-aac-dev ffmpeg libgl-dev  libswscale-dev libavformat-dev libavcodec-dev libavdevice-dev libglut3.12 libglut-dev freeglut3-dev mesa-vulkan-drivers robin-map-dev) 
+    
+    #for aarch64 and x86_64 these dependancies are the same
+    #seems to work without, depends that are removed (not tested yet on x86): libc++-dev ffmpeg libavdevice-dev
+    local depends=(build-essential cmake clang clang-format libsdl2-dev libssl-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools qt6-base-dev qt6-base-private-dev libxcb-cursor-dev libvulkan-dev qt6-multimedia-dev libqt6sql6 libasound2-dev xorg-dev libx11-dev libxext-dev libpipewire-0.3-dev libsndio-dev libgl-dev  libswscale-dev libavformat-dev libavcodec-dev libglut3.12 libglut-dev freeglut3-dev mesa-vulkan-drivers)
+    #use libqt6core6t64 for Trixie or higher
+    
+    if compareVersions $__gcc_version lt 14; then
+		depends+=(libqt6core6)
 	else
-		# packages not in bookworm for x86_64 : libfdk-aac-dev
-		# robin-map-dev is in the source and found when using https://github.com/rtiangha/Borked3DS.git
-		local depends=(build-essential cmake clang clang-format libc++-dev libsdl2-dev libssl-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools  qt6-base-dev qt6-base-private-dev libxcb-cursor-dev libvulkan-dev qt6-multimedia-dev libqt6sql6 libqt6core6 libasound2-dev xorg-dev libx11-dev libxext-dev libpipewire-0.3-dev libsndio-dev ffmpeg libgl-dev  libswscale-dev libavformat-dev libavcodec-dev libavdevice-dev libglut3.12 libglut-dev freeglut3-dev mesa-vulkan-drivers) 
+		depends+=(libqt6core6t64)
+	fi
+    #cpu based: additional libraries
+    #packages not in bookworm for x86_64 : libfdk-aac-dev
+	#robin-map-dev is in the source and found when using https://github.com/rtiangha/Borked3DS.git
+	if isPlatform "aarch64"; then
+		depends+=(libfdk-aac-dev robin-map-dev) 
 	fi
 	getDepends "${depends[@]}"
 }
@@ -57,17 +65,23 @@ function sources_borked3ds() {
 #gitPullOrClone "$md_build" https://github.com/rtiangha/Borked3DS.git fix-gcc12
 #gitPullOrClone "$md_build" https://github.com/gvx64/Borked3DS-rpi.git
 
-	#Borked3DS requires a cmake 3.5 as minimum, we will use the 4.0.2 binary
-	#find the files on "https://cmake.org/files/v4.0/" (cmake-4.0.2.tar.gz is source only)
-	
 	if isPlatform "aarch64"; then
 		gitPullOrClone "$md_build" https://github.com/gvx64/Borked3DS-rpi.git
-		downloadAndExtract https://cmake.org/files/v4.0/cmake-4.0.2-linux-aarch64.tar.gz "$md_build"
 	else
 		gitPullOrClone "$md_build" https://github.com/rtiangha/Borked3DS.git
-		downloadAndExtract https://cmake.org/files/v4.0/cmake-4.0.2-linux-x86_64.tar.gz "$md_build"
 	fi
- 	mv cmake-4.0.2* cmake-4.0.2
+	
+	#do this after cloning Borked3ds, otherwise the $md_build will already exist and cloning will fail
+	#Borked3DS requires a cmake 3.5 as minimum, we will use the 4.0.2 binary when using Bookworm or lower
+	#find the files on "https://cmake.org/files/v4.0/" (cmake-4.0.2.tar.gz is source only)
+	if compareVersions $__gcc_version lt 14; then
+		if isPlatform "aarch64"; then
+			downloadAndExtract https://cmake.org/files/v4.0/cmake-4.0.2-linux-aarch64.tar.gz "$md_build"
+		else
+			downloadAndExtract https://cmake.org/files/v4.0/cmake-4.0.2-linux-x86_64.tar.gz "$md_build"
+		fi
+		mv cmake-4.0.2* cmake-4.0.2
+	fi
 }
  
 function build_borked3ds() {
@@ -75,8 +89,14 @@ function build_borked3ds() {
  	isPlatform "aarch64" && extra_build_options="-DDYNARMIC_USE_BUNDLED_EXTERNALS=OFF"
 	mkdir build
 	cd build
-	$md_build/cmake-4.0.2/bin/cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options
- 	$md_build/cmake-4.0.2/bin/cmake --build . -- -j"$(nproc)"
+	#Borked3DS requires a cmake 3.5 as minimum, we will use the 4.0.2 binary when using Bookworm or lower
+	if compareVersions $__gcc_version lt 14; then
+		$md_build/cmake-4.0.2/bin/cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options
+		$md_build/cmake-4.0.2/bin/cmake --build . -- -j"$(nproc)"
+	else
+		cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options
+		cmake --build . -- -j"$(nproc)"
+	fi
 	md_ret_require="$md_build/build/bin"
 }
  
@@ -108,7 +128,7 @@ function gui_borked3ds() {
     #special charachters ■□▪▫▬▲►▼◄◊○◌●☺☻←↑→↓↔↕⇔
     local csv=()
     csv=(
-'□menu_item□□to_do□□□□□help_to_do□'
+`□menu_item□□to_do□□□□□help_to_do□`
 '□Add/Remove GL_OES_texture_buffer (Mesa Extension Overide)□□patch_es_systems_cfg_borked3ds□□□□□printMsgs dialog "@gvx64:\nI added support for GL_OES_texture_buffer in Borked3ds-rpi. This is a GLES 3.2 extension that the Pi does not completely support, but the code in Borked3ds-rpi does not depend on the problematic portions of this extension and so we can tap into this GLES 3.2 functionality on the Pi by using an environment variable override. to launch within Retropie with GL_OES_texture_buffer support enabled, edit the contents of /etc/emulationstation/es_systems.cfg so that the 3DS entry appears as follows. This will theoretically give better performance than the fall-back code path that uses 2D texture LUTs and it should be more accelerated in games that have fog/lighting effects (that said, I am not noticing much of an improvement on my Pi4, maybe because it is GPU is too weak for it to matter)."□'
 # next are a few examples
 #'□Enable Gles□□iniConfig "=" "" "/home/$user/.config/borked3ds-emu/qt-config.ini";iniSet "use_gles" "true"□□□□□printMsgs dialog "NO HELP"□'
