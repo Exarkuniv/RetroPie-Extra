@@ -10,7 +10,7 @@ rp_module_repo="git https://github.com/OpenMW/openmw.git stable"
 rp_module_section="exp"
 rp_module_flags="rpi5 !rpi4 !rpi3"
 
-function depends_openmw) {
+function depends_openmw {
     local depends=(
         git cmake build-essential libopenal-dev libsdl2-dev
         libqt5opengl5-dev libunshield-dev libavcodec-dev libavformat-dev
