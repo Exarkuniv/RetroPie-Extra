@@ -53,6 +53,6 @@ function configure_openbor-v5() {
 
     addSystem "openbor" "OpenBOR" ".zip .ZIP .pak .PAK"
 	
-	    chown $__user:$__group -R $md_conf_root/$md_id/$dir"
+	    chown $__user:$__group -R "$md_conf_root/$md_id/$dir"
 
 }
