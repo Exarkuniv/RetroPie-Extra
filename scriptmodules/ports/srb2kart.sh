@@ -3,7 +3,7 @@
 # Input Server Address and Port - Place [srb2kart-assets.tar.gz] in root of webSERVER
 webSERVER=127.0.0.1
 webPORT=8000
-srb2kVER=v1.3
+srb2kVER=v1.6
 
 # This file is part of The RetroPie Project
 #
@@ -22,12 +22,12 @@ rp_module_section="exp"
 rp_module_flags="!all rpi4 rpi5"
 
 function depends_srb2kart() {
-    getDepends cmake libsdl2-dev libsdl2-mixer-dev
+    getDepends cmake libsdl2-dev libsdl2-mixer-dev libpng-dev libcurl4-openssl-dev libgme-dev libopenmpt-dev libminiupnpc-dev
 }
 
 function sources_srb2kart() {
     gitPullOrClone
-    downloadAndExtract "https://www.dropbox.com/s/xe8pzukzby1bwrj/srb2kart-assets.tar.gz" "$md_build"
+    downloadAndExtract "https://github.com/STJr/Kart-Public/releases/download/v1.6/AssetsLinuxOnly.zip" "$md_build/assets/installer"
 }
 
 function build_srb2kart() {
@@ -41,13 +41,14 @@ function build_srb2kart() {
 function install_srb2kart() {
     # copy and dereference, so we get a srb2kart binary rather than a symlink to srb2kart-version
     cp -L 'build/bin/srb2kart' "$md_inst/srb2kart"
+    cp -R 'assets/installer/mdls' "$md_inst/"
     md_ret_files=(
         'assets/installer/bonuschars.kart'
         'assets/installer/chars.kart'
         'assets/installer/gfx.kart'
         'assets/installer/maps.kart'
         'assets/installer/music.kart'
-        'assets/installer/patch.kart'
+        'assets/installer/mdls.dat'
         'assets/installer/sounds.kart'
         'assets/installer/textures.kart'
         'assets/installer/srb2.srb'
@@ -58,4 +59,3 @@ function configure_srb2kart() {
     addPort "$md_id" "srb2kart" "Sonic Robo Blast 2 Kart" "pushd $md_inst; ./srb2kart; popd"
     moveConfigDir "$home/.srb2kart"  "$md_conf_root/$md_id"
 }
-
