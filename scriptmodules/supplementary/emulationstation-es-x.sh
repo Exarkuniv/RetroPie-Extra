@@ -3,13 +3,15 @@
 # This file is part of RetroPie-Extra, a supplement to RetroPie.
 # For more information, please visit:
 #
+# this was made by RapidEdwin08 i dont take any credit for this in anyway
+#
 # https://github.com/RetroPie/RetroPie-Setup
 # https://github.com/Exarkuniv/RetroPie-Extra
 # https://github.com/Renetrox/EmulationStation-X
 # https://github.com/RapidEdwin08/RetroPie-Setup
 #
 # See the LICENSE file distributed with this source and at
-# https://raw.githubusercontent.com/RapidEdwin08/RetroPie-Setup/master/ext/RetroPie-Extra/LICENSE
+# https://raw.githubusercontent.com/Exarkuniv/RetroPie-Setup/master/ext/RetroPie-Extra/LICENSE
 #
 # ============================================================
 #  EmulationStation-X (ES-X) for RetroPie
@@ -47,12 +49,6 @@ function sources_emulationstation-es-x() {
     if [[ "$__gcc_version" -gt 12 ]]; then
         sed -i "s+^struct _Mix_Music\;+struct Mix_Music\;+" "$md_build/es-app/src/audio/BackgroundMusicManager.h"
         sed -i "s+typedef struct _Mix_Music Mix_Music+//typedef struct _Mix_Music Mix_Music+" "$md_build/es-app/src/audio/BackgroundMusicManager.h"
-    fi
-
-    # Disable Built-In BGM Menu Button IF IMP found
-    if [[ -d /opt/retropie/configs/imp ]] || [[ -d /home/$__user/imp ]]; then
-        echo IMP FOUND: BGM [On/Off] Button Will NOT be Included in [ES-X]
-        applyPatch "$md_data/bgm-menu-remove.diff"
     fi
 
     # [x3] 0ptional JoyPad Connected Popup Changes
