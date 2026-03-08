@@ -22,7 +22,7 @@ rp_module_flags="!all rpi4 rpi5"
 
 
 function depends_dunedynasty() {
-   getDepends build-essential cmake liballegro5-dev libenet-dev libmad0-dev libfluidsynth-dev fluidsynth patchelf
+   getDepends build-essential cmake liballegro5-dev libenet-dev libmad0-dev libfluidsynth-dev fluidsynth libgl1 patchelf liballegro-acodec5-dev liballegro-audio5-dev liballegro-image5-dev
 }
 
 
