@@ -19,7 +19,13 @@ rp_module_section="exp"
 rp_module_flags=""
 
 function depends_augustus() {
-    getDepends cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev libsdl-mixer1.2-dev libmpg123-0 libsdl2-mixer-dev
+    local mpg123_pkg="libmpg123-0"
+
+    if [[ -n "$__os_debian_ver" ]] && [[ "$__os_debian_ver" -ge 13 ]]; then
+        mpg123_pkg="libmpg123-0t64"
+    fi
+
+    getDepends cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev libsdl-mixer1.2-dev $mpg123_pkg
 }
 
 function sources_augustus() {
