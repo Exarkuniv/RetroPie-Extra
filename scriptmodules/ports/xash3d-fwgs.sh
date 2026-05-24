@@ -13,11 +13,13 @@ rp_module_id="xash3d-fwgs"
 rp_module_desc="xash3d-fwgs - Half-Life Engine Port"
 rp_module_help="Please add your full version Half-Life data files (folders /valve, /bshift and /gearbox) to $romdir/ports/xash3d-fwgs/ to play."
 rp_module_section="exp"
-rp_module_flags="!mali !x86 !all rpi5"
+rp_module_flags="!mali !x86 !all rpi5 rpi4"
 
 
 function _arch_xash3d() {
     if isPlatform "rpi5"; then
+        echo arm64
+    elif isPlatform "rpi4" && isPlatform "64bit"; then
         echo arm64
     else
         echo armv8_32hf
