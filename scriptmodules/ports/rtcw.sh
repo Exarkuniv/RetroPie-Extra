@@ -22,9 +22,11 @@ function _arch_rtcw() {
     # exact parsing from Makefile
     if isPlatform "rpi5"; then
         echo arm
+    elif isPlatform "64bit"; then
+        echo aarch64
     else
         echo "$(uname -m | sed -e 's/i.86/x86/' | sed -e 's/^arm.*/arm/')"
-   fi
+    fi
 }
 
 function depends_rtcw() {
@@ -42,6 +44,12 @@ function sources_rtcw() {
 }
 
 function build_rtcw() {
+    local build_arch="arm"
+    
+    if isPlatform "64bit"; then
+        build_arch="aarch64"
+    fi
+
     cd "$md_build/SP"
 
     # Use Case switch to allow future expansion to other potential platforms
@@ -63,9 +71,9 @@ function build_rtcw() {
             USE_MUMBLE=0\
             BUILD_GAME_SO=1\
             BUILD_RENDERER_REND2=0\
-            ARCH=arm\
+            ARCH="$build_arch"\
             PLATFORM=linux\
-            COMPILE_ARCH=arm\
+            COMPILE_ARCH="$build_arch"\
             COMPILE_PLATFORM=linux\
             make
     else
@@ -92,9 +100,9 @@ function build_rtcw() {
             USE_MUMBLE=0\
             BUILD_GAME_SO=1\
             BUILD_RENDERER_REND2=0\
-            ARCH=arm\
+            ARCH="$build_arch"\
             PLATFORM=linux\
-            COMPILE_ARCH=arm\
+            COMPILE_ARCH="$build_arch"\
             COMPILE_PLATFORM=linux\
             make
     else
