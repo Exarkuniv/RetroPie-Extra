@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+# This file is part of RetroPie-Extra, a supplement to RetroPie.
+# For more information, please visit:
+#
+# https://github.com/RetroPie/RetroPie-Setup
+# https://github.com/Exarkuniv/RetroPie-Extra
+#
+# See the LICENSE file distributed with this source and at
+# https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
+#
+
+rp_module_id="starship"
+rp_module_desc="Starship - an advanced source port for Star Fox 64 (aka Lylat Wars)"
+rp_module_help="Save your valid USA .z64 copy of Star Fox 64 (v1.0 or v1.1) to $romdir/n64"
+rp_module_repo="git https://github.com/HarbourMasters/Starship.git main"
+rp_module_section="exp"
+rp_module_flags="all"
+
+function depends_starship() {
+    local depends=(gcc g++ git cmake ninja-build lsb-release libsdl2-dev libpng-dev libsdl2-net-dev libzip-dev zipcmp zipmerge ziptool nlohmann-json3-dev libtinyxml2-dev libspdlog-dev libboost-dev libopengl-dev libogg-dev libvorbis-dev clang)
+	
+    getDepends "${depends[@]}"   
+
+}
+
+function sources_starship() {
+    gitPullOrClone
+}
+
+function copy_rom_starship() {
+    local romdir="$home/RetroPie/roms/n64"
+    local destdir="$md_build"
+
+    mkdir -p "$destdir"
+
+    # Define the hashes to check against
+    local hash1="d8b1088520f7c5f81433292a9258c1184afa1457"
+    local hash2="09f0d105f476b00efa5303a3ebc42e60a7753b7a"
+
+    # Iterate through the files in the ROM directory
+    for file in "$romdir"/*; do
+        if [[ -f "$file" ]]; then
+            local sha1=$(sha1sum "$file" | awk '{print $1}')
+            # Check if the calculated SHA1 matches either of the specified hashes
+            if [[ "$sha1" == "$hash1" || "$sha1" == "$hash2" ]]; then
+                cp "$file" "$destdir/baserom.z64"
+                echo "Copied $file to $destdir/baserom.z64"
+                return 0
+            fi
+        fi
+    done
+
+    echo "No matching ROM file found in $romdir"
+    return 1
+}
+
+function build_starship() {
+    copy_rom_starship
+    if [[ $? -ne 0 ]]; then
+        echo "Build cannot proceed without a valid ROM file."
+        return 1
+    fi
+
+    rpSwap on 2048
+    cmake -H. -B build-cmake -GNinja -DUSE_OPENGLES=1 -DCMAKE_BUILD_TYPE:STRING=Release
+    cmake --build build-cmake --target ExtractAssets -j4
+    cmake --build build-cmake --target GeneratePortO2R -j4
+    cmake --build build-cmake -j4
+    md_ret_require="$md_build/build-cmake/Starship"
+    rpSwap off
+}
+
+function install_starship() {
+    md_ret_files=(
+       'build-cmake/gamecontrollerdb.txt'
+	   'build-cmake/sf64.o2r'
+	   'starship.o2r'
+	   'build-cmake/Starship'
+    )
+}
+
+function configure_starship() {
+    local launch_prefix="XINIT-WM:"
+
+# Create the boot .sh file
+    cat > "$md_inst/starship.sh" << _EOF_
+#!/bin/bash
+
+# Change directory
+cd "$md_inst" || exit
+ 
+# Run the Starship file
+./Starship
+_EOF_
+    chmod +x "$md_inst/starship.sh"
+    
+# Create the config file to default to fullscreen
+    cat > "$md_inst/starship.cfg.json" << _EOF_
+{
+    "Window": {
+        "AudioBackend": "sdl",
+        "Backend": {
+            "Id": 3,
+            "Name": "OpenGL"
+        },
+        "Fullscreen": {
+            "Enabled": true,
+            "Height": 1080,
+            "Width": 1920
+        },
+        "Height": 1080,
+        "PositionX": 0,
+        "PositionY": 0,
+        "Width": 1920
+    }
+}
+_EOF_
+    chmod +x "$md_inst/starship.cfg.json"
+	
+    chown -R $user:$user "$md_inst"
+	
+    addPort "$md_id" "starship" "Starship - Star Fox 64" "$launch_prefix$md_inst/starship.sh"
+    
+
+}
