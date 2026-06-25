@@ -42,9 +42,10 @@ function install_lr-bsnes-hd() {
 }
 
 function configure_lr-bsnes-hd() {
-    mkRomDir "snes"
-    defaultRAConfig "snes"
-
-    addEmulator 0 "$md_id" "snes" "$md_inst/bsnes_hd_beta_libretro.so"
-    addSystem "snes"
+    local system
+    for system in satellaview sfc sfc-t snes snesh snesmsu1 snes-proto snes-unl sufami; do
+    mkRomDir "$system"
+    defaultRAConfig "$system"
+    addEmulator 0 "$md_id" "$system" "$md_inst/bsnes_hd_beta_libretro.so"
+    addSystem "$system"
 }
