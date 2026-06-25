@@ -27,10 +27,10 @@ function sources_ecwolf-mod() {
 }
 
 function build_ecwolf-mod() {
-    mkdir build
-    cd build
-    cmake -DCMAKE_BUILD_TYPE=Release -DGPL=ON ..
-    make
+    mkdir -p build
+    cd build || return 1
+    cmake -DCMAKE_BUILD_TYPE=Release -DGPL=ON .. || return 1
+    make || return 1
     md_ret_require="$md_build/build/ecwolf"
 }
 
@@ -43,7 +43,7 @@ function install_ecwolf-mod() {
 
 function game_data_ecwolf-mod() {
     if [[ -z $(ls "$romdir/ports/wolf3d") ]]; then
-        cd "$__tmpdir"
+        cd "$__tmpdir" || return 1
         downloadAndExtract "http://maniacsvault.net/ecwolf/files/shareware/wolf3d14.zip" "$romdir/ports/wolf3d/shareware"
         downloadAndExtract "http://maniacsvault.net/ecwolf/files/shareware/soddemo.zip" "$romdir/ports/wolf3d/shareware"
     fi

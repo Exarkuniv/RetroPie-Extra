@@ -28,8 +28,8 @@ function sources_rednukem() {
 }
 
 function build_rednukem() {
-    cd $md_build/Rednukem
-    make rr USE_OPENGL=1 STARTUP_WINDOW=0
+    cd $md_build/Rednukem || return 1
+    make rr USE_OPENGL=1 STARTUP_WINDOW=0 || return 1
 	md_ret_require="$md_build"
 }
 
@@ -42,7 +42,7 @@ function install_rednukem() {
 }
 	
 function configure_rednukem() {
-	mkdir "$home/.config/rednukem"
+	mkdir -p "$home/.config/rednukem"
 	cp -v rednukem.cfg "$home/.config/rednukem"
 
     moveConfigDir "$home/.config/rednukem" "$md_conf_root/rednukem"

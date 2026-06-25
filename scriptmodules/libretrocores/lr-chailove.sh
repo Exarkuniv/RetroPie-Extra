@@ -24,7 +24,7 @@ function sources_lr-chailove() {
 
 function build_lr-chailove() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/chailove_libretro.so"
 }
 

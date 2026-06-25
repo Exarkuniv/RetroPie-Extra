@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/libreoffice.sh"
 
     addPort "$md_id" "libreoffice" "LibreOffice Open Source office suite" "XINIT: $md_inst/libreoffice.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

@@ -27,8 +27,8 @@ function sources_lr-bsnes-hd() {
 
 function build_lr-bsnes-hd() {
     local params=(target="libretro" build="release" binary="library" CXXFLAGS="$CXXFLAGS" platform="linux" local="false")
-    make -C bsnes clean "${params[@]}"
-    make -C bsnes "${params[@]}"
+    make -C bsnes clean "${params[@]}" || return 1
+    make -C bsnes "${params[@]}" || return 1
     md_ret_require="$md_build/bsnes/out/bsnes_hd_beta_libretro.so"
 }
 

@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/weechat.sh"
 
     addPort "$md_id" "weechat" "Weechat - Console IRC Client" "XINIT: $md_inst/weechat.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

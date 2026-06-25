@@ -28,10 +28,10 @@ function sources_lr-easyrpg() {
 
 function build_lr-easyrpg() {
     mkdir -p build
-    cd build
+    cd build || return 1
 
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DPLAYER_TARGET_PLATFORM=libretro -DBUILD_SHARED_LIBS=ON
-    cmake --build .
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DPLAYER_TARGET_PLATFORM=libretro -DBUILD_SHARED_LIBS=ON || return 1
+    cmake --build . || return 1
     md_ret_require="$md_build/build/easyrpg_libretro.so"
 }
 

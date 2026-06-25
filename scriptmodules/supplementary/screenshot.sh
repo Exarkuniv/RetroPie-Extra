@@ -27,7 +27,7 @@ function sources_screenshot() {
 
 function build_screenshot() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/raspi2png"
 }
 

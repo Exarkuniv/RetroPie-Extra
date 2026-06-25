@@ -30,7 +30,7 @@ function sources_lr-crocods() {
 
 function build_lr-crocods() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/crocods_libretro.so"
 }
 

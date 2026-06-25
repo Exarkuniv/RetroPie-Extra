@@ -24,14 +24,14 @@ function depends_fallout1() {
 
 
 function sources_fallout1() {
-    git clone "https://github.com/alexbatalov/fallout1-ce.git"
+    git clone "https://github.com/alexbatalov/fallout1-ce.git" || return 1
 }
 
 function build_fallout1() {
-    cd fallout1-ce
-    mkdir build && cd build
-    cmake ..
-    cmake --build .
+    cd fallout1-ce || return 1
+    mkdir -p build && cd build
+    cmake .. || return 1
+    cmake --build . || return 1
     md_ret_require="$md_build/fallout1-ce/build/fallout-ce"
 }
 

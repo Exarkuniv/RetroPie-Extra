@@ -36,12 +36,12 @@ function sources_easyrpg-player() {
 
 function build_easyrpg-player() {
     mkdir -p build
-    cd build
+    cd build || return 1
 
     sed -i 's#APPEND_STRING PROPERTY#APPEND PROPERTY#' "$md_build/builds/cmake/Modules/FindSDL2.cmake"
     sed -i 's#INTERFACE_LINK_LIBRARIES "${SDL2PC_STATIC_LIBRARIES}")#INTERFACE_INCLUDE_DIRECTORIES "${SDL2PC_STATIC_LIBRARY_DIRS}")#' "$md_build/builds/cmake/Modules/FindSDL2.cmake"
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DPLAYER_BUILD_LIBLCF=ON
-    cmake --build .
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DPLAYER_BUILD_LIBLCF=ON || return 1
+    cmake --build . || return 1
 
     md_ret_require="$md_build/build/easyrpg-player"
 }

@@ -31,8 +31,8 @@ function sources_nblood() {
 }
 
 function build_nblood() {
-    cd $md_build
-   make blood USE_OPENGL=0 STARTUP_WINDOW=0
+    cd $md_build || return 1
+   make blood USE_OPENGL=0 STARTUP_WINDOW=0 || return 1
 	md_ret_require="$md_build"
 }
 
@@ -45,7 +45,7 @@ function install_nblood() {
 }
 
 function configure_nblood() {
-	mkdir "$home/.config/nblood"
+	mkdir -p "$home/.config/nblood"
 
 	cp -v nblood.cfg "$home/.config/nblood"
 	chown -R pi:pi "$home/.config/nblood"

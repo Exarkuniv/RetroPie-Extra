@@ -21,8 +21,8 @@ function depends_revolt() {
 }
 
 function sources_revolt() {
-     wget -O rvgl-data.deb https://github.com/Exarkuniv/Rpi-pikiss-binary/raw/Master/rvgl-data.deb
-     wget -O rvgl.deb https://github.com/Exarkuniv/Rpi-pikiss-binary/raw/Master/rvgl.deb
+     wget -O rvgl-data.deb https://github.com/Exarkuniv/Rpi-pikiss-binary/raw/Master/rvgl-data.deb || return 1
+     wget -O rvgl.deb https://github.com/Exarkuniv/Rpi-pikiss-binary/raw/Master/rvgl.deb || return 1
 }
 
 function install_revolt() {

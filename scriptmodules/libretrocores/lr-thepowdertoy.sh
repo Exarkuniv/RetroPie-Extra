@@ -28,10 +28,10 @@ function sources_lr-thepowdertoy() {
 }
 
 function build_lr-thepowdertoy() {
-    mkdir build && cd build
+    mkdir -p build && cd build
     make clean
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    make
+    cmake .. -DCMAKE_BUILD_TYPE=Release || return 1
+    make || return 1
     md_ret_require="$md_build/build/src/thepowdertoy_libretro.so"
 }
 

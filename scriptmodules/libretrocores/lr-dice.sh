@@ -26,7 +26,7 @@ function sources_lr-dice() {
 
 function build_lr-dice() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/dice_libretro.so"
 }
 

@@ -30,7 +30,7 @@ function build_prototype() {
     local params=(SDL2=1)
     isPlatform "x86" && params+=(LINUX=1)
     ! isPlatform "x86" && params+=(ODROID=1)
-    make "${params[@]}"
+    make "${params[@]}" || return 1
     md_ret_require="$md_build/prototype"
 }
 

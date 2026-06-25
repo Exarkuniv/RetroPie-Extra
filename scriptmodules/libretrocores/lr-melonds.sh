@@ -24,7 +24,7 @@ function sources_lr-melonds() {
 
 function build_lr-melonds() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/melonds_libretro.so"
 }
 

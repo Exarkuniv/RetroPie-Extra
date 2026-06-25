@@ -28,12 +28,12 @@ function sources_vanillacc() {
 }
 
 function build_vanillacc() {
-    mkdir build
-    cd build
+    mkdir -p build
+    cd build || return 1
     CXXFLAGS=-fpermissive cmake .. 
 
-    make -j4 
-    cd ..
+    make -j4  || return 1
+    cd .. || return 1
     md_ret_require=(
 	'build/vanillara'
 	'build/vanillatd'

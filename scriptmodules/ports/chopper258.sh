@@ -27,7 +27,7 @@ function sources_chopper258() {
 }
 
 function build_chopper258() {
-    make
+    make || return 1
     md_ret_require="$md_build/bin/chopper258"
 }
 

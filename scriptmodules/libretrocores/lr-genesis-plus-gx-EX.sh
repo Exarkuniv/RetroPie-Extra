@@ -22,8 +22,8 @@ function sources_lr-genesis-plus-gx-EX() {
 }
 
 function build_lr-genesis-plus-gx-EX() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
+    make -f Makefile.libretro clean || return 1
+    make -f Makefile.libretro || return 1
     md_ret_require="$md_build/genesis_plus_gx_libretro.so"
 }
 

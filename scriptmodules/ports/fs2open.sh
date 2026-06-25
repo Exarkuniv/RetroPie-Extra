@@ -40,7 +40,7 @@ function build_fs2open() {
     sed -i -e 's/-mtune=generic -mfpmath=sse -msse -msse2/ /' ./mongoose/Makefile
     sed -i -e 's/-mtune=generic -mfpmath=sse -msse -msse2/ /' ./code/Makefile
     sed -i -e 's/-mtune=generic -mfpmath=sse -msse -msse2/ /' Makefile
-	make -j4
+	make -j4 || return 1
 	#make -j$(nproc) > output.txt 2> errors.txt
     
 	    md_ret_require=(

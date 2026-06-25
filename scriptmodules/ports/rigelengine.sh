@@ -29,11 +29,11 @@ function sources_rigelengine() {
 }
 
 function build_rigelengine() {
-    mkdir $md_build/build
-    cd $md_build/build
-    cmake .. -DUSE_GL_ES=ON -DCMAKE_BUILD_TYPE=Release -DWARNINGS_AS_ERRORS=OFF
+    mkdir -p $md_build/build
+    cd $md_build/build || return 1
+    cmake .. -DUSE_GL_ES=ON -DCMAKE_BUILD_TYPE=Release -DWARNINGS_AS_ERRORS=OFF || return 1
 
-    make
+    make || return 1
 
     md_ret_require="$md_build/build/src/RigelEngine"
 }

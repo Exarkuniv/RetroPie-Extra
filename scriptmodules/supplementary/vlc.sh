@@ -38,5 +38,5 @@ _EOF_
     chmod +x "$md_inst/vlc.sh"
 
     addPort "$md_id" "vlc" "VLC media player" "XINIT: $md_inst/vlc.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

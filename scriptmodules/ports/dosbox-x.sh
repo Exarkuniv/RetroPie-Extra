@@ -37,7 +37,7 @@ function build_dosbox-x() {
 }
 
 function install_dosbox-x() {
-    make install
+    make install || return 1
 }
 
 function configure_dosbox-x() {

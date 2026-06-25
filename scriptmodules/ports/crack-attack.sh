@@ -26,7 +26,7 @@ function install_bin_crack-attack() {
 }
 
 function configure_crack-attack() {
-    mkdir "ports"
+    mkdir -p "ports"
     moveConfigDir "$home/.crack-attack" "$md_conf_root/crack-attack"
     addPort "$md_id" "crack-attack" "Crack-Attack - Tetris Attack clone" "XINIT: crack-attack"
 }

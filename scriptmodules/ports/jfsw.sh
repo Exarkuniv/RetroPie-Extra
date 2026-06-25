@@ -27,7 +27,7 @@ function sources_jfsw() {
 }
 
 function build_jfsw() {
-    make DATADIR="$romdir/ports/shadowwarrior" RELEASE=1 USE_POLYMOST=1 USE_OPENGL=USE_GLES2 WITHOUT_GTK=1
+    make DATADIR="$romdir/ports/shadowwarrior" RELEASE=1 USE_POLYMOST=1 USE_OPENGL=USE_GLES2 WITHOUT_GTK=1 || return 1
     md_ret_require="$md_build/sw"
 }
 
@@ -45,8 +45,8 @@ function gamedata_jfsw() {
         # download shareware data
         local tempdir="$(mktemp -d)"
         download ftp://ftp.3drealms.com/share/3dsw12.zip "$tempdir"
-        unzip -Lo "$tempdir/3dsw12.zip" swsw12.shr -d "$tempdir"
-        unzip -Lo "$tempdir/swsw12.shr" sw.grp sw.rts -d "$dest"
+        unzip -Lo "$tempdir/3dsw12.zip" swsw12.shr -d "$tempdir" || return 1
+        unzip -Lo "$tempdir/swsw12.shr" sw.grp sw.rts -d "$dest" || return 1
         rm -rf "$tempdir"
     fi
     chown -R $user:$user "$dest"

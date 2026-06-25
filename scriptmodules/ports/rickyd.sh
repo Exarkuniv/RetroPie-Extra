@@ -28,16 +28,16 @@ function sources_rickyd() {
 function build_rickyd() {
     ./bootstrap.sh
     make distclean
-    mkdir build
-    cd build
+    mkdir -p build
+    cd build || return 1
     .././configure --prefix=$md_inst
-    make
+    make || return 1
     md_ret_require="$md_build/build/sources/ricky"
 }
 
 function install_rickyd() {
-    cd "$md_build/build"
-    make install
+    cd "$md_build/build" || return 1
+    make install || return 1
 }
 
 function configure_rickyd() {

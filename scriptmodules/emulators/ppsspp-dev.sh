@@ -28,7 +28,7 @@ function depends_ppsspp-dev() {
 
 function sources_ppsspp-dev() {
     gitPullOrClone "$md_build/ppsspp"
-    cd "ppsspp"
+    cd "ppsspp" || return 1
 
     # remove the lines that trigger the ffmpeg build script functions - we will just use the variables from it
     sed -i "/^build_ARMv6$/,$ d" ffmpeg/linux_arm.sh
@@ -46,14 +46,14 @@ function sources_ppsspp-dev() {
     sed -n -i "p; s/^set(CMAKE_EXE_LINKER_FLAGS/set(CMAKE_SHARED_LINKER_FLAGS/p" cmake/Toolchains/raspberry.armv?.cmake
 
     if hasPackage cmake 3.6 lt; then
-        cd ..
+        cd .. || return 1
         mkdir -p cmake
         downloadAndExtract "$__archive_url/cmake-3.6.2.tar.gz" "$md_build/cmake" --strip-components 1
     fi
 }
 
 function build_ffmpeg_ppsspp-dev() {
-    cd "$1"
+    cd "$1" || return 1
     local arch
     if isPlatform "arm"; then
         if isPlatform "armv6"; then
@@ -103,13 +103,13 @@ function build_ffmpeg_ppsspp-dev() {
         ${MUXERS} \
         ${PARSERS}
     make clean
-    make install
+    make install || return 1
 }
 
 function build_cmake_ppsspp-dev() {
-    cd "$md_build/cmake"
+    cd "$md_build/cmake" || return 1
     ./bootstrap
-    make
+    make || return 1
 }
 
 function build_ppsspp-dev() {
@@ -124,7 +124,7 @@ function build_ppsspp-dev() {
     build_ffmpeg_ppsspp-dev "$md_build/ppsspp/ffmpeg"
 
     # build ppsspp
-    cd "$md_build/ppsspp"
+    cd "$md_build/ppsspp" || return 1
     rm -rf CMakeCache.txt CMakeFiles
     local params=()
     if isPlatform "videocore"; then
@@ -154,7 +154,7 @@ function build_ppsspp-dev() {
     fi
     "$cmake" "${params[@]}" .
     make clean
-    make
+    make || return 1
 
     md_ret_require="$md_build/ppsspp/$ppsspp_binary"
 }

@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/mixxx.sh"
 
     addPort "$md_id" "mixxx" "Mixxx - Free DJ Mixing Software App" "XINIT: $md_inst/mixxx.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

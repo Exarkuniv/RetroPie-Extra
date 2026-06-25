@@ -28,11 +28,11 @@ function sources_manaplus() {
 function build_manaplus() {
     autoreconf -i
     ./configure --prefix="$md_inst"
-    make
+    make || return 1
 }
 
 function install_manaplus() {
-    make install
+    make install || return 1
 }
 
 function configure_manaplus() {

@@ -36,11 +36,11 @@ function sources_openjk_ja() {
 }
 
 function build_openjk_ja() {
-    mkdir "$md_build/build"
-    cd "$md_build/build"
-    cmake -DCMAKE_BUILD_TYPE=Release ..
+    mkdir -p "$md_build/build"
+    cd "$md_build/build" || return 1
+    cmake -DCMAKE_BUILD_TYPE=Release .. || return 1
     make clean
-    make
+    make || return 1
 
     md_ret_require=(
         "$md_build/build/openjk.$(_arch_openjk_ja)"

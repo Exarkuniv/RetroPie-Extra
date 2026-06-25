@@ -27,9 +27,9 @@ function sources_lr-bsnes-jg() {
 
 function build_lr-bsnes-jg() {
     local params=(target="libretro" build="release" binary="library" CXXFLAGS="$CXXFLAGS" platform="linux" local="false")
-    cd libretro
+    cd libretro || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/libretro/bsnes-jg_libretro.so"
 }
 

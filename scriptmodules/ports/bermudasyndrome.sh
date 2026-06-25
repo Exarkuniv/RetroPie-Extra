@@ -26,7 +26,7 @@ function sources_bermudasyndrome() {
 }
 
 function build_bermudasyndrome() {
-    make
+    make || return 1
 }
 
 function install_bermudasyndrome() {

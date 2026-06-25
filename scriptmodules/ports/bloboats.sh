@@ -27,9 +27,9 @@ function sources_bloboats() {
 
 function build_bloboats() {
     if [ ! -f "/opt/retropie/supplementary/glshim/libGL.so.1" ]; then
-       cd "$md_build/glshim"
-       cmake . -DBCMHOST=1
-       make GL
+       cd "$md_build/glshim" || return 1
+       cmake . -DBCMHOST=1 || return 1
+       make GL || return 1
     fi
 }
 
@@ -42,7 +42,7 @@ function install_bin_bloboats() {
 }
 
 function configure_bloboats() {
-    mkdir "ports"
+    mkdir -p "ports"
     moveConfigDir "$home/.bloboats" "$md_conf_root/bloboats"
     addPort "$md_id" "bloboats" "Bloboats" "XINIT: /usr/games/bloboats"
 }

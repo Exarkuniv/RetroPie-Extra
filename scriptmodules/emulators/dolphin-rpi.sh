@@ -40,46 +40,46 @@ function sources_dolphin-rpi() {
 }
  
 function build_dolphin-rpi() {
-    mkdir build
-    cd build
+    mkdir -p build
+    cd build || return 1
     # use the bundled 'speexdsp' libs, distro versions before 1.2.1 trigger a 'cmake' error
-    cmake .. -DCMAKE_C_COMPILER=gcc-11 -DCMAKE_CXX_COMPILER=g++-11 -DBUNDLE_SPEEX=ON -DENABLE_AUTOUPDATE=OFF -DENABLE_ANALYTICS=OFF  -DUSE_DISCORD_PRESENCE=O>    make clean
-    make
+    cmake .. -DCMAKE_C_COMPILER=gcc-11 -DCMAKE_CXX_COMPILER=g++-11 -DBUNDLE_SPEEX=ON -DENABLE_AUTOUPDATE=OFF -DENABLE_ANALYTICS=OFF  -DUSE_DISCORD_PRESENCE=O>    make clean || return 1
+    make || return 1
     md_ret_require="$md_build/build/Binaries/dolphin-emu"
 }
  
 function install_dolphin-rpi() {
     #copy binaries to /opt/retropie/emulators/dolphin-rpi
-    cd build/Binaries/
-    mkdir /opt/retropie/emulators/dolphin-rpi/
-    mkdir /opt/retropie/emulators/dolphin-rpi/bin/
-    mv dolphin-emu /opt/retropie/emulators/dolphin-rpi/bin/
-    mv dolphin-emu-nogui /opt/retropie/emulators/dolphin-rpi/bin/
+    cd build/Binaries/ || return 1
+    mkdir -p /opt/retropie/emulators/dolphin-rpi/
+    mkdir -p /opt/retropie/emulators/dolphin-rpi/bin/
+    mv dolphin-emu /opt/retropie/emulators/dolphin-rpi/bin/ || return 1
+    mv dolphin-emu-nogui /opt/retropie/emulators/dolphin-rpi/bin/ || return 1
     #use $home/DolphinConfig5.0/ as the configuration/settings/save file directory
-    cd ..
-    mkdir $home/DolphinConfig5.0/
-    mkdir $home/DolphinConfig5.0/Config/
-    mv ../Data/Sys/GameSettings/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/GC/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/Wii/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/Maps/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/Resources/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/Shaders/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/Themes/ $home/DolphinConfig5.0/
-    mv ../Data/Sys/codehandler.bin $home/DolphinConfig5.0/
-    mv ../Data/Sys/totaldb.dsy $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-de.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-en.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-es.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-fr.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-it.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-ja.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-ko.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-nl.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-pt.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-ru.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-zh_CN.txt $home/DolphinConfig5.0/
-    mv ../Data/Sys/wiitdb-zh_TW.txt $home/DolphinConfig5.0/
+    cd .. || return 1
+    mkdir -p $home/DolphinConfig5.0/
+    mkdir -p $home/DolphinConfig5.0/Config/
+    mv ../Data/Sys/GameSettings/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/GC/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/Wii/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/Maps/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/Resources/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/Shaders/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/Themes/ $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/codehandler.bin $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/totaldb.dsy $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-de.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-en.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-es.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-fr.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-it.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-ja.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-ko.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-nl.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-pt.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-ru.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-zh_CN.txt $home/DolphinConfig5.0/ || return 1
+    mv ../Data/Sys/wiitdb-zh_TW.txt $home/DolphinConfig5.0/ || return 1
 }
  
 function remove_dolphin-rpi() {

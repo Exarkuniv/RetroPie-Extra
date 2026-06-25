@@ -27,8 +27,8 @@ function sources_openjazz() {
 }
 
 function build_openjazz() {
-    cmake -B OJ -S .
-    cmake --build OJ
+    cmake -B OJ -S . || return 1
+    cmake --build OJ || return 1
     md_ret_require="$md_build/OJ/OpenJazz"
 }
 

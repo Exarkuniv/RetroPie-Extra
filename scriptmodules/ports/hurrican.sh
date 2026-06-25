@@ -27,10 +27,10 @@ function sources_hurrican() {
 }
 
 function build_hurrican() {
-    cd "$md_build/Hurrican"
-    mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release ..
-    make
+    cd "$md_build/Hurrican" || return 1
+    mkdir -p build && cd build
+    cmake -DCMAKE_BUILD_TYPE=Release .. || return 1
+    make || return 1
     md_ret_require="$md_build/Hurrican/build/hurrican"
 }
 

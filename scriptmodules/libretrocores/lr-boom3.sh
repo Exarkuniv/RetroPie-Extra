@@ -30,15 +30,15 @@ function sources_lr-boom3() {
     gitPullOrClone
 }
 function build_lr-boom3() {
-    cd "neo"
+    cd "neo" || return 1
     mkdir -p "cores"
     local target
     for target in $(_get_targets_lr-boom3); do
         make clean
 	if [[ "$target" == boom3_xp ]]; then
-	    make D3XP=1
+	    make D3XP=1 || return 1
 	else
-	    make
+	    make || return 1
 	fi
         cp "${target}_libretro.so" "cores"
         md_ret_require+=("$md_build/neo/cores/${target}_libretro.so")

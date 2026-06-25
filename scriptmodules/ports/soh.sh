@@ -64,9 +64,9 @@ function build_soh() {
     fi
 
     rpSwap on 2048
-    cmake -H. -Bbuild-cmake -GNinja
-    cmake --build build-cmake --target ExtractAssets -j3
-    cmake --build build-cmake-j3
+    cmake -H. -Bbuild-cmake -GNinja || return 1
+    cmake --build build-cmake --target ExtractAssets -j3 || return 1
+    cmake --build build-cmake-j3 || return 1
     md_ret_require="$md_build/build-cmake/soh"
     rpSwap off
 }

@@ -45,9 +45,9 @@ function sources_supermodel-mechafatnick() {
 }
 
 function build_supermodel-mechafatnick() {
-    cd $md_build/SuperModelPi-master
+    cd $md_build/SuperModelPi-master || return 1
     cp Makefiles/Makefile.UNIX Makefile
-    make
+    make || return 1
 }
 
 function install_supermodel-mechafatnick() {
@@ -100,7 +100,7 @@ function configure_supermodel-mechafatnick() {
     #then move the existing Supermodel.ini to Supermodel.ini.old
     rm $romdir/supermodel/model3emu/mechafatnick/Supermodel.ini.old 2>&-
     mv $romdir/supermodel/model3emu/mechafatnick/Supermodel.ini $romdir/supermodel/model3emu/mechafatnick/Supermodel.ini.old 2>&-
-    mv $md_inst/Config/Supermodel.ini  $romdir/supermodel/model3emu/mechafatnick/Supermodel.ini
+    mv $md_inst/Config/Supermodel.ini  $romdir/supermodel/model3emu/mechafatnick/Supermodel.ini || return 1
     #fix permissions
     chown $__user:$__group -R "$romdir/supermodel/model3emu/mechafatnick"
     #make symlinks

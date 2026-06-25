@@ -46,16 +46,16 @@ function build_sm64ex() {
 
 	if [[ -f "$md_build/baserom.us.z64" ]]
 	then
-        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=us
-                 mv "$md_build/build/us_pc/sm64.us.f3dex2e.arm" "$md_build/build/sm64ex.arm"
+        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=us || return 1
+                 mv "$md_build/build/us_pc/sm64.us.f3dex2e.arm" "$md_build/build/sm64ex.arm" || return 1
     	elif [[ -f $home/baserom.eu.z64 ]]
     	then
-        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=eu
-		 mv "$md_build/build/eu_pc/sm64.eu.f3dex2e.arm" "$md_build/build/sm64ex.arm"
+        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=eu || return 1
+		 mv "$md_build/build/eu_pc/sm64.eu.f3dex2e.arm" "$md_build/build/sm64ex.arm" || return 1
     	elif [[ -f $home/baserom.jp.z64 ]]
     	then
-        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=jp
-	         mv "$md_build/build/jp_pc/sm64.jp.f3dex2e.arm" "$md_build/build/sm64ex.arm"
+        	 make EXT_OPTIONS_MENU=1 CONTROLLER_API=SDL2 TARGET_RPI=1 VERSION=jp || return 1
+	         mv "$md_build/build/jp_pc/sm64.jp.f3dex2e.arm" "$md_build/build/sm64ex.arm" || return 1
     	else
         	dialog --msgbox "Can't find the baserom you are attempting to use so we cannot tell which version you are trying to compile." 0 0
         	md_ret_errors+=("Failed: Couldn't find baserom so unsure which version to compile.")

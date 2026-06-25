@@ -42,8 +42,8 @@ function build_relive() {
     export CC=/usr/bin/clang
     export CXX=/usr/bin/clang++
 
-    cmake -S .. -B .
-    make -j$(nproc)
+    cmake -S .. -B . || return 1
+    make -j$(nproc) || return 1
 	#make -j$(nproc) > output.txt 2> errors.txt
     
    md_ret_require="$md_build/build/Source/relive/relive"

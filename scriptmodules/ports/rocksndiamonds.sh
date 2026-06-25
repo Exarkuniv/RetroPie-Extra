@@ -22,14 +22,14 @@ function depends_rocksndiamonds() {
 }
 
 function sources_rocksndiamonds() {
-    git clone https://git.artsoft.org/rocksndiamonds.git
-    cd rocksndiamonds
+    git clone https://git.artsoft.org/rocksndiamonds.git || return 1
+    cd rocksndiamonds || return 1
     git checkout master-next-patch-release
 }
 
 function build_rocksndiamonds() {
-    cd rocksndiamonds
-    make
+    cd rocksndiamonds || return 1
+    make || return 1
     md_ret_require="rocksndiamonds"
 }
 

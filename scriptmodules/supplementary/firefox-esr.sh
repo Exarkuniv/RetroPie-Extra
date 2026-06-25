@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/firefox-esr.sh"
 
     addPort "$md_id" "firefox-esr" "FireFox-ESR - Firefox Web Browser" "XINIT: $md_inst/firefox-esr.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

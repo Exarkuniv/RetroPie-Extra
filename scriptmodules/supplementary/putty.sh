@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/putty.sh"
 
     addPort "$md_id" "putty" "Putty SSH and telnet client" "XINIT: $md_inst/putty.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

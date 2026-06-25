@@ -37,7 +37,7 @@ function depends_gzdoom-system() {
 function sources_gzdoom-system() {
     gitPullOrClone
     # add 'ZMusic' repo
-    cd "$md_build"
+    cd "$md_build" || return 1
     gitPullOrClone zmusic https://github.com/ZDoom/ZMusic
     # workaround for Ubuntu 20.04 older vpx/wepm dev libraries
     sed -i 's/IMPORTED_TARGET libw/IMPORTED_TARGET GLOBAL libw/' CMakeLists.txt
@@ -50,17 +50,17 @@ function build_gzdoom-system() {
 
     # build 'ZMusic' first
     pushd zmusic
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$md_build/release/zmusic" .
-    make
-    make install
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$md_build/release/zmusic" . || return 1
+    make || return 1
+    make install || return 1
     popd
 
-    cd release
+    cd release || return 1
     local params=(-DCMAKE_INSTALL_PREFIX="$md_inst" -DPK3_QUIET_ZIPDIR=ON -DCMAKE_BUILD_TYPE=Release -DDYN_OPENAL=ON -DCMAKE_PREFIX_PATH="$md_build/release/zmusic")
     ! hasFlag "vulkan" && params+=(-DHAVE_VULKAN=OFF)
 
-    cmake "${params[@]}" ..
-    make
+    cmake "${params[@]}" .. || return 1
+    make || return 1
     md_ret_require="$md_build/release/gzdoom"
 }
 
@@ -83,13 +83,13 @@ function install_gzdoom-system() {
 function game_data_gzdoom-system() {
     mkRomDir "doom"
     if [[ ! -f "$romdir/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad"
+        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad" || return 1
     fi
 
     if [[ ! -f "$romdir/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/doom"
+        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip" || return 1
+        unzip freedoom-0.12.1.zip || return 1
+        mv freedoom-0.12.1/*.wad "$romdir/doom" || return 1
         rm -rf freedoom-0.12.1
         rm freedoom-0.12.1.zip
     fi

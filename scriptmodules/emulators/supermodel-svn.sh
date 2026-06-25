@@ -45,11 +45,11 @@ function sources_supermodel-svn() {
 }
 
 function build_supermodel-svn() {
-    cd $md_build
+    cd $md_build || return 1
     sed -i 's/texture2DLod/texture2D/g'  Src/Graphics/New3D/R3DShaderTriangles.h
     sed -i 's/ARCH =/ARCH = \-march=native/g'  /home/pi/model3emu-code/Makefiles/Rules.inc
     cp Makefiles/Makefile.UNIX Makefile
-    make
+    make || return 1
 }
 
 function install_supermodel-svn() {
@@ -89,7 +89,7 @@ function configure_supermodel-svn() {
     #- fix the permissions of that file to the normal user
     #- make a symlink to that file
     if [[ -f "$md_inst/Config/Supermodel.ini" ]] && [[ ! -L "$md_inst/Config/Supermodel.ini" ]]; then
-    mv "$md_inst/Config/Supermodel.ini" "$romdir/supermodel/model3emu/svn/Supermodel.ini"
+    mv "$md_inst/Config/Supermodel.ini" "$romdir/supermodel/model3emu/svn/Supermodel.ini" || return 1
     chown $__user:$__group -R "$romdir/supermodel/model3emu/svn/Supermodel.ini"
     ln -sv "$romdir/supermodel/model3emu/svn/Supermodel.ini" "$md_inst/Config/Supermodel.ini"
     fi

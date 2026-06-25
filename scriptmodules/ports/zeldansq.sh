@@ -27,13 +27,13 @@ function sources_zeldansq() {
 }
 
 function build_zeldansq() {
-   cd ZeldaNSQ-src-linux
+   cd ZeldaNSQ-src-linux || return 1
     
     # Apply fixes for pointer comparison errors
     sed -i 's/epee > 0/epee != nullptr/g' "src/game/content/link/Link.cpp"
     sed -i 's/bouclier > 0/bouclier != nullptr/g' "src/game/content/link/Link.cpp"
     
-    make
+    make || return 1
     md_ret_require="$md_build/ZeldaNSQ-src-linux/bin/Release/ZeldaNSQ"
 }
 

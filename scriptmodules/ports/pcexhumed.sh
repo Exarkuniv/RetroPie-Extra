@@ -36,8 +36,8 @@ function sources_pcexhumed() {
 }
 
 function build_pcexhumed() {
-    cd $md_build
-    make exhumed USE_OPENGL=1 STARTUP_WINDOW=0
+    cd $md_build || return 1
+    make exhumed USE_OPENGL=1 STARTUP_WINDOW=0 || return 1
 	md_ret_require="$md_build"
 }
 
@@ -50,7 +50,7 @@ function install_pcexhumed() {
 }
 	
 function configure_pcexhumed() {
-	mkdir "$home/.config/pcexhumed"
+	mkdir -p "$home/.config/pcexhumed"
 	cp -v pcexhumed.cfg "$home/.config/pcexhumed"
 	
 	moveConfigDir "$home/.config/pcexhumed" "$md_conf_root/pcexhumed"

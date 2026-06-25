@@ -50,7 +50,7 @@ function build_rtcw() {
         build_arch="aarch64"
     fi
 
-    cd "$md_build/SP"
+    cd "$md_build/SP" || return 1
 
     # Use Case switch to allow future expansion to other potential platforms
     if isPlatform "rpi"; then
@@ -75,12 +75,12 @@ function build_rtcw() {
             PLATFORM=linux\
             COMPILE_ARCH="$build_arch"\
             COMPILE_PLATFORM=linux\
-            make
+            make || return 1
     else
-        make
+        make || return 1
     fi
 
-    cd "$md_build/MP"
+    cd "$md_build/MP" || return 1
 
     if isPlatform "rpi"; then
         USE_CODEC_VORBIS=0 \
@@ -104,9 +104,9 @@ function build_rtcw() {
             PLATFORM=linux\
             COMPILE_ARCH="$build_arch"\
             COMPILE_PLATFORM=linux\
-            make
+            make || return 1
     else
-        make
+        make || return 1
     fi
 
     md_ret_require="$md_build/SP"
@@ -138,9 +138,9 @@ function install_rtcw() {
 }
 
 function game_data_rtcw() {
-    mkdir "$home/.wolf/main"
-    mv /opt/retropie/ports/rtcw/[^render*]*.so /opt/retropie/ports/rtcw/main
-    mv /opt/retropie/ports/rtcw/vm /opt/retropie/ports/rtcw/main
+    mkdir -p "$home/.wolf/main"
+    mv /opt/retropie/ports/rtcw/[^render*]*.so /opt/retropie/ports/rtcw/main || return 1
+    mv /opt/retropie/ports/rtcw/vm /opt/retropie/ports/rtcw/main || return 1
     cp "$md_data/wolfconfig.cfg" "$home/.wolf/main"
     cp "$md_data/wolfconfig_mp.cfg" "$home/.wolf/main"
     chown -R $user:$user "$romdir/ports/rtcw"

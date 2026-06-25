@@ -31,10 +31,10 @@ function sources_lr-arduous_lcd() {
 }
 
 function build_lr-arduous_lcd() {
-    cd build
-    cmake ..
+    cd build || return 1
+    cmake .. || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/build/arduous_libretro.so"
 }
 

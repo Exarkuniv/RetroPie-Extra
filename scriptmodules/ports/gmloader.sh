@@ -163,7 +163,7 @@ function sources_gmloader() {
 
 function build_gmloader() {
     [[ ! -d build ]] && mkdir build
-    cd build
+    cd build || return 1
     local cmflags=(
         -DCMAKE_BUILD_TYPE=Release
         -DPLATFORM=linux
@@ -176,7 +176,7 @@ function build_gmloader() {
     fi
 
     [[ -f Makefile ]] && make --ignore-errors clean
-    cmake "${cmflags[@]}" ..
+    cmake "${cmflags[@]}" .. || return 1
     VERBOSE=1 make -j$(nproc)
     md_ret_require="$md_build/build/gmloader"
 }
@@ -188,7 +188,7 @@ function install_gmloader() {
         'README.md'
     )
     if isPlatform "64bit" ; then
-        cd /usr/arm-linux-gnueabihf/lib
+        cd /usr/arm-linux-gnueabihf/lib || return 1
         [[ -L crtbeginS.o ]] || ln -s $(_gmloader_armhf_libdir)/crtbeginS.o
         [[ -L crtendS.o ]] || ln -s $(_gmloader_armhf_libdir)/crtendS.o
 

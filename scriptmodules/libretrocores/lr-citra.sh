@@ -27,9 +27,9 @@ function sources_lr-citra() {
 }
 
 function build_lr-citra() {
-    mkdir build  && cd build
-    cmake .. -DENABLE_LIBRETRO=1 -DLIBRETRO_STATIC=1 -DENABLE_SDL2=0 -DENABLE_QT=0 -DCMAKE_BUILD_TYPE="Release" -DENABLE_WEB_SERVICE=0
-    make
+    mkdir -p build  && cd build
+    cmake .. -DENABLE_LIBRETRO=1 -DLIBRETRO_STATIC=1 -DENABLE_SDL2=0 -DENABLE_QT=0 -DCMAKE_BUILD_TYPE="Release" -DENABLE_WEB_SERVICE=0 || return 1
+    make || return 1
     md_ret_require="$md_build/build/citra_libretro.so"
 }
 

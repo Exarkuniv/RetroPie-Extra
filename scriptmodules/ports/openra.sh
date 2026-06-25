@@ -29,16 +29,16 @@ function depends_openra() {
 
 function sources_openra() {
     mkdir -p openra
-    wget https://github.com/OpenRA/OpenRA/releases/download/release-20230225/OpenRA-release-20230225-source.tar.bz2
-    tar xvjf OpenRA-release-20230225-source.tar.bz2 -C /home/pi/RetroPie-Setup/tmp/build/openra/openra 	
+    wget https://github.com/OpenRA/OpenRA/releases/download/release-20230225/OpenRA-release-20230225-source.tar.bz2 || return 1
+    tar xvjf OpenRA-release-20230225-source.tar.bz2 -C /home/pi/RetroPie-Setup/tmp/build/openra/openra 	 || return 1
 }
 
 function build_openra() {
     echo 'export DOTNET_ROOT=$HOME/.dotnet' >> ~/.bashrc
     echo 'export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools' >> ~/.bashrc
     source ~/.bashrc
-    cd openra
-    make RUNTIME=mono
+    cd openra || return 1
+    make RUNTIME=mono || return 1
     md_ret_require="$md_build/openra"
 }
 

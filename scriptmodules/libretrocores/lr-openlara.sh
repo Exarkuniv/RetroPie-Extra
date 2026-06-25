@@ -24,7 +24,7 @@ function sources_lr-openlara() {
 
 function build_lr-openlara() {
     make clean
-    make -C src/platform/libretro
+    make -C src/platform/libretro || return 1
     md_ret_require="$md_build/src/platform/libretro/openlara_libretro.so"
 }
 

@@ -29,7 +29,7 @@ function sources_lr-reminiscence() {
 
 function build_lr-reminiscence() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/reminiscence_libretro.so"
 }
 

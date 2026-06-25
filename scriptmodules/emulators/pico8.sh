@@ -23,7 +23,7 @@ function depends_pico8() {
 function sources_pico8() {
     if [ -f "$home/pico8.zip" ]
     then
-        unzip "$home/pico8.zip" -d "$md_build"
+        unzip "$home/pico8.zip" -d "$md_build" || return 1
     else
         error="You must purchase pico8 and place the received zip file at $home/pico8.zip before installing."
     fi

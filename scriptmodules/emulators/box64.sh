@@ -37,17 +37,17 @@ function sources_box64() {
 }
 
 function build_box64() {
-    cd "$md_build"
+    cd "$md_build" || return 1
     mkdir -p build
-    cd build
-    cmake .. -D RPI5ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
-    make -j$(nproc)
+    cd build || return 1
+    cmake .. -D RPI5ARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo || return 1
+    make -j$(nproc) || return 1
     md_ret_require="$md_build/build/box64"
 }
 
 function install_box64() {
-    cd "$md_build/build"
-    make install
+    cd "$md_build/build" || return 1
+    make install || return 1
     systemctl restart systemd-binfmt
     dpkg --add-architecture amd64
     apt update
@@ -65,8 +65,8 @@ function configure_box64() {
 }
 
 function remove_box64() {
-    cd "$md_build/build"
-    make uninstall
+    cd "$md_build/build" || return 1
+    make uninstall || return 1
     rm -rf "$home/.config/box64"
     # Remove from PATH
     sed -i '/\/usr\/local\/bin/d' "$home/.bashrc"

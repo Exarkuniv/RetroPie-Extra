@@ -29,9 +29,9 @@ function sources_lr-gearboy() {
 }
 
 function build_lr-gearboy() {
-    cd "platforms/libretro"
+    cd "platforms/libretro" || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/platforms/libretro/gearboy_libretro.so"
 }
 

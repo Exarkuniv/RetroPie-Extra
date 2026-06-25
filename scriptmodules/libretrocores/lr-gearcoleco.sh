@@ -28,9 +28,9 @@ function sources_lr-gearcoleco() {
 }
 
 function build_lr-gearcoleco() {
-    cd "platforms/libretro"
+    cd "platforms/libretro" || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/platforms/libretro/gearcoleco_libretro.so"
 }
 

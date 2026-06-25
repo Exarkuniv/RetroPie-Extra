@@ -28,8 +28,8 @@ function sources_quakespasm() {
 }
 
 function build_quakespasm() {
-  	cd Quake
-	  make USE_SDL2=1 DO_USERDIRS=1
+  	cd Quake || return 1
+	  make USE_SDL2=1 DO_USERDIRS=1 || return 1
     md_ret_require=(
       )
 }

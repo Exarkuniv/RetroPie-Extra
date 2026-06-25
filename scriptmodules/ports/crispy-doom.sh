@@ -29,7 +29,7 @@ function sources_crispy-doom() {
 function build_crispy-doom() {
     ./autogen.sh
     ./configure --prefix="$md_inst"
-    make
+    make || return 1
     md_ret_require="$md_build/src/crispy-doom"
 }
 
@@ -46,13 +46,13 @@ function game_data_doom() {
     mkRomDir "ports"
     mkRomDir "ports/doom"
     if [[ ! -f "$romdir/ports/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/ports/doom/doom1.wad"
+        wget "$__archive_url/doom1.wad" -O "$romdir/ports/doom/doom1.wad" || return 1
     fi
 
     if [[ ! -f "$romdir/ports/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/ports/doom"
+        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip" || return 1
+        unzip freedoom-0.12.1.zip || return 1
+        mv freedoom-0.12.1/*.wad "$romdir/ports/doom" || return 1
         rm -rf freedoom-0.12.1
         rm freedoom-0.12.1.zip
     fi

@@ -26,7 +26,7 @@ function sources_hexen2() {
 }
 
 function build_hexen2() {
-    cd "$md_build/engine/hexen2"
+    cd "$md_build/engine/hexen2" || return 1
     ./build_all.sh
     md_ret_require="$md_build/engine/hexen2/hexen2"
 }

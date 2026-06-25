@@ -26,7 +26,7 @@ function sources_meritous() {
 }
 
 function build_meritous() {
-    make
+    make || return 1
     md_ret_require="$md_build/meritous"
 }
 

@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/gparted.sh"
 
     addPort "$md_id" "gparted" "Gparted partition editing application" "XINIT: $md_inst/gparted.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

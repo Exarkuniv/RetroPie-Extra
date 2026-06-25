@@ -37,54 +37,54 @@ function install_pydance() {
 function configure_pydance() {
     local script="$md_inst/$md_id.sh"
     moveConfigDir "$home/.pydance" "$md_conf_root/$md_id"
-    mkdir "$md_conf_root/$md_id/cdtitles"
-    mkdir "$md_conf_root/$md_id/songs"
-    mkdir "$md_conf_root/$md_id/themes"
-    mkdir "$md_conf_root/$md_id/themes/dj"
-    cd "$md_conf_root/$md_id/themes/dj"
+    mkdir -p "$md_conf_root/$md_id/cdtitles"
+    mkdir -p "$md_conf_root/$md_id/songs"
+    mkdir -p "$md_conf_root/$md_id/themes"
+    mkdir -p "$md_conf_root/$md_id/themes/dj"
+    cd "$md_conf_root/$md_id/themes/dj" || return 1
     if [ ! -f "$md_conf_root/$md_id/themes/dj/mrt/its_good.ogg" ]; then
-        wget https://icculus.org/pyddr/mrt.tar.gz
-        tar zxvf ./mrt.tar.gz
+        wget https://icculus.org/pyddr/mrt.tar.gz || return 1
+        tar zxvf ./mrt.tar.gz || return 1
         rm ./mrt.tar.gz
     fi
-    cd "$md_conf_root/$md_id/songs"
+    cd "$md_conf_root/$md_id/songs" || return 1
     if [ ! -f "$md_conf_root/$md_id/songs/forkbomb.ogg" ]; then
-        wget https://icculus.org/pyddr/forkbomb.ogg
+        wget https://icculus.org/pyddr/forkbomb.ogg || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/forkbomb.dance" ]; then
-        wget https://icculus.org/pyddr/forkbomb.dance
+        wget https://icculus.org/pyddr/forkbomb.dance || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/forkbomb-bg.jpg" ]; then
-        wget https://icculus.org/pyddr/forkbomb-bg.jpg
+        wget https://icculus.org/pyddr/forkbomb-bg.jpg || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/forkbomb-banner.png" ]; then
-        wget https://icculus.org/pyddr/forkbomb-banner.png
+        wget https://icculus.org/pyddr/forkbomb-banner.png || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/6jan.ogg" ]; then
-        wget https://icculus.org/pyddr/6jan.ogg
+        wget https://icculus.org/pyddr/6jan.ogg || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/6jan.dance" ]; then
-        wget https://icculus.org/pyddr/6jan.dance
+        wget https://icculus.org/pyddr/6jan.dance || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/6jan-bg.jpg" ]; then
-        wget https://icculus.org/pyddr/6jan-bg.jpg
+        wget https://icculus.org/pyddr/6jan-bg.jpg || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/6jan-banner.png" ]; then
-        wget https://icculus.org/pyddr/6jan-banner.png
+        wget https://icculus.org/pyddr/6jan-banner.png || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/synrg.ogg" ]; then
-        wget https://icculus.org/pyddr/synrg.ogg
+        wget https://icculus.org/pyddr/synrg.ogg || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/synrg.dance" ]; then
-        wget https://icculus.org/pyddr/synrg.dance
+        wget https://icculus.org/pyddr/synrg.dance || return 1
     fi
     if [ ! -f "$md_conf_root/$md_id/songs/synrg-bg.png" ]; then
-        wget https://icculus.org/pyddr/synrg-bg.png
+        wget https://icculus.org/pyddr/synrg-bg.png || return 1
     fi
-    cd "$md_conf_root/$md_id/cdtitles"
+    cd "$md_conf_root/$md_id/cdtitles" || return 1
     if [ ! -f "$md_conf_root/$md_id/cdtitles/pydance.png" ]; then
-        wget https://icculus.org/pyddr/pydance-cdtitle.png
-        mv pydance-cdtitle.png pydance.png
+        wget https://icculus.org/pyddr/pydance-cdtitle.png || return 1
+        mv pydance-cdtitle.png pydance.png || return 1
     fi
     chown -R $user:$user /opt/retropie/ports/pydance
 	#create buffer script for launch

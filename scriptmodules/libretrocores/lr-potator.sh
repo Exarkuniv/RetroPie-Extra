@@ -23,9 +23,9 @@ function sources_lr-potator() {
 }
 
 function build_lr-potator() {
-    cd "platform/libretro"
+    cd "platform/libretro" || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/platform/libretro/potator_libretro.so"
 }
 

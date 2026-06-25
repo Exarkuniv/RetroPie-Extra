@@ -27,10 +27,10 @@ function sources_nxengine-evo() {
 }
 
 function build_nxengine-evo() {
-    mkdir build
-    cd build
+    mkdir -p build
+    cd build || return 1
     CFLAGS='-DDATADIR="\"'"$romdir"'/ports/CaveStory/'"$md_id"'/data/\""' CXXFLAGS='-DDATADIR="\"'"$romdir"'/ports/CaveStory/'"$md_id"'/data/\""' cmake -DCMAKE_BUILD_TYPE=Release -DPORTABLE=On ..
-    make
+    make || return 1
     md_ret_require=(
         "$md_build/build/nxengine-evo"
         "$md_build/build/nxextract"
@@ -48,7 +48,7 @@ function install_nxengine-evo() {
 function gamedata_nxengine-evo() {
     if [[ ! -f "$romdir/ports/CaveStory/$md_id/Doukutsu.exe" ]]; then
         downloadAndExtract "https://cavestory.org/downloads/cavestoryen.zip" "$romdir/ports/CaveStory/$md_id"
-        mv "$romdir/ports/CaveStory/$md_id/CaveStory/"* "$romdir/ports/CaveStory/$md_id"
+        mv "$romdir/ports/CaveStory/$md_id/CaveStory/"* "$romdir/ports/CaveStory/$md_id" || return 1
         rmdir "$romdir/ports/CaveStory/$md_id/CaveStory"
     fi
     [[ ! -d "$romdir/ports/CaveStory/$md_id/data/lang" ]] && downloadAndExtract "https://github.com/nxengine/translations/releases/download/v1.14/all.zip" "$romdir/ports/CaveStory/$md_id"

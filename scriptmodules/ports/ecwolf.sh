@@ -27,10 +27,10 @@ function sources_ecwolf() {
 }
 
 function build_ecwolf() {
-    mkdir build
-    cd build
-    cmake -DCMAKE_BUILD_TYPE=Release -DGPL=ON ..
-    make
+    mkdir -p build
+    cd build || return 1
+    cmake -DCMAKE_BUILD_TYPE=Release -DGPL=ON .. || return 1
+    make || return 1
     md_ret_require="$md_build/build/ecwolf"
 }
 

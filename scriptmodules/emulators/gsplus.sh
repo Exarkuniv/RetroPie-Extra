@@ -35,14 +35,14 @@ function depends_gsplus() {
 
 function sources_gsplus() {
     local revision="$1"
-    git clone "$md_repo_url" "$md_build"
+    git clone "$md_repo_url" "$md_build" || return 1
 }
 
 function build_gsplus() {
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX=/opt/retropie/emulators/$rp_module_id
-    make -j 3
+    mkdir -p build
+    cd build || return 1
+    cmake .. -DCMAKE_INSTALL_PREFIX=/opt/retropie/emulators/$rp_module_id || return 1
+    make -j 3 || return 1
 
     md_ret_require="$md_build/build/bin/GSplus"
 }

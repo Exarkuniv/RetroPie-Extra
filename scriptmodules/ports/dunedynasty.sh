@@ -31,9 +31,9 @@ function sources_dunedynasty() {
 }
 
 function build_dunedynasty() {
-    cmake -DCMAKE_BUILD_TYPE=Release .
-    make
-    mkdir dist/libs
+    cmake -DCMAKE_BUILD_TYPE=Release . || return 1
+    make || return 1
+    mkdir -p dist/libs
     (ldd ./dist/dunedynasty | grep -E 'libfluidsynth' |awk '{if(substr($3,0,1)=="/") print $1,$3}' |sort) |cut -d\  -f2 |
     xargs -d '\n' -I{} cp --copy-contents {} ./dist/libs
     ls -1 ./dist/libs/ | while read file

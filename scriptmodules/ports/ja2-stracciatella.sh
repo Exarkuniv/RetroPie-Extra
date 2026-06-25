@@ -39,8 +39,8 @@ function sources_ja2-stracciatella() {
 
 function build_ja2-stracciatella() {
     rpSwap on 3072
-    cmake . -DCMAKE_INSTALL_PREFIX="$md_inst"
-    make
+    cmake . -DCMAKE_INSTALL_PREFIX="$md_inst" || return 1
+    make || return 1
     rpSwap off
     md_ret_require="$md_build/ja2"
     strip "$md_build/ja2"

@@ -29,9 +29,9 @@ function build_ikemen-go() {
     sed -i 's#120#330#' "$md_build/src/render_gl.go"
     sed -i 's#150#330#' "$md_build/src/render_gl_gl32.go"
 
-    make Ikemen_GO_LinuxARM
+    make Ikemen_GO_LinuxARM || return 1
     #grabs default screenpack and content required for the game to run; note that the screenpack has a CC-BY-NC 3.0 license
-    git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git elecbyte
+    git clone https://github.com/ikemen-engine/Ikemen_GO-Elecbyte-Screenpack.git elecbyte || return 1
     md_ret_require="$md_build/bin/Ikemen_GO_LinuxARM"
 }
 

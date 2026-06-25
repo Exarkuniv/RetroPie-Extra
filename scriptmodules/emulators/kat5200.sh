@@ -37,20 +37,20 @@ function build_kat5200() {
     ./configure --prefix="$md_inst"
     make clean
     # Author forgot to include the kat5200.html documentation in the latest version so we'll fake it.
-    mkdir doc/kat5200.html/
+    mkdir -p doc/kat5200.html/
     touch doc/kat5200.html/deleteme.html
-    make
+    make || return 1
     md_ret_require="$md_build/src/kat5200"
 }
 
 function install_kat5200() {
-    make install
+    make install || return 1
 }
 
 function configure_kat5200() {
     mkRomDir "atari5200"
     mkUserDir "$home/.kat5200"
-    mv "/etc/kat5200/kat5200.db3" "$home/.kat5200/"
+    mv "/etc/kat5200/kat5200.db3" "$home/.kat5200/" || return 1
     chown $__user:$__group -R "$home/.kat5200/kat5200.db3"
     moveConfigDir "$home/.kat5200" "$md_conf_root/kat5200"
 

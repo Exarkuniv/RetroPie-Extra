@@ -26,11 +26,11 @@ function sources_prboom-plus() {
 }
 
 function build_prboom-plus() {
-    cd prboom2
+    cd prboom2 || return 1
 #    ./bootstrap
 #    ./configure
-    cmake .
-    make
+    cmake . || return 1
+    make || return 1
     md_ret_require="$md_build/prboom2/prboom-plus"
 
 }
@@ -45,7 +45,7 @@ function install_prboom-plus() {
 function game_data_prboom-plus() {
     if [[ ! -f "$romdir/ports/doom/doom1.wad" ]]; then
         # download doom 1 shareware
-        wget -nv -O "$romdir/ports/doom/doom1.wad" "$__archive_url/doom1.wad"
+        wget -nv -O "$romdir/ports/doom/doom1.wad" "$__archive_url/doom1.wad" || return 1
         chown $user:$user "$romdir/ports/doom/doom1.wad"
     fi
 }

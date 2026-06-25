@@ -36,11 +36,11 @@ function sources_openjk_jo() {
 }
 
 function build_openjk_jo() {
-    mkdir "$md_build/build"
-    cd "$md_build/build"
-    cmake -DBuildJK2SPEngine=ON -DBuildJK2SPGame=ON -DBuildJK2SPRdVanilla=ON -DCMAKE_BUILD_TYPE=Release ..
+    mkdir -p "$md_build/build"
+    cd "$md_build/build" || return 1
+    cmake -DBuildJK2SPEngine=ON -DBuildJK2SPGame=ON -DBuildJK2SPRdVanilla=ON -DCMAKE_BUILD_TYPE=Release .. || return 1
     make clean
-    make
+    make || return 1
 
     md_ret_require="$md_build/build/openjk_sp.$(_arch_openjk_jo)"
 }

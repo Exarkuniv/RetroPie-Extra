@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/thunderbird.sh"
 
     addPort "$md_id" "thunderbird" "Mozilla - Thunderbird - Email Client" "XINIT: $md_inst/thunderbird.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

@@ -21,14 +21,14 @@ function depends_cytadela() {
 }
 
 function sources_cytadela() {
-	wget https://sourceforge.net/projects/cytadela/files/cytadela/1.1.0/cytadela-1.1.0.tar.bz2
-	tar -xf cytadela-1.1.0.tar.bz2
+	wget https://sourceforge.net/projects/cytadela/files/cytadela/1.1.0/cytadela-1.1.0.tar.bz2 || return 1
+	tar -xf cytadela-1.1.0.tar.bz2 || return 1
 }
 function build_cytadela() {
-	cd cytadela-1.1.0
+	cd cytadela-1.1.0 || return 1
 	./configure
- 	make
-	make install 
+ 	make || return 1
+	make install  || return 1
 
 	md_ret_require=(
 	)

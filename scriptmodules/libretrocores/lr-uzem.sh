@@ -23,8 +23,8 @@ function sources_lr-uzem() {
 }
 
 function build_lr-uzem() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
+    make -f Makefile.libretro clean || return 1
+    make -f Makefile.libretro || return 1
     md_ret_require="$md_build/uzem_libretro.so"
 }
 

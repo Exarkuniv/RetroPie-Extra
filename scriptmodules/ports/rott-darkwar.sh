@@ -35,8 +35,8 @@ function sources_rott-darkwar() {
 }
 
 function build_rott-darkwar() {
-    cd src
-    make rott
+    cd src || return 1
+    make rott || return 1
     md_ret_require=(
        "$md_build/src/rott"
     )

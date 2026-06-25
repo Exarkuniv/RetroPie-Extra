@@ -30,11 +30,11 @@ function sources_freeciv() {
 function build_freeciv() {
     params=(--prefix="$md_inst" --enable-sdl-mixer=sdl --disable-fcmp --disable-gtktest --enable-client=sdl)
     ./configure "${params[@]}"
-    make
+    make || return 1
 }
 
 function install_freeciv() {
-    make install
+    make install || return 1
 }
 
 function configure_freeciv() {

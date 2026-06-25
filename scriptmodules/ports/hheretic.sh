@@ -27,7 +27,7 @@ function sources_hheretic() {
 
 function build_hheretic() {
     ./configure --enable-fullscreen --with-audio=sdlmixer --with-datapath=$romdir/ports/heretic
-    make
+    make || return 1
 
     md_ret_require=(hheretic-gl)
 }
@@ -41,8 +41,8 @@ function game_data_heretic() {
     chown -R $user:$user "$romdir/ports/heretic"
     fi
         [[ ! -d "$romdir/ports/heretic/music" ]] && downloadAndExtract "http://sycraft.org/content/audio/heretic/hereticsoundtrackhq.zip" "$romdir/ports/heretic/files" 
-    unzip $romdir/ports/heretic/files/musichq.zip -d $romdir/ports/heretic/files
-    mv "$romdir/ports/heretic/files/Data/jHeretic/Music"* "$romdir/ports/heretic/music"
+    unzip $romdir/ports/heretic/files/musichq.zip -d $romdir/ports/heretic/files || return 1
+    mv "$romdir/ports/heretic/files/Data/jHeretic/Music"* "$romdir/ports/heretic/music" || return 1
     rm -r "$romdir/ports/heretic/files"
     chown -R $user:$user "$romdir/ports/heretic/music"
 

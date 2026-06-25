@@ -37,7 +37,7 @@ function install_openclaw() {
 		'SAVES.XML'
 		'ClawLauncher.exe.config'
     )
-    mkdir $home/.config/openclaw
+    mkdir -p $home/.config/openclaw
     cp -v "config.xml" "$home/.config/openclaw/config.xml"
 }
 

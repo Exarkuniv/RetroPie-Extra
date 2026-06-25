@@ -26,7 +26,7 @@ function sources_sdl-bomber() {
 }
 
 function build_sdl-bomber() {
-  make
+  make || return 1
   md_ret_require="$md_build"
 }
 

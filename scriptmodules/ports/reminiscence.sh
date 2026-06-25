@@ -23,11 +23,13 @@ function depends_reminiscence() {
 }
 
 function sources_reminiscence() {
-    wget -O- -q http://cyxdown.free.fr/reminiscence/REminiscence-0.2.1.tar.bz2 | tar -xvj --strip-components=1
+    wget -q http://cyxdown.free.fr/reminiscence/REminiscence-0.2.1.tar.bz2 || return 1
+    tar -xvjf REminiscence-0.2.1.tar.bz2 --strip-components=1 || return 1
+    rm -f REminiscence-0.2.1.tar.bz2
 }
 
 function build_reminiscence() {
-    make
+    make || return 1
 }
 
 function install_reminiscence() {

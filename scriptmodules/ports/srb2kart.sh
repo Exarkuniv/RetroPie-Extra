@@ -31,10 +31,10 @@ function sources_srb2kart() {
 }
 
 function build_srb2kart() {
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$md_inst"
-    make
+    mkdir -p build
+    cd build || return 1
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$md_inst" || return 1
+    make || return 1
     md_ret_require="$md_build/build/bin/srb2kart"
 }
 

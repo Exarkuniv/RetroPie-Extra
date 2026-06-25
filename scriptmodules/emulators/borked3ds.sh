@@ -84,22 +84,22 @@ function sources_borked3ds() {
 		else
 			downloadAndExtract https://cmake.org/files/v4.0/cmake-4.0.2-linux-x86_64.tar.gz "$md_build"
 		fi
-		mv cmake-4.0.2* cmake-4.0.2
+		mv cmake-4.0.2* cmake-4.0.2 || return 1
 	fi
 }
  
 function build_borked3ds() {
 	local extra_build_options
  	isPlatform "aarch64" && extra_build_options="-DDYNARMIC_USE_BUNDLED_EXTERNALS=OFF"
-	mkdir build
-	cd build
+	mkdir -p build
+	cd build || return 1
 	#Borked3DS requires a cmake 3.5 as minimum, we will use the 4.0.2 binary when using Bookworm or lower
 	if compareVersions $__gcc_version lt 14; then
 		$md_build/cmake-4.0.2/bin/cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options
 		$md_build/cmake-4.0.2/bin/cmake --build . -- -j"$(nproc)"
 	else
-		cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options
-		cmake --build . -- -j"$(nproc)"
+		cmake .. -DCMAKE_BUILD_TYPE=Release $extra_build_options || return 1
+		cmake --build . -- -j"$(nproc)" || return 1
 	fi
 	md_ret_require="$md_build/build/bin"
 }

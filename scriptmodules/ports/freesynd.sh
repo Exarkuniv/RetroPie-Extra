@@ -29,7 +29,7 @@ function sources_freesynd() {
 function build_freesynd() {
     cmake
     ./configure --release
-    make
+    make || return 1
      md_ret_require="$md_build/src/freesynd"
 }
 

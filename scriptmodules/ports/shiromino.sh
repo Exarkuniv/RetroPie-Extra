@@ -27,7 +27,7 @@ function sources_shiromino() {
 }
 
 function build_shiromino() {
-    make
+    make || return 1
     md_ret_require="$md_build/bin/game"
 }
 
@@ -45,5 +45,5 @@ function configure_shiromino() {
     addPort "$md_id" "shiromino" "shiromino - Tetris The Grand Master Clone" "pushd $md_inst; ./shiromino; popd"
     moveConfigFile "$md_inst/scores.db" "$md_conf_root/shiromino/scores.db"
     moveConfigFile "$md_inst/game.cfg" "$md_conf_root/shiromino/game.cfg"
-    mv "$md_inst/game" "$md_inst/shiromino"
+    mv "$md_inst/game" "$md_inst/shiromino" || return 1
 }

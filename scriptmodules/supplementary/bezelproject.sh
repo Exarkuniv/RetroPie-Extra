@@ -17,7 +17,7 @@ rp_module_section="exp"
 rp_module_flags="!mali !x86"
 
 function sources_bezelproject() {
-    wget https://raw.githubusercontent.com/thebezelproject/BezelProject/master/bezelproject.sh
+    wget https://raw.githubusercontent.com/thebezelproject/BezelProject/master/bezelproject.sh || return 1
 }
 
 function install_bezelproject() {

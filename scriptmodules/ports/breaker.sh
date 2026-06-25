@@ -27,9 +27,9 @@ function sources_breaker() {
 }
 
 function build_breaker() {
-  cd "$md_build/source"
+  cd "$md_build/source" || return 1
  sed -i "s/-lSDL/-lSDL -lm/" "$md_build/source/Makefile"
-  make
+  make || return 1
   md_ret_require="$md_build/source/breaker"
 }
 

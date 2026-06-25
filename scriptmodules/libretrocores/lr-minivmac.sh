@@ -24,7 +24,7 @@ function sources_lr-minivmac() {
 
 function build_lr-minivmac() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/minivmac_libretro.so"
 }
 

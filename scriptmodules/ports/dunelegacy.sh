@@ -45,18 +45,18 @@ sed '0,/SDL_RenderPresent(renderer);/s//\/\/SDL_RenderPresent(renderer);/' $md_b
 
     autoreconf --install
     ./configure "${params[@]}"
-    make -j4
+    make -j4 || return 1
 	md_ret_require="$md_build/src/dunelegacy"
 }
 
 function install_dunelegacy() {
-    make install
+    make install || return 1
 }
 
 function game_data_dunelegacy() {
     if [[ ! -f "$romdir/ports/dune2/data/DUNE2.EXE" ]]; then
         downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/dune-II.zip" "$romdir/ports/dune2"
-    mv "$romdir/ports/dune2/dune-ii-the-building-of-a-dynasty/"* "$romdir/ports/dune2/data"
+    mv "$romdir/ports/dune2/dune-ii-the-building-of-a-dynasty/"* "$romdir/ports/dune2/data" || return 1
     rmdir "$romdir/ports/dune2/dune-ii-the-building-of-a-dynasty/"
     chown $__user:$__group -R "$romdir/ports/dune2"
     fi
