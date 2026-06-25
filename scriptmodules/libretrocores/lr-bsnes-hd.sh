@@ -15,7 +15,7 @@ rp_module_help="ROM Extensions: .bml .smc .sfc .zip\n\nCopy your SNES roms to $r
 rp_module_licence="GPL3 https://raw.githubusercontent.com/DerKoun/bsnes-hd/master/LICENSE"
 rp_module_repo="git https://github.com/DerKoun/bsnes-hd master"
 rp_module_section="exp"
-rp_module_flags="!mali !x86"
+rp_module_flags="!mali"
 
 function depends_lr-bsnes-hd() {
     getDepends build-essential libgtk2.0-dev libpulse-dev mesa-common-dev libcairo2-dev libsdl2-dev libxv-dev libao-dev libopenal-dev libasound2-dev libudev-dev
