@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-oberon"
 rp_module_desc="Oberon RISC emulator for libretro"
 rp_module_help="ROM Extensions: .dsk\n\nOberon RISC disk images are copied to $romdir/ports/oberon"
@@ -27,9 +29,7 @@ function sources_lr-oberon() {
 }
 
 function build_lr-oberon() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/oberon_libretro.so"
+    _build_libretro_core "oberon"
 }
 
 function install_lr-oberon() {

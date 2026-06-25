@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="prboom-plus-system"
 rp_module_desc="Doom/Doom II engine - Enhanced PRBoom Port"
 rp_module_licence="https://github.com/coelckers/prboom-plus"
@@ -41,18 +43,7 @@ function install_prboom-plus-system() {
 }
 
 function game_data_prboom-plus() {
-    mkRomDir "doom"
-    if [[ ! -f "$romdir/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad"
-    fi
-
-    if [[ ! -f "$romdir/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/doom"
-        rm -rf freedoom-0.12.1
-        rm freedoom-0.12.1.zip
-    fi
+    _download_doom_system_wads
 }
 function configure_prboom-plus-system() {
     mkUserDir "$home/.config"

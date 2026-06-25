@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-bk"
 rp_module_desc="Elektronika БК-0010/0011/Terak 8510a emulator - BK port for libretro"
 rp_module_help="ROM Extension: .bin .zip .7z\n\nCopy your roms to $romdir/bk\n\nCopy the following BIOS files to $biosdir/bk:\nMONIT10.ROM (BK-0010/0010.01);\nFOCAL10.ROM (BK-0010);\nBASIC10.ROM (BK-0010.01);\nDISK_327.ROM (BK-0010.01/0011M + FDD);\nB11M_BOS.ROM, BAS11M_0.ROM, BAS11M_1.ROM and B11M_EXT.ROM (BK-0011M + FDD);\nTERAK.ROM (Terak 8510/a)."
@@ -23,9 +25,7 @@ function sources_lr-bk() {
 }
 
 function build_lr-bk() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/bk_libretro.so"
+    _build_libretro_core "bk"
 }
 
 function install_lr-bk() {

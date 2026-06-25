@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-potator"
 rp_module_desc="Watara Supervision emulator based on Normmatt version - Potator port for libretro"
 rp_module_help="ROM Extensions: .sv .zip .7z\n\nCopy your Watara Supervision roms to $romdir/svision"
@@ -37,9 +39,5 @@ function install_lr-potator() {
 }
 
 function configure_lr-potator() {
-        mkRomDir "potator"
-        ensureSystemretroconfig "potator"
-
-        addEmulator 1 "$md_id" "potator" "$md_inst/potator_libretro.so"
-        addSystem "potator" "Watara Supervision" ".sv .SV"
+    _configure_libretro_system "potator" "potator_libretro.so" 1 "Watara Supervision" ".sv .SV"
 }

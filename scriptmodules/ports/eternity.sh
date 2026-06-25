@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="eternity"
 rp_module_desc="Eternity Doom - Enhanced port of the official DOOM source"
 rp_module_licence="GPL3 https://github.com/team-eternity/eternity/blob/master/COPYING"
@@ -43,80 +45,15 @@ function install_eternity() {
 }
 
 function game_data_eternity() {
-    mkRomDir "ports"
-    mkRomDir "ports/doom"
-    if [[ ! -f "$romdir/ports/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/ports/doom/doom1.wad"
-    fi
-
-    if [[ ! -f "$romdir/ports/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/ports/doom"
-        rm -rf freedoom-0.12.1
-        rm freedoom-0.12.1.zip
-    fi
+    _download_doom_port_wads
 }
 
 function configure_eternity() {
     mkUserDir "$home/.config"
     moveConfigDir "$home/.config/eternity" "$md_conf_root/eternity"
 
-    # Temporary until the official RetroPie WAD selector is complete.
-    if [[ -f "$romdir/ports/doom/doom1.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/doom1.wad"
-       addPort "$md_id" "eternity-doom1" "Eternity Doom Shareware" "$md_inst/eternity -iwad $romdir/ports/doom/doom1.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/doom.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/doom.wad"
-       addPort "$md_id" "eternity-doom" "Eternity Doom Registered" "$md_inst/eternity -iwad $romdir/ports/doom/doom.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/freedoom1.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/freedoom1.wad"
-       addPort "$md_id" "eternity-freedoom1" "Eternity Free Doom: Phase 1" "$md_inst/eternity -iwad $romdir/ports/doom/freedoom1.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/freedoom2.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/freedoom2.wad"
-       addPort "$md_id" "eternity-freedoom2" "Eternity Free Doom: Phase 2" "$md_inst/eternity -iwad $romdir/ports/doom/freedoom2.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/doom2.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/doom2.wad"
-       addPort "$md_id" "eternity-doom2" "Eternity Doom II: Hell on Earth" "$md_inst/eternity -iwad $romdir/ports/doom/doom2.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/doomu.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/doomu.wad"
-       addPort "$md_id" "eternity-doomu" "Eternity Ultimate Doom" "$md_inst/eternity -iwad $romdir/ports/doom/doomu.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/tnt.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/tnt.wad"
-       addPort "$md_id" "eternity-doomtnt" "Eternity Final Doom - TNT: Evilution" "$md_inst/eternity -iwad $romdir/ports/doom/tnt.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/plutonia.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/plutonia.wad"
-       addPort "$md_id" "eternity-doomplutonia" "Eternity Final Doom - The Plutonia Experiment" "$md_inst/eternity -iwad $romdir/ports/doom/plutonia.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/heretic1.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/heretic1.wad"
-       addPort "$md_id" "eternity-heretic1" "Eternity Heretic Shareware" "$md_inst/eternity -iwad $romdir/ports/doom/heretic1.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/heretic.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/heretic.wad"
-       addPort "$md_id" "eternity-heretic" "Eternity Heretic Registered" "$md_inst/eternity -iwad $romdir/ports/doom/heretic.wad"
-    fi
-
-    if [[ -f "$romdir/ports/doom/strife1.wad" ]]; then
-       chown $user:$user "$romdir/ports/doom/strife1.wad"
-       addPort "$md_id" "eternity-strife1" "Eternity Strife" "$md_inst/eternity -iwad $romdir/ports/doom/strife1.wad"
-    fi
+    _add_doom_wad_ports "eternity" "Eternity" "$md_inst/eternity"
+    _add_heretic_hexen_strife_ports "eternity" "Eternity" "$md_inst/eternity" "" "$md_inst/eternity"
 
     [[ "$md_mode" == "install" ]] && game_data_eternity
     [[ "$md_mode" == "remove" ]] && return

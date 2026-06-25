@@ -10,6 +10,8 @@
 #
 # [lr-genesis-plus-gx-EX for Sega Channel Revival] https://github.com/BillyTimeGames/Genesis-Plus-GX-Expanded-Rom-Size.git +P4PR1UM Compatibility (202507)
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-genesis-plus-gx-EX"
 rp_module_desc="Fork of lr-genesis-plus-gx + Expanded Rom Size Support"
 rp_module_help="ROM Extensions: .bin .cue .gen .gg .iso .md .sg .smd .sms .zip\nCopy your Game Gear roms to $romdir/gamegear\nMasterSystem roms to $romdir/mastersystem\nMegadrive / Genesis roms to $romdir/megadrive\nSG-1000 roms to $romdir/sg-1000\nSegaCD roms to $romdir/segacd\nThe Sega CD requires the BIOS files bios_CD_U.bin and bios_CD_E.bin and bios_CD_J.bin copied to $biosdir"
@@ -22,9 +24,7 @@ function sources_lr-genesis-plus-gx-EX() {
 }
 
 function build_lr-genesis-plus-gx-EX() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/genesis_plus_gx_libretro.so"
+    _build_libretro_core "genesis_plus_gx"
 }
 
 function install_lr-genesis-plus-gx-EX() {
