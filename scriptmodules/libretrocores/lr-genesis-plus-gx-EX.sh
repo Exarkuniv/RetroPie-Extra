@@ -39,7 +39,7 @@ function install_lr-genesis-plus-gx-EX() {
 function configure_lr-genesis-plus-gx-EX() {
     local system
     local def
-   for system in megadrive genesis genesish genesis-proto genesis-unl megacd-japan megadrive-japan megadrive-japan-t segacd gamegear gamegearh gamegear-japan gamegear-proto gamegear-unl markiii markiii-t mastersystemh mastersystem-proto mastersystem-unl mastersystem sg-1000 multivision; do
+    for system in megadrive genesis genesish genesis-proto genesis-unl megacd-japan megadrive-japan megadrive-japan-t segacd gamegear gamegearh gamegear-japan gamegear-proto gamegear-unl markiii markiii-t mastersystemh mastersystem-proto mastersystem-unl mastersystem sg-1000 multivision; do
         def=0
         [[ "$system" == "gamegear" || "$system" == "sg-1000" ]] && def=1
         # always default emulator for non armv6
