@@ -30,13 +30,13 @@ function sources_dhewm3() {
 }
 
 function build_dhewm3() {
-    mkdir "$md_build/build"
+    mkdir -p "$md_build/build"
 
-    cd "$md_build/build"
+    cd "$md_build/build" || return 1
 
-    cmake "../neo"
+    cmake "../neo" || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/build"
 }
 
@@ -52,7 +52,7 @@ function install_dhewm3() {
 function game_data_dhewm3() {
     if [[ ! -f "$romdir/ports/doom3/base/pak000.pk4" ]]; then
         downloadAndExtract "https://github.com/techcoder20/RPIDoom3Installer/releases/download/v1.0.0/Doom3DemoGameFiles.zip" "$romdir/ports/doom3/base"
-    mv "$romdir/ports/doom3/base/Doom3Demo/demo/"* "$romdir/ports/doom3/base"
+    mv "$romdir/ports/doom3/base/Doom3Demo/demo/"* "$romdir/ports/doom3/base" || return 1
     rm -r "$romdir/ports/doom3/base/Doom3Demo"
         chown -R pi:pi "$romdir/ports/doom3"
     fi

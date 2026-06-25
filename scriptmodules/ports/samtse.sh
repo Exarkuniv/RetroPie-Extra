@@ -34,14 +34,14 @@ function sources_samtse() {
 
 function build_samtse() {
     local params=()
-    mkdir "$md_build/build"
-    cd "$md_build/build"
+    mkdir -p "$md_build/build"
+    cd "$md_build/build" || return 1
 
     isPlatform "rpi4" && params+=(-DRPI4=TRUE)
     isPlatform "32bit" && params+=(-DUSE_I386_NASM_ASM=FALSE)
 
-    cmake "${params[@]}" ..
-    make -j4
+    cmake "${params[@]}" .. || return 1
+    make -j4 || return 1
 
     if [[ "$md_id" == "samtfe" ]]; then
     md_ret_require="$md_build/build/SamTFE/Sources/SeriousSam"

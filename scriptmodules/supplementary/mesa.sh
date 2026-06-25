@@ -70,9 +70,9 @@ function build_mesa-pi4() {
 function install_mesa-pi4() {
     # 8: Install new MESA version (You'll see various warnings, these are safe and can be ignored)
     echo "Installing into $md_inst"
-    cd builddir
+    cd builddir || return 1
     ninja install
-    cd ..
+    cd .. || return 1
 
     # The following line is to configure the location of Vulkan
     echo export VK_ICD_FILENAMES="$md_inst"/share/vulkan/icd.d/broadcom_icd.armv7l.json >> /home/pi/.profile

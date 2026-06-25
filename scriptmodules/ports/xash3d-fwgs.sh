@@ -38,16 +38,16 @@ function sources_xash3d-fwgs() {
 }
 
 function build_xash3d-fwgs() {
-    cd "$md_build/$md_id"
+    cd "$md_build/$md_id" || return 1
     ./waf configure -T release 
     ./waf build
-    cd "$md_build/hlsdk"
+    cd "$md_build/hlsdk" || return 1
     ./waf configure -T release 
     ./waf build 
-    cd "$md_build/bshiftsdk"
+    cd "$md_build/bshiftsdk" || return 1
     ./waf configure -T release
     ./waf build 
-    cd "$md_build/opforsdk"
+    cd "$md_build/opforsdk" || return 1
     ./waf configure -T release 
     ./waf build 
     md_ret_require=(
@@ -74,8 +74,8 @@ function install_xash3d-fwgs() {
 
 function configure_xash3d-fwgs() {
     mkRomDir "ports/$md_id/valve"
-    mkdir "$romdir/ports/$md_id/valve/cl_dlls"
-    mkdir "$romdir/ports/$md_id/valve/dlls"
+    mkdir -p "$romdir/ports/$md_id/valve/cl_dlls"
+    mkdir -p "$romdir/ports/$md_id/valve/dlls"
     mkdir -p "$romdir/ports/$md_id/bshift/cl_dlls"
     mkdir -p "$romdir/ports/$md_id/bshift/dlls"
     mkdir -p "$romdir/ports/$md_id/gearbox/cl_dlls"

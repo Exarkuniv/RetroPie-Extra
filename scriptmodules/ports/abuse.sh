@@ -35,26 +35,26 @@ function sources_abuse() {
 
 function build_abuse() {
 if isPlatform "64bit"; then
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX="$md_inst" ..
-        make
+        mkdir -p build
+        cd build || return 1
+        cmake -DCMAKE_INSTALL_PREFIX="$md_inst" .. || return 1
+        make || return 1
 		md_ret_require=()
     else
-        cd abuse-0.8
+        cd abuse-0.8 || return 1
 	    ./configure --enable-debug   
-	    make
+	    make || return 1
 		md_ret_require=()
 	fi
 }
 
 function install_abuse() {
     if isPlatform "64bit"; then
-        cd build
-        make install
+        cd build || return 1
+        make install || return 1
     else
-        cd abuse-0.8
-	    make install
+        cd abuse-0.8 || return 1
+	    make install || return 1
 	fi
 
     md_ret_files=(

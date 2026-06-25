@@ -23,7 +23,9 @@ function depends_kodi-extra() {
             rm -f /etc/apt/sources.list.d/mene.list
             # Use the official Kodi repository
             echo "deb http://mirrors.kodi.tv/debian bookworm main" >/etc/apt/sources.list.d/kodi.list
-            wget -qO - http://mirrors.kodi.tv/debian/repo.gpg.key | apt-key add - >/dev/null
+            wget -qO /tmp/kodi-repo.gpg.key http://mirrors.kodi.tv/debian/repo.gpg.key || return 1
+            apt-key add /tmp/kodi-repo.gpg.key >/dev/null
+            rm -f /tmp/kodi-repo.gpg.key
         else
             rm -f /etc/apt/sources.list.d/kodi.list
             apt-key del 4096R/AC8F3A7D >/dev/null

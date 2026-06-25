@@ -27,10 +27,10 @@ function sources_vcmi() {
 }
 
 function build_vcmi() {
-    mkdir build
-    cd build
-    cmake .. -DENABLE_LAUNCHER=OFF -DENABLE_EDITOR=OFF -DENABLE_TEST=OFF -DM_DATA_DIR=/home/pi/RetroPie/roms/ports/vcmi   
-    cmake --build . -- -j4
+    mkdir -p build
+    cd build || return 1
+    cmake .. -DENABLE_LAUNCHER=OFF -DENABLE_EDITOR=OFF -DENABLE_TEST=OFF -DM_DATA_DIR=/home/pi/RetroPie/roms/ports/vcmi    || return 1
+    cmake --build . -- -j4 || return 1
     md_ret_require=()
 }
 

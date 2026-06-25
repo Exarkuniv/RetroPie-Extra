@@ -25,11 +25,11 @@ function sources_prboom-plus-system() {
 }
 
 function build_prboom-plus-system() {
-    cd prboom2
+    cd prboom2 || return 1
 #    ./bootstrap
 #    ./configure
-    cmake .
-    make
+    cmake . || return 1
+    make || return 1
     md_ret_require="$md_build/prboom2/prboom-plus"
 }
 
@@ -43,13 +43,13 @@ function install_prboom-plus-system() {
 function game_data_prboom-plus() {
     mkRomDir "doom"
     if [[ ! -f "$romdir/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad"
+        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad" || return 1
     fi
 
     if [[ ! -f "$romdir/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/doom"
+        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip" || return 1
+        unzip freedoom-0.12.1.zip || return 1
+        mv freedoom-0.12.1/*.wad "$romdir/doom" || return 1
         rm -rf freedoom-0.12.1
         rm freedoom-0.12.1.zip
     fi
@@ -58,7 +58,7 @@ function configure_prboom-plus-system() {
     mkUserDir "$home/.config"
     setConfigRoot ""
 
-    mv $md_inst/prboom-plus.wad "$home/.prboom-plus/prboom-plus.wad"
+    mv $md_inst/prboom-plus.wad "$home/.prboom-plus/prboom-plus.wad" || return 1
 
     addEmulator 1 "prboom-plus" "doom" "$md_inst/prboom-plus -iwad %ROM%"
     addSystem "doom" "DOOM" ".pk3 .wad"

@@ -27,9 +27,9 @@ function sources_bstone() {
 }
 
 function build_bstone() {
-    cd src
-    cmake .. -DCMAKE_BUILD_TYPE=Release
-    make
+    cd src || return 1
+    cmake .. -DCMAKE_BUILD_TYPE=Release || return 1
+    make || return 1
     md_ret_require="$md_src"
 }
 
@@ -42,7 +42,7 @@ function install_bstone() {
 function game_data_bstone() {
     if [[ ! -f "$romdir/ports/bstone/aog/BS_AOG.EXE" ]]; then
         downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/bstone.zip" "$romdir/ports/bstone/aog/"
-    mv "$romdir/ports/bstone/aog/bstone/"* "$romdir/ports/bstone/aog/"
+    mv "$romdir/ports/bstone/aog/bstone/"* "$romdir/ports/bstone/aog/" || return 1
     rmdir "$romdir/ports/bstone/aog/bstone/"
 
     fi
@@ -56,8 +56,8 @@ function configure_bstone() {
     #mkRomDir "ports/bstone"
     mkRomDir "ports/bstone/aog"
     mkRomDir "ports/bstone/ps"
-    mkdir $home/.local/share/bibendovsky
-    mkdir $home/.local/share/bibendovsky/bstone
+    mkdir -p $home/.local/share/bibendovsky
+    mkdir -p $home/.local/share/bibendovsky/bstone
 
     moveConfigDir "$home/.local/share/bibendovsky/bstone" "$md_conf_root/bibendovsky/bstone"
 

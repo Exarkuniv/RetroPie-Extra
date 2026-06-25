@@ -66,8 +66,8 @@ function build_perfect_dark() {
         return 1
     fi
 
-    cmake -G"Unix Makefiles" -Bbuild .
-    cmake --build build -j4
+    cmake -G"Unix Makefiles" -Bbuild . || return 1
+    cmake --build build -j4 || return 1
 }
 
 function install_perfect_dark() {

@@ -23,9 +23,9 @@ function sources_lr-mesen-s() {
 }
 
 function build_lr-mesen-s() {
-    cd Libretro
+    cd Libretro || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/Libretro/mesen-s_libretro.so"
 }
 

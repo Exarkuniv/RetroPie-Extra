@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/epiphany.sh"
 
     addPort "$md_id" "epiphany" "Epiphany Lightweight Web Browser" "XINIT: $md_inst/epiphany.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

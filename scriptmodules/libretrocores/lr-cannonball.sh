@@ -29,7 +29,7 @@ function sources_lr-cannonball() {
 function build_lr-cannonball() {
     > CannonBall.game
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/cannonball_libretro.so"
 }
 
@@ -46,7 +46,7 @@ function configure_lr-cannonball() {
 
     mkRomDir "ports/cannonball"
 
-    mv "$md_inst/CannonBall.game" "$romdir/ports/cannonball"
+    mv "$md_inst/CannonBall.game" "$romdir/ports/cannonball" || return 1
 
     addPort "$md_id" "cannonball" "Cannonball - OutRun Engine" "$md_inst/cannonball_libretro.so" "$romdir/ports/cannonball/CannonBall.game"
 

@@ -83,10 +83,10 @@ function _gui_dink_install() {
         return 0
     fi
 
-    wget "http://www.dinknetwork.com/download/${search}.dmod"
+    wget "http://www.dinknetwork.com/download/${search}.dmod" || return 1
     if ! [ -f ${search}.dmod ]
     then
-        wget "http://www.dinknetwork.com/download/dmods/${search}.dmod"
+        wget "http://www.dinknetwork.com/download/dmods/${search}.dmod" || return 1
     fi
 
     if [ -f ${search}.dmod ]
@@ -95,7 +95,7 @@ function _gui_dink_install() {
         # A DMOD file is almost but not quite in zip/tar format. This step
         # converts the tar file into a format that can be expanded correctly.
         dd if=/dev/zero bs=412 count=2 >> ${search}.dmod.out
-        tar -xvf ${search}.dmod.out
+        tar -xvf ${search}.dmod.out || return 1
 
         # Need to remove the version from the folder name so that the correct
         # folder can be moved and the matching dsm file created.

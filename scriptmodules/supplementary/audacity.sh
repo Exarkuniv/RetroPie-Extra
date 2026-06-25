@@ -38,5 +38,5 @@ _EOF_
     chmod +x "$md_inst/audacity.sh"
 
     addPort "$md_id" "audacity" "Audacity Open-Source Digital Audio Editor" "XINIT: $md_inst/audacity.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

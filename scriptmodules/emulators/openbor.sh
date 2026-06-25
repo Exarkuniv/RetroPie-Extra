@@ -31,22 +31,23 @@ function build_openbor-v6510() {
     ! isPlatform "x11" && params+=(BUILD_PANDORA=1)
     make clean-all BUILD_PANDORA=1
     patch -p0 -i ./patch/latest_build.diff
-    make "${params[@]}"
+    make "${params[@]}" || return 1
     md_ret_require="$md_build/OpenBOR"
     if isPlatform "rpi3"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi 3..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-3/libGL.so.1"
+	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-3/libGL.so.1" || return 1
     elif isPlatform "rpi4"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi 4..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-4/libGL.so.1"
+	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-4/libGL.so.1" || return 1
     elif isPlatform "rpi1"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
+	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1" || return 1
     elif isPlatform "rpi"; then
         echo "Fetching libGL.so.1 for Raspberry Pi..."
-        wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
+        wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1" || return 1
     else
-	error="This script is intended for Raspberry Pis only and will not work on other hardware."
+	md_ret_errors+=("This script is intended for Raspberry Pis only and will not work on other hardware.")
+	return 1
     fi
 }
 

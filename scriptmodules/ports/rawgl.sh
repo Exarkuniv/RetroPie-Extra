@@ -27,7 +27,7 @@ function sources_rawgl() {
 
 function build_rawgl() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/rawgl"
 }
 

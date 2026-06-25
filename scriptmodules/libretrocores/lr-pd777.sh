@@ -25,9 +25,9 @@ function sources_lr-pd777() {
 }
 
 function build_lr-pd777() {
-    cd source/libretro
+    cd source/libretro || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/source/libretro/pd777_libretro.so"
 }
 

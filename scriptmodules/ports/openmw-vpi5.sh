@@ -93,7 +93,7 @@ function build_openmw() {
             -DCMAKE_CXX_FLAGS="$extra_cflags" \
             -DCMAKE_EXE_LINKER_FLAGS="$extra_ldflags"
             
-        make -j$make_jobs
+        make -j$make_jobs || return 1
         md_ret_require="$md_build/build"
     else
         md_ret_errors+=("Failed to configure OpenMW - check compiler installation")
@@ -103,7 +103,7 @@ function build_openmw() {
 
 function install_openmw() {
     cd build || exit
-    make install
+    make install || return 1
     
     # Create data directory
     mkdir -p "$md_inst/data"
@@ -111,7 +111,7 @@ function install_openmw() {
 
 function install_openmw() {
     cd build || exit
-    make install
+    make install || return 1
     
     # Create data directory
     mkdir -p "$md_inst/data"

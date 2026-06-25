@@ -23,9 +23,9 @@ function sources_lr-mu() {
 }
 
 function build_lr-mu() {
-    cd libretroBuildSystem
+    cd libretroBuildSystem || return 1
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/libretroBuildSystem/mu_libretro.so"
 }
 

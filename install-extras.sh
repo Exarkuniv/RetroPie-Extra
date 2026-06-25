@@ -35,7 +35,7 @@ Options (up to one):
 
     -h, --help      Display this help and exit
 _BREAK_
-exit
+exit 0
 }
 
 SCRIPTDIR="$(dirname "$0")"
@@ -56,12 +56,12 @@ case "${1,,}" in
         shift
         ;;
     -u|--update)
-        git pull origin
-        exit
+        git pull origin || { echo "Error: git pull failed. Aborting."; exit 1; }
+        exit 0
         ;;
     -*)
         runHelp
-        exit
+        exit 0
         ;;
 esac
 readonly MODE
@@ -79,14 +79,19 @@ readonly REGEX='^[0-9]+$'
 function startCmd() {
     if [[ ! -d "$RPS_HOME" ]]; then
         echo -e "Error: RetroPie-Setup directory $RPS_HOME does not exist. Please input the location of RetroPie-Setup, ex:\n\n    ./$(basename "$0") /home/pi/RetroPie-Setup\n\nUse '-h' for help. Aborting."
-        exit
+        exit 1
     fi
 
     local version_req="4.8.8"
-    local rp_version="$(cat /opt/retropie/VERSION)"
+    local version_file="/opt/retropie/VERSION"
+    if [[ ! -f "$version_file" ]]; then
+        echo -e "Error: RetroPie version file $version_file not found. Is RetroPie installed?\n\nAborting."
+        exit 1
+    fi
+    local rp_version="$(cat "$version_file")"
     if ! dpkg --compare-versions "$rp_version" ge "$version_req" >/dev/null; then
         echo -e "Error: RetroPie version $rp_version is not compatible with the scripts used in this repository. Please update to RetroPie version $version_req or greater.\n\nAborting."
-        exit
+        exit 1
     fi
 
     case "$MODE" in
@@ -99,19 +104,27 @@ function startCmd() {
 function runAuto() {
     echo -e "Placing scriptmodules in $RP_EXTRA\n"
     mkdir -p "$RP_EXTRA"
-    cp -rp "$SCRIPTDIR/scriptmodules/" "$RP_EXTRA" && echo "...done."
-    exit
+    if ! cp -rp "$SCRIPTDIR/scriptmodules/" "$RP_EXTRA"; then
+        echo "Error: failed to copy scriptmodules to $RP_EXTRA"
+        exit 1
+    fi
+    echo "...done."
+    exit 0
 }
 
 function removeAll() {
     if [[ ! -d "$RP_EXTRA" ]]; then
         echo -e "RetroPie-Extra directory $RP_EXTRA does not exist. Nothing to remove.\n\nAborting."
-        exit
+        exit 1
     fi
 
     echo -e "Removing directory $RP_EXTRA and all of its contents.\n"
-    rm -rf "$RP_EXTRA" && echo "...done."
-    exit
+    if ! rm -rf "$RP_EXTRA"; then
+        echo "Error: failed to remove $RP_EXTRA"
+        exit 1
+    fi
+    echo "...done."
+    exit 0
 }
 
 function runGui() {
@@ -234,7 +247,7 @@ function copyModule() {
 
     mkdir -p "$target" 2>&1 \
       && cp -pf "$script" "$target" 2>&1 \
-      && [[ ! -d "$datadir" ]] || cp -rpf "$datadir" "$target" 2>&1
+      && { [[ ! -d "$datadir" ]] || cp -rpf "$datadir" "$target" 2>&1; }
 }
 
 function viewModules() {
@@ -308,10 +321,10 @@ function deleteModule() {
     local section="$(dirname "$script")"
     local datadir="${script%.*}"
     rm -f "$script" 2>&1 \
-      && [[ ! -d "$datadir" ]] || rm -rf "$datadir" 2>&1 \
-      && [[ ! -d "$section" ]] || [[ -n "$(ls -A "$section" 2>&1)" ]] || rmdir "$section" 2>&1 \
-      && [[ ! -d "$RP_EXTRA/scriptmodules" ]] || [[ -n "$(ls -A "$RP_EXTRA/scriptmodules" 2>&1)" ]] || rmdir "$RP_EXTRA/scriptmodules" 2>&1 \
-      && [[ ! -d "$RP_EXTRA" ]] || [[ -n "$(ls -A "$RP_EXTRA" 2>&1)" ]] || rmdir "$RP_EXTRA" 2>&1
+      && { [[ ! -d "$datadir" ]] || rm -rf "$datadir" 2>&1; } \
+      && { [[ ! -d "$section" ]] || [[ -n "$(ls -A "$section" 2>&1)" ]] || rmdir "$section" 2>&1; } \
+      && { [[ ! -d "$RP_EXTRA/scriptmodules" ]] || [[ -n "$(ls -A "$RP_EXTRA/scriptmodules" 2>&1)" ]] || rmdir "$RP_EXTRA/scriptmodules" 2>&1; } \
+      && { [[ ! -d "$RP_EXTRA" ]] || [[ -n "$(ls -A "$RP_EXTRA" 2>&1)" ]] || rmdir "$RP_EXTRA" 2>&1; }
 }
 
 function installBySection() {
@@ -382,8 +395,8 @@ function removeSection() {
     elif dialog --backtitle "$BACKTITLE" --cr-wrap --no-collapse --defaultno --yesno "Removing directory $RP_EXTRA/scriptmodules/$section and all of its contents.\n\nDo you wish to continue?" 20 60 2>&1 >/dev/tty; then
         local errormsg="$(
             rm -rf "$RP_EXTRA/scriptmodules/$section" \
-              && [[ ! -d "$RP_EXTRA/scriptmodules" ]] || [[ -n "$(ls -A "$RP_EXTRA/scriptmodules" 2>&1)" ]] || rmdir "$RP_EXTRA/scriptmodules" 2>&1 \
-              && [[ ! -d "$RP_EXTRA" ]] || [[ -n "$(ls -A "$RP_EXTRA" 2>&1)" ]] || rmdir "$RP_EXTRA" 2>&1 \
+              && { [[ ! -d "$RP_EXTRA/scriptmodules" ]] || [[ -n "$(ls -A "$RP_EXTRA/scriptmodules" 2>&1)" ]] || rmdir "$RP_EXTRA/scriptmodules" 2>&1; } \
+              && { [[ ! -d "$RP_EXTRA" ]] || [[ -n "$(ls -A "$RP_EXTRA" 2>&1)" ]] || rmdir "$RP_EXTRA" 2>&1; } \
               && echo "...done"
         )"
         dialog --backtitle "$BACKTITLE" --cr-wrap --no-collapse --programbox "Removing $section..." 20 60 2>&1 >/dev/tty < <(echo "$errormsg" | fold -w 56 -s)

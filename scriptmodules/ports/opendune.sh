@@ -30,7 +30,7 @@ function sources_opendune() {
 
 function build_opendune() {
     ./configure --with-asound --without-oss --without-pulse --with-sdl2 --without-munt
-    make
+    make || return 1
 
     md_ret_require=(
       )

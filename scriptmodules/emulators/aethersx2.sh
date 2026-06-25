@@ -44,7 +44,7 @@ function sources_aethersx2() {
 function install_aethersx2() {
     $(_get_vars_sx2)
     local file
-    tar -xzvf AetherSX2-v1.5-3606.tar.gz -C "/opt/retropie/emulators/aethersx2"
+    tar -xzvf AetherSX2-v1.5-3606.tar.gz -C "/opt/retropie/emulators/aethersx2" || return 1
     chmod +x /opt/retropie/emulators/aethersx2/AetherSX2-v1.5-3606/usr/bin/aethersx2
 }
 

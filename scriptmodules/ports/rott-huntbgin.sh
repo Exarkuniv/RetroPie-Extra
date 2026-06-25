@@ -36,8 +36,8 @@ function build_rott-huntbgin() {
     sed -i 's#joystickenabled  = 0#joystickenabled  = 1#' "$md_build/src/rt_cfg.c"
     sed -i 's#joypadenabled    = 0#joypadenabled    = 1#' "$md_build/src/rt_cfg.c"
     sed -i 's/SHAREWARE   ?= 0/SHAREWARE   ?= 1/g' "$md_build/src/Makefile"
-    cd src
-    make rott
+    cd src || return 1
+    make rott || return 1
     md_ret_require=(
         "$md_build/src/rott"
     )
@@ -52,7 +52,7 @@ function install_rott-huntbgin() {
 function game_data_rott-huntbgin() {
     if [[ ! -f "$romdir/ports/rott/HUNTBGIN.WAD" ]]; then
         downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/HUNTBGIN.zip" "$romdir/ports/rott"
-    mv "$romdir/ports/rott/HUNTBGIN/"* "$romdir/ports/rott/"
+    mv "$romdir/ports/rott/HUNTBGIN/"* "$romdir/ports/rott/" || return 1
     rmdir "$romdir/ports/rott/HUNTBGIN/"
     chown -R $user:$user "$romdir/ports/rott"
     fi

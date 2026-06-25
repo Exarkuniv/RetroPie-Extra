@@ -32,7 +32,7 @@ function sources_openlara() {
 }
 
 function build_openlara() {
-    cd "$md_build/src/platform/sdl2"
+    cd "$md_build/src/platform/sdl2" || return 1
     #./build.sh
     g++ -std=c++11 `sdl2-config --cflags` -O3 -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections -Wl,--gc-sections -DNDEBUG -D__SDL2__ -D_SDL2_OPENGL main.cpp ../../libs/stb_vorbis/stb_vorbis.c ../../libs/minimp3/minimp3.cpp ../../libs/tinf/tinflate.c -I../../ -o OpenLara `sdl2-config --libs` -lGL -lm -lrt -lpthread -lasound -ludev
     md_ret_require="$md_build/src/platform/sdl2"
@@ -45,7 +45,7 @@ function install_openlara() {
 }
 
 function game_data_openlara() {
-    mkdir "$home/.openlara"
+    mkdir -p "$home/.openlara"
     chown -R $user:$user "$md_conf_root/openlara"
 
     if [[ ! -f "$romdir/ports/tombraider/DATA/" ]]; then

@@ -24,8 +24,8 @@ function sources_lr-simcoupe() {
 
 function build_lr-simcoupe() {
     make clean
-    make
-    mv "libretro-simcp.so" "simcp_libretro.so"
+    make || return 1
+    mv "libretro-simcp.so" "simcp_libretro.so" || return 1
     md_ret_require="$md_build/simcp_libretro.so"
 }
 

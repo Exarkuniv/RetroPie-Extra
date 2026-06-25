@@ -57,11 +57,11 @@ function sources_box86() {
 }
 
 function build_box86() {
-    mkdir build
-    cd build
-    cmake .. -DARM_DYNAREC=1 -DRPI4=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
-    make -j4
-    cd ..
+    mkdir -p build
+    cd build || return 1
+    cmake .. -DARM_DYNAREC=1 -DRPI4=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo || return 1
+    make -j4 || return 1
+    cd .. || return 1
 }
 
 function install_box86() {

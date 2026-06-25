@@ -27,7 +27,7 @@ function build_lr-mame2003_midway() {
     make clean
     local params=()
     isPlatform "arm" && params+=("ARM=1")
-    make ARCH="$CFLAGS" "${params[@]}"
+    make ARCH="$CFLAGS" "${params[@]}" || return 1
     rpSwap off
     md_ret_require="$md_build/mame2003_midway_libretro.so"
 }

@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/filezilla.sh"
 
     addPort "$md_id" "filezilla" "FileZilla cross platform FTP application" "XINIT: $md_inst/filezilla.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

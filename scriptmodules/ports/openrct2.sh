@@ -24,7 +24,7 @@ function depends_openrct2() {
     xorg x11-xserver-utils libsdl2-dev libicu-dev gcc pkg-config 
     libjansson-dev libspeex-dev libspeexdsp-dev libcurl4-openssl-dev libcrypto++-dev 
     libfontconfig1-dev libfreetype6-dev libpng-dev libssl-dev libzip-dev build-essential 
-    make libbenchmark-dev libbenchmark-ocaml-dev duktape-dev 
+    make libbenchmark-dev libbenchmark-ocaml-dev duktape-dev
     libvorbis-dev libflac++-dev ccache nlohmann-json3-dev
 )
 
@@ -40,11 +40,11 @@ function sources_openrct2() {
 }
 
 function build_openrct2() {
-    mkdir $md_build/build
-    cd $md_build/build
-    cmake ../
-    make -j4
-    make install
+    mkdir -p $md_build/build
+    cd $md_build/build || return 1
+    cmake ../ || return 1
+    make -j4 || return 1
+    make install || return 1
 
     md_ret_require=( 
 	'openrct2'
@@ -53,7 +53,7 @@ function build_openrct2() {
 
 function game_data_openrct2() {
       if [[ ! -f "/home/pi/.config/OpenRCT2/config.ini" ]]; then
-        git clone "https://github.com/Exarkuniv/RCTconfig.git" "/home/pi/.config/OpenRCT2"
+        git clone "https://github.com/Exarkuniv/RCTconfig.git" "/home/pi/.config/OpenRCT2" || return 1
       fi
      chown -R pi:pi "/home/pi/.config/OpenRCT2"
      chmod +x "/home/pi/.config/OpenRCT2/config.ini"

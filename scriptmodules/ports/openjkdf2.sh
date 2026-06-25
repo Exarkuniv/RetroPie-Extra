@@ -39,7 +39,7 @@ function build_openjkdf2() {
         -DTARGET_USE_OPENGL=ON \
         -DTARGET_USE_SDL2=ON
     
-    cmake --build build -j$(nproc)
+    cmake --build build -j$(nproc) || return 1
     md_ret_require="$md_build/build/openjkdf2"
 }
 

@@ -75,20 +75,20 @@ function __config_game_data() {
     fi
 
     if [[ -d "$md_inst/$ut_game_dir" ]]; then
-        cd "$md_inst/$ut_game_dir"
+        cd "$md_inst/$ut_game_dir" || return 1
         for file in $(ls -d *); do
 
             echo "Moving $md_inst/$ut_game_dir/$file -> $romdir/ports/$ut_game_dir/$file"
 
             if [[ -d "$md_inst/$ut_game_dir/$file" ]]; then
                 if [[ ! -d "$romdir/ports/ut/$ut_game_dir/$file" ]]; then
-                    mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file"
+                    mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file" || return 1
                 else
                     rm -rf "$romdir/ports/ut/$ut_game_dir/$file"
-                    mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file"
+                    mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file" || return 1
                 fi
             else
-                mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file"
+                mv "$md_inst/$ut_game_dir/$file" "$romdir/ports/ut/$ut_game_dir/$file" || return 1
             fi
         done
 
@@ -136,7 +136,7 @@ function configure_ut() {
 
     # We only want to install this if it is not already installed.
     if [[ ! -f "$home/.utpg/System/UnrealTournament.ini" ]]; then
-        mkdir "$home/.utpg/System/"
+        mkdir -p "$home/.utpg/System/"
         cp "$md_data/UnrealTournament.ini" "$home/.utpg/System/UnrealTournament.ini"
         chown "$__user":"$__group" "$home/.utpg/System/UnrealTournament.ini"
         chmod 644 "$home/.utpg/System/UnrealTournament.ini"

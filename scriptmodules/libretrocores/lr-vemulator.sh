@@ -24,7 +24,7 @@ function sources_lr-vemulator() {
 
 function build_lr-vemulator() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/vemulator_libretro.so"
 }
 

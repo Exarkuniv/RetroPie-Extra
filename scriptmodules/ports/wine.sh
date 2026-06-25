@@ -145,13 +145,13 @@ function install_bin_wine() {
         mkdir -p "$pkgdir"
         pushd "$pkgdir"
         ar x "../${package}"
-        tar xvf data.tar.xz
+        tar xvf data.tar.xz || return 1
         cp -R opt/wine-${releaseType}/* "$md_inst"
         popd
     done
     
     # Install Winetricks
-    wget -nv -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+    wget -nv -O winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks || return 1
     cp winetricks "$md_inst/bin/"
     chmod a+rx "$md_inst/bin/winetricks"
     

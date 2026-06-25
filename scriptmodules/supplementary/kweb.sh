@@ -21,14 +21,16 @@ function depends_kweb() {
 }
 
 function sources_kweb() {
-    wget -O- -q http://steinerdatenbank.de/software/kweb-1.7.9.8.tar.gz | tar -zxv
-    git clone git://github.com/rg3/youtube-dl youtube-dl
+    wget -q http://steinerdatenbank.de/software/kweb-1.7.9.8.tar.gz || return 1
+    tar -zxvf kweb-1.7.9.8.tar.gz || return 1
+    rm -f kweb-1.7.9.8.tar.gz
+    git clone git://github.com/rg3/youtube-dl youtube-dl || return 1
 }
 
 function install_kweb() {
-    cd kweb-1.7.9.8
+    cd kweb-1.7.9.8 || return 1
     ./debinstall
-    cd ..
+    cd .. || return 1
     cp -R youtube-dl/ "$md_inst"
     ln -s "$md_inst/youtube-dl/youtube_dl/__main__.py" /usr/bin/youtube-dl
     chmod 755 /usr/bin/youtube-dl
@@ -37,5 +39,5 @@ function install_kweb() {
 function configure_kweb() {
     mkRomDir "ports"
     addPort "$md_id" "kweb" "kweb - Minimal Kiosk Web Browser" "XINIT: kweb"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports"
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports" || return 1
 }

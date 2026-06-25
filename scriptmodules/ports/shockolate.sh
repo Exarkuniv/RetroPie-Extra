@@ -27,9 +27,9 @@ function sources_shockolate() {
 }
 
 function build_shockolate() {
-    ./build_deps.sh
-    cmake ENABLE_SDL2=BUNDELED, ENABLE_SOUND=ON and ENABLE_FLUIDSYNTH=ON .
-    make systemshock
+    ./build_deps.sh || return 1
+    cmake ENABLE_SDL2=BUNDELED, ENABLE_SOUND=ON and ENABLE_FLUIDSYNTH=ON . || return 1
+    make systemshock || return 1
 }
 
 function install_shockolate() {

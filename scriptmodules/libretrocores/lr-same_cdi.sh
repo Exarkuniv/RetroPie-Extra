@@ -26,8 +26,8 @@ function build_lr-same_cdi() {
     else
         rpSwap on 1024
     fi
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
+    make -f Makefile.libretro clean || return 1
+    make -f Makefile.libretro || return 1
     rpSwap off
     md_ret_require="$md_build/same_cdi_libretro.so"
 }

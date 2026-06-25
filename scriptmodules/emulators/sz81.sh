@@ -29,7 +29,7 @@ function sources_sz81() {
 
 function build_sz81() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/sz81"
 }
 

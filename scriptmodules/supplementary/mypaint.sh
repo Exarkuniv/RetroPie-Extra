@@ -37,5 +37,5 @@ _EOF_
     chmod +x "$md_inst/mypaint.sh"
 
     addPort "$md_id" "mypaint" "MyPaint easy-to-use painting program" "XINIT: $md_inst/mypaint.sh"
-    mv "$md_conf_root/$md_id" "$md_conf_root/ports" 
+    mv "$md_conf_root/$md_id" "$md_conf_root/ports"  || return 1
 }

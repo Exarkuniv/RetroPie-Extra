@@ -27,15 +27,15 @@ function sources_corsixth() {
 }
 
 function build_corsixth() {
-    cmake . -DWITH_LIBAV=ON -DCMAKE_INSTALL_PREFIX:PATH="$md_inst"
-    cd ./CorsixTH
-    make
+    cmake . -DWITH_LIBAV=ON -DCMAKE_INSTALL_PREFIX:PATH="$md_inst" || return 1
+    cd ./CorsixTH || return 1
+    make || return 1
     md_return_require="$md_build/CorsixTH/CorsixTH"
-    cd "$md_build"
+    cd "$md_build" || return 1
 }
 
 function install_corsixth() {
-    make install
+    make install || return 1
 }
 
 function game_data_corsixth() {

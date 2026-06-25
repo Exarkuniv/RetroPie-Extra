@@ -37,12 +37,12 @@ function sources_devilutionx() {
 }
 
 function build_devilutionx() {
-    cd tools
+    cd tools || return 1
     ./build_and_install_smpq.sh
-    cd ..
+    cd .. || return 1
 
-    cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF 
-    cmake --build build
+    cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF  || return 1
+    cmake --build build || return 1
     md_ret_require="$md_build/build/devilutionx"
 }
 
@@ -58,7 +58,7 @@ function install_devilutionx() {
 function game_data_diablo() {
     if [[ ! -f "$romdir/ports/devilutionx/diablo.exe" ]]; then
         downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/diablo.zip" "$romdir/ports/devilutionx"
-    mv "$romdir/ports/devilutionx/diablo"* "$romdir/ports/devilutionx/"
+    mv "$romdir/ports/devilutionx/diablo"* "$romdir/ports/devilutionx/" || return 1
     chown -R $user:$user "$romdir/ports/devilutionx"
     fi
 }

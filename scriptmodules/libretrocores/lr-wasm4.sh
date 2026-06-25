@@ -20,9 +20,9 @@ function sources_lr-wasm4() {
 }
 
 function build_lr-wasm4() {
-    cd runtimes/native
-    cmake -B build
-    cmake --build build
+    cd runtimes/native || return 1
+    cmake -B build || return 1
+    cmake --build build || return 1
 }
 
 function install_lr-wasm4() {

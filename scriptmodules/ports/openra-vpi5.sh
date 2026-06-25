@@ -52,9 +52,9 @@ function depends_openra() {
 }
 
 function sources_openra() {
-    git clone https://github.com/OpenRA/OpenRA.git "$md_build/openra"
+    git clone https://github.com/OpenRA/OpenRA.git "$md_build/openra" || return 1
     
-    cd "$md_build/openra"
+    cd "$md_build/openra" || return 1
     
     # Find latest stable release
     local latest_release=$(
@@ -72,8 +72,8 @@ function build_openra() {
     echo 'export DOTNET_ROOT=$HOME/.dotnet' >> ~/.bashrc
     echo 'export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools' >> ~/.bashrc
     source ~/.bashrc
-    cd openra
-    make RUNTIME=mono
+    cd openra || return 1
+    make RUNTIME=mono || return 1
     md_ret_require="$md_build/openra"
 }
 
@@ -117,13 +117,13 @@ if [ -f "\$GAME_ISO" ]; then
     echo "Mounting ISO for ${game_name} from \$GAME_ISO"
     mkdir -p "\$MOUNT_POINT"
     sudo mount -o loop "\$GAME_ISO" "\$MOUNT_POINT"
-    cd "$md_inst"
+    cd "$md_inst" || return 1
     ./launch-game.sh Game.Mod=${game_mod} --install-data="\$MOUNT_POINT"
     sudo umount "\$MOUNT_POINT"
     rmdir "\$MOUNT_POINT"
 else
     echo "Starting ${game_name} without ISO"
-    cd "$md_inst"
+    cd "$md_inst" || return 1
     ./launch-game.sh Game.Mod=${game_mod}
 fi
 _EOF_

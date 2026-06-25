@@ -28,9 +28,9 @@ function sources_lr-play() {
 }
 
 function build_lr-play() {
-    mkdir build && cd build
-    cmake .. -G"Unix Makefiles" -DBUILD_LIBRETRO_CORE=yes -DBUILD_PLAY=off -DBUILD_TESTS=no -DENABLE_AMAZON_S3=no -DCMAKE_BUILD_TYPE="Release"
-    cmake --build .
+    mkdir -p build && cd build
+    cmake .. -G"Unix Makefiles" -DBUILD_LIBRETRO_CORE=yes -DBUILD_PLAY=off -DBUILD_TESTS=no -DENABLE_AMAZON_S3=no -DCMAKE_BUILD_TYPE="Release" || return 1
+    cmake --build . || return 1
     md_ret_require="$md_build/build/Source/ui_libretro/play_libretro.so"
 }
 

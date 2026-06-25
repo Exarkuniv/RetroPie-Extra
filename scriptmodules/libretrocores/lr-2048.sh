@@ -22,8 +22,8 @@ function sources_lr-2048() {
 }
 
 function build_lr-2048() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
+    make -f Makefile.libretro clean || return 1
+    make -f Makefile.libretro || return 1
     md_ret_require="$md_build/2048_libretro.so"
 }
 

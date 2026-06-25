@@ -30,8 +30,8 @@ function sources_lr-vircon32() {
 function build_lr-vircon32() {
     local defines=()
     isPlatform "gles" && defines+=("-DENABLE_OPENGLES2=1")
-    cmake "${defines[@]}" .
-    make -j$(nproc)
+    cmake "${defines[@]}" . || return 1
+    make -j$(nproc) || return 1
     md_ret_require="$md_build/vircon32_libretro.so"
 }
 

@@ -24,7 +24,7 @@ function sources_lr-race() {
 
 function build_lr-race() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/race_libretro.so"
 }
 

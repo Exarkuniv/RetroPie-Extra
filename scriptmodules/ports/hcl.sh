@@ -27,9 +27,9 @@ function sources_hcl() {
 }
 
 function build_hcl() {
-    mkdir build && cd build
-    cmake -DUSE_SDL2=ON ..
-    make
+    mkdir -p build && cd build
+    cmake -DUSE_SDL2=ON .. || return 1
+    make || return 1
     md_ret_require="$md_build/build/hcl"
 }
 

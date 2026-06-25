@@ -26,11 +26,11 @@ function sources_xm8() {
 }
 
 function build_xm8() {
-    mkdir build
-    cd build
-    cmake ..
+    mkdir -p build
+    cd build || return 1
+    cmake .. || return 1
     make clean
-    make
+    make || return 1
 }
 
 function install_xm8() {

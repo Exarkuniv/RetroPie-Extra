@@ -27,9 +27,9 @@ function sources_gearboy() {
 }
 
 function build_gearboy() {
-     cd "$md_build/platforms/linux"
+     cd "$md_build/platforms/linux" || return 1
     make clean
-    make
+    make || return 1
     strip "gearboy"
 
         md_ret_require="$md_build/platforms/linux/gearboy"

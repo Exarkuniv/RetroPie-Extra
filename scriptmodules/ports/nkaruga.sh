@@ -26,7 +26,7 @@ function sources_nkaruga() {
 }
 
 function build_nkaruga() {
-    make -f Makefile.linux
+    make -f Makefile.linux || return 1
     md_ret_require="$md_build/nKaruga.elf"
 }
 

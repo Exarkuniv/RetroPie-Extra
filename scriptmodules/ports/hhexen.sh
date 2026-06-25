@@ -27,7 +27,7 @@ function sources_hhexen() {
 
 function build_hhexen() {
     ./configure --enable-fullscreen --with-audio=sdlmixer --with-datapath=/home/pi/RetroPie/roms/ports/hexen
-    make
+    make || return 1
 
     md_ret_require=(hhexen-gl)
 }
@@ -41,7 +41,7 @@ function game_data_hexen() {
     chown -R $user:$user "$romdir/ports/hexen"
     fi
     [[ ! -d "$romdir/ports/hexen/music" ]] && downloadAndExtract "http://sycraft.org/content/audio/hexen/sycraft-hexen-high.zip" "$romdir/ports/hexen/files" 
-    mv "$romdir/ports/hexen/files/Data/jHexen/Music"* "$romdir/ports/hexen/music"
+    mv "$romdir/ports/hexen/files/Data/jHexen/Music"* "$romdir/ports/hexen/music" || return 1
     rm -r "$romdir/ports/hexen/files"
     chown -R $user:$user "$romdir/ports/hexen/music"
     

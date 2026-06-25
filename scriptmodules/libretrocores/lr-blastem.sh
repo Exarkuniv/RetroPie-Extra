@@ -23,8 +23,8 @@ function sources_lr-blastem() {
 }
 
 function build_lr-blastem() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
+    make -f Makefile.libretro clean || return 1
+    make -f Makefile.libretro || return 1
     md_ret_require="$md_build/blastem_libretro.so"
 }
 

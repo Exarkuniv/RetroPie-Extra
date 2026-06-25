@@ -22,7 +22,7 @@ function sources_lr-prboom-system() {
 
 function build_lr-prboom-system() {
     make clean
-    make
+    make || return 1
     md_ret_require="$md_build/prboom_libretro.so"
 }
 
@@ -36,7 +36,7 @@ function install_lr-prboom-system() {
 function game_data_lr-prboom-system() {
     if [[ ! -f "$romdir/doom/doom1.wad" ]]; then
         # download doom 1 shareware
-        wget -nv -O "$romdir/doom/doom1.wad" "$__archive_url/doom1.wad"
+        wget -nv -O "$romdir/doom/doom1.wad" "$__archive_url/doom1.wad" || return 1
     fi
 
     if ! echo "e9bf428b73a04423ea7a0e9f4408f71df85ab175 $romdir/doom/freedoom1.wad" | sha1sum -c &>/dev/null; then

@@ -28,8 +28,8 @@ function sources_pokemini() {
 }
 
 function build_pokemini() {
-    cd platform/sdl2
-    make
+    cd platform/sdl2 || return 1
+    make || return 1
     md_ret_require="$md_build/platform/sdl2/PokeMini"
 }
 
