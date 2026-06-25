@@ -15,7 +15,7 @@ rp_module_help="ROM Extensions: .bml .smc .sfc .zip\n\nCopy your SNES roms to $r
 rp_module_licence="GPL3 https://github.com/libretro/bsnes-jg?tab=GPL-3.0-1-ov-file#readme"
 rp_module_repo="git https://github.com/libretro/bsnes-jg libretro"
 rp_module_section="exp"
-rp_module_flags="!mali !x86"
+rp_module_flags="!mali"
 
 function depends_lr-bsnes-jg() {
     getDepends build-essential libgtk2.0-dev libpulse-dev mesa-common-dev libcairo2-dev libsdl2-dev libxv-dev libao-dev libopenal-dev libasound2-dev libudev-dev
@@ -41,9 +41,10 @@ function install_lr-bsnes-jg() {
 }
 
 function configure_lr-bsnes-jg() {
-    mkRomDir "snes"
-    defaultRAConfig "snes"
-
-    addEmulator 0 "$md_id" "snes" "$md_inst/bsnes-jg_libretro.so"
-    addSystem "snes"
+    local system
+    for system in satellaview sfc sfc-t snes snesh snesmsu1 snes-proto snes-unl sufami; do
+    mkRomDir "$system"
+    defaultRAConfig "$system"
+    addEmulator 0 "$md_id" "$system" "$md_inst/bsnes-jg_libretro.so"
+    addSystem "$system"
 }
