@@ -13,6 +13,8 @@
 # If no user is specified (for RetroPie below v4.8.9)
 if [[ -z "$__user" ]]; then __user="$SUDO_USER"; [[ -z "$__user" ]] && __user="$(id -un)"; fi
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-numero"
 rp_module_desc="lr-numero - Numero is a libretro core for emulating the TI-83 family of graphing calculators."
 rp_module_help="ROM Extensions: .8xp .8xk .8xg\n\nPlace TI-83 ROMs in: $romdir/ti83/\n\nPlace TI-83 BIOS in: $biosdir/\nti83se.rom      TI-83 Silver Edition   *Recommended*\nti83plus.rom    TI-83 Plus\nti83.rom        TI-83\n\n{RESET/RESTART in RetroArch to CLEAR the Entire Memory}\n\nMore Info:\ngithub.com/nbarkhina/numero/blob/master/README.md\n\n{ti83se.rom}:\nhttps://web.archive.org/web/20230208002249/http://tiroms.weebly.com/uploads/1/1/0/5/110560031/ti83se.rom\n\n{ti83plus.rom}\nhttps://web.archive.org/web/20230208002249/http://tiroms.weebly.com/uploads/1/1/0/5/110560031/ti83plus.rom"
@@ -25,9 +27,7 @@ function sources_lr-numero() {
 }
 
 function build_lr-numero() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/numero_libretro.so"
+    _build_libretro_core "numero"
 }
 
 function install_lr-numero() {

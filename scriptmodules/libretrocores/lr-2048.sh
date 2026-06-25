@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-2048"
 rp_module_desc="2048 engine - 2048 port for libretro"
 rp_module_licence="Unl https://raw.githubusercontent.com/libretro/libretro-2048/master/COPYING"
@@ -22,9 +24,7 @@ function sources_lr-2048() {
 }
 
 function build_lr-2048() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/2048_libretro.so"
+    _build_libretro_core "2048"
 }
 
 function install_lr-2048() {
@@ -34,9 +34,5 @@ function install_lr-2048() {
 }
 
 function configure_lr-2048() {
-    setConfigRoot "ports"
-
-    addPort "$md_id" "2048" "2048" "$md_inst/2048_libretro.so"
-
-    ensureSystemretroconfig "ports/2048"
+    _configure_libretro_port "2048" "2048" "2048_libretro.so"
 }

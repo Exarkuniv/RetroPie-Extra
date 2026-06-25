@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-blastem"
 rp_module_desc="Sega Genesis emu - BlastEm port for libretro"
 rp_module_help="ROM Extensions: .md .bin .smd .zip .7z\n\nCopy the required BIOS file rom.db to $biosdir"
@@ -23,9 +25,7 @@ function sources_lr-blastem() {
 }
 
 function build_lr-blastem() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/blastem_libretro.so"
+    _build_libretro_core "blastem"
 }
 
 function install_lr-blastem() {
@@ -36,9 +36,5 @@ function install_lr-blastem() {
 }
 
 function configure_lr-blastem() {
-    mkRomDir "megadrive"
-    ensureSystemretroconfig "megadrive"
-
-    addEmulator 1 "$md_id" "megadrive" "$md_inst/blastem_libretro.so"
-    addSystem "megadrive"
+    _configure_libretro_system "megadrive" "blastem_libretro.so"
 }

@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-uzem"
 rp_module_desc="Uzebox engine - Uzem port for libretro"
 rp_module_help="ROM Extensions: .uze\n\nCopy your ROM files to $romdir/uzebox"
@@ -23,9 +25,7 @@ function sources_lr-uzem() {
 }
 
 function build_lr-uzem() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/uzem_libretro.so"
+    _build_libretro_core "uzem"
 }
 
 function install_lr-uzem() {
@@ -35,9 +35,5 @@ function install_lr-uzem() {
 }
 
 function configure_lr-uzem() {
-    mkRomDir "uzebox"
-    ensureSystemretroconfig "uzebox"
-
-    addEmulator 1 "$md_id" "uzebox" "$md_inst/uzem_libretro.so"
-    addSystem "uzebox" "Uzem" ".uze .zip"
+    _configure_libretro_system "uzebox" "uzem_libretro.so" 1 "Uzem" ".uze .zip"
 }

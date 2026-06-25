@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="crispy-doom-system"
 rp_module_desc="Crispy Doom - Enhanced port of the official DOOM source"
 rp_module_licence="GPL2 https://raw.githubusercontent.com/fabiangreffrath/crispy-doom/master/COPYING"
@@ -43,20 +45,8 @@ function install_crispy-doom-system() {
 }
 
 function game_data_doom() {
-    mkRomDir "doom"
-    if [[ ! -f "$romdir/doom/doom1.wad" ]]; then
-        wget "$__archive_url/doom1.wad" -O "$romdir/doom/doom1.wad"
-    fi
-
-    if [[ ! -f "$romdir/doom/freedoom1.wad" ]]; then
-        wget "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip"
-        unzip freedoom-0.12.1.zip
-        mv freedoom-0.12.1/*.wad "$romdir/doom"
-        rm -rf freedoom-0.12.1
-        rm freedoom-0.12.1.zip
-    fi
+    _download_doom_system_wads
 }
-
 
 function configure_crispy-doom-system() {
     mkUserDir "$home/.config"

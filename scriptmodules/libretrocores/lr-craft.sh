@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
+source "$(dirname "${BASH_SOURCE[0]}")/../helpers.sh"
+
 rp_module_id="lr-craft"
 rp_module_desc="Minecraft engine - Craft port for libretro"
 rp_module_licence="MIT https://raw.githubusercontent.com/libretro/Craft/master/LICENSE.md"
@@ -22,9 +24,7 @@ function sources_lr-craft() {
 }
 
 function build_lr-craft() {
-    make -f Makefile.libretro clean
-    make -f Makefile.libretro
-    md_ret_require="$md_build/craft_libretro.so"
+    _build_libretro_core "craft"
 }
 
 function install_lr-craft() {
@@ -34,9 +34,5 @@ function install_lr-craft() {
 }
 
 function configure_lr-craft() {
-    setConfigRoot "ports"
-
-    addPort "$md_id" "craft" "Craft" "$md_inst/craft_libretro.so"
-
-    ensureSystemretroconfig "ports/craft"
+    _configure_libretro_port "craft" "Craft" "craft_libretro.so"
 }
