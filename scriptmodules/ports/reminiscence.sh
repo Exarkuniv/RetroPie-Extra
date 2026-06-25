@@ -23,7 +23,7 @@ function depends_reminiscence() {
 }
 
 function sources_reminiscence() {
-    wget -O- -q http://cyxdown.free.fr/reminiscence/REminiscence-0.2.1.tar.bz2 | tar -xvj --strip-components=1
+    wget -O- -q https://cyxdown.free.fr/reminiscence/REminiscence-0.2.1.tar.bz2 | tar -xvj --strip-components=1
 }
 
 function build_reminiscence() {

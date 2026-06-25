@@ -31,8 +31,10 @@ succ="ModuleNotFoundError"
 echo "----------------------------------"
 echo "$pip"
 if [[ $pip == *"$succ"* ]]; then
-   su $user -c "wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py"
-   su $user -c "python3 /tmp/get-pip.py"
+   local pip_installer="$(su $user -c "mktemp --suffix=.py")"
+   su $user -c "wget https://bootstrap.pypa.io/get-pip.py -O '$pip_installer'"
+   su $user -c "python3 '$pip_installer'"
+   rm -f "$pip_installer"
 fi
    su $user -c "python3 -m pip install --user --upgrade pip wheel setuptools"
    su $user -c "python3 -m pip install --user -r $md_inst/dependencies.txt"

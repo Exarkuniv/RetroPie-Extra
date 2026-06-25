@@ -35,16 +35,16 @@ function build_openbor-v6510() {
     md_ret_require="$md_build/OpenBOR"
     if isPlatform "rpi3"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi 3..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-3/libGL.so.1"
+	wget -q --show-progress "https://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-3/libGL.so.1"
     elif isPlatform "rpi4"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi 4..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-4/libGL.so.1"
+	wget -q --show-progress "https://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-4/libGL.so.1"
     elif isPlatform "rpi1"; then
 	echo "Fetching libGL.so.1 for Raspberry Pi..."
-	wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
+	wget -q --show-progress "https://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
     elif isPlatform "rpi"; then
         echo "Fetching libGL.so.1 for Raspberry Pi..."
-        wget -q --show-progress "http://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
+        wget -q --show-progress "https://raw.githubusercontent.com/crcerror/OpenBOR-63xx-RetroPie-openbeta/master/libGL-binary/libGL-for-RPi-zero/libGL.so.1"
     else
 	error="This script is intended for Raspberry Pis only and will not work on other hardware."
     fi
