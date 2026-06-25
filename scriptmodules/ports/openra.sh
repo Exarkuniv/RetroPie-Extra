@@ -23,7 +23,11 @@ function depends_openra() {
     echo "deb https://download.mono-project.com/repo/debian stable-raspbianbuster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
     apt update
     aptInstall mono-devel
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 6.0.406
+    local dotnet_installer="$__tmpdir/dotnet-install.sh"
+    curl -sSL -o "$dotnet_installer" https://dot.net/v1/dotnet-install.sh
+    chmod +x "$dotnet_installer"
+    bash "$dotnet_installer" --version 6.0.406
+    rm -f "$dotnet_installer"
 
 }
 

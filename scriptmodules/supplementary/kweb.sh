@@ -21,7 +21,7 @@ function depends_kweb() {
 }
 
 function sources_kweb() {
-    wget -O- -q http://steinerdatenbank.de/software/kweb-1.7.9.8.tar.gz | tar -zxv
+    wget -O- -q https://steinerdatenbank.de/software/kweb-1.7.9.8.tar.gz | tar -zxv
     git clone git://github.com/rg3/youtube-dl youtube-dl
 }
 

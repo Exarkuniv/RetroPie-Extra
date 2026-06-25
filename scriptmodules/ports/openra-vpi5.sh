@@ -41,7 +41,11 @@ function depends_openra() {
 
     # Install .NET 6.0 runtime
     echo "Installing .NET 6.0 runtime"
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 6.0.406
+    local dotnet_installer="$__tmpdir/dotnet-install.sh"
+    curl -sSL -o "$dotnet_installer" https://dot.net/v1/dotnet-install.sh
+    chmod +x "$dotnet_installer"
+    bash "$dotnet_installer" --version 6.0.406
+    rm -f "$dotnet_installer"
     local depends=(
         mono-devel mono-complete mono-source libopenal-dev libfreetype6-dev liblua5.1-0-dev \
         libcurl4-openssl-dev zenity cmake build-essential libtool automake \

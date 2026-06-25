@@ -166,7 +166,12 @@ function build_menu_borked3ds() {
             joy2keyStop
             joy2keyStart
             unset IFS
-	    eval $run
+	    # Only allow known function calls, not arbitrary code
+	    if declare -f "$run" >/dev/null 2>&1; then
+	        "$run"
+	    else
+	        printMsgs "dialog" "Unknown action: $run"
+	    fi
 	    joy2keyStart
         else
             break
