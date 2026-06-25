@@ -18,7 +18,7 @@ rp_module_repo="git https://github.com/drhelius/Gearcoleco.git main"
 rp_module_section="exp"
 rp_module_flags=""
 
-function depends_gearboy() {
+function depends_lr-gearcoleco() {
     getDepends build-essential libsdl2-dev libglew-dev libgtk-3-dev
 
 }
@@ -43,8 +43,9 @@ function install_lr-gearcoleco() {
 function configure_lr-gearcoleco() {
     local system
     for system in coleco colecoh coleco-proto coleco-sgm coleco-unl; do
-    mkRomDir "$system"
-    defaultRAConfig "$system"
-    addEmulator 0 "$md_id" "$system" "$md_inst/gearcoleco_libretro.so"
-    addSystem "$system"
+        mkRomDir "$system"
+        defaultRAConfig "$system"
+        addEmulator 0 "$md_id" "$system" "$md_inst/gearcoleco_libretro.so"
+        addSystem "$system"
+    done
 }

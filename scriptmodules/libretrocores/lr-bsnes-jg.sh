@@ -43,8 +43,9 @@ function install_lr-bsnes-jg() {
 function configure_lr-bsnes-jg() {
     local system
     for system in satellaview sfc sfc-t snes snesh snesmsu1 snes-proto snes-unl sufami; do
-    mkRomDir "$system"
-    defaultRAConfig "$system"
-    addEmulator 0 "$md_id" "$system" "$md_inst/bsnes-jg_libretro.so"
-    addSystem "$system"
+        mkRomDir "$system"
+        defaultRAConfig "$system"
+        addEmulator 0 "$md_id" "$system" "$md_inst/bsnes-jg_libretro.so"
+        addSystem "$system"
+    done
 }
