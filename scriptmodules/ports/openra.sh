@@ -18,7 +18,7 @@ rp_module_section="exp"
 rp_module_flags="!mali !all rpi4 rpi3"
 
 function depends_openra() {
-    getDepends libfreetype6 libopenal1 liblua5.1-0 libsdl2-2.0-0 xdg-utils zenity wget dbus-x11 apt-transport-https dirmngr gnupg ca-certificates xorg 
+    getDepends libfreetype6 libopenal1 liblua5.1-0 libsdl2-2.0-0 xdg-utils zenity wget dbus-x11 apt-transport-https dirmngr gnupg ca-certificates xorg xinit
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
     echo "deb https://download.mono-project.com/repo/debian stable-raspbianbuster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
     apt update
@@ -48,6 +48,8 @@ function install_openra() {
 }
 
 function configure_openra() {
+    local launch_prefix="XINIT-WM:"
+    
     mkRomDir "ports/opend2k"
     mkRomDir "ports/openra"
     mkRomDir "ports/opentd"
@@ -55,10 +57,10 @@ function configure_openra() {
 
     moveConfigDir "$home/.config/openra" "$md_conf_root/openra"
 
-    addPort "$md_id" "openra" "Open Red Alert" "XINIT: /opt/retropie/ports/openra/openra/ORA.sh"
-    addPort "opentd" "opentd" "Open Tiberian Dawn" "XINIT: /opt/retropie/ports/openra/openra/OTD.sh"
-    addPort "opend2k" "opend2k" "Open Dune2000" "XINIT: /opt/retropie/ports/openra/openra/OD2K.sh"
-    addPort "opents" "opents" "Open Tiberian Sun" "XINIT: /opt/retropie/ports/openra/openra/OTS.sh"
+    addPort "$md_id" "openra" "Open Red Alert" "$launch_prefix$md_inst/ORA.sh"
+    addPort "opentd" "opentd" "Open Tiberian Dawn" "$launch_prefix$md_inst/OTD.sh"
+    addPort "opend2k" "opend2k" "Open Dune2000" "$launch_prefix$md_inst/OD2K.sh"
+    addPort "opents" "opents" "Open Tiberian Sun" "$launch_prefix$md_inst/OTS.sh"
 
  #running script for Red Alert
 cat >"$md_inst/openra/ORA.sh" << _EOF_
