@@ -316,6 +316,7 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `kweb.sh` - Minimal kiosk web browser - **Installs Runs fine**
 - [X] - `librecad.sh` - librecad open-source 2d cad - **Installs Runs fine**
 - [X] - `libreoffice.sh` - Open source office suite - **Installs Runs fine**
+- [X] - `lwgmenager.sh` - RetroPie Light Web Game Manager - Flask web panel to manage files and monitor your Pi - **Web UI on port 5000, runs as a service**
 - [X] - `mesa.sh` - Mesa3d OpenGL and Vulkan Drivers - **Installs fine**
 - [X] - `mpv.sh` - Video Player - Not an actual emulator but allows you to play movies and tv shows from new systems in RetroPie.   - **Installs Runs fine**
 - [X] - `mixx.sh` - Mixxx DJ Mixing Software App - **Installs Runs fine**
