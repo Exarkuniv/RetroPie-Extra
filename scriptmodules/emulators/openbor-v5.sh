@@ -13,7 +13,7 @@
 
 rp_module_id="openbor-v5"
 rp_module_desc="OpenBOR - Beat 'em Up Game Engine -Pi5 edition"
-rp_module_help="Place your pak files in $romdir/ports/openbo"
+rp_module_help="Place your pak files in $romdir/ports/openbor"
 rp_module_licence="BSD https://raw.githubusercontent.com/DCurrent/openbor/refs/heads/master/LICENSE"
 rp_module_repo="git https://github.com/DCurrent/openbor.git master"
 rp_module_section="exp"
