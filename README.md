@@ -270,6 +270,7 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [ ] - `rickyd.sh` - Rick Dangerous clone - **Blocked from installing on Pi4**
 - [X] - `rigelengine.sh` - RigelEngine - Duke Nukem 2 source port - **Installs, Plays great/ with Demo**
 - [X] - `rocksndiamonds.sh` - Rocks'n'Diamonds - Emerald Mine Clone - **Installs, Plays great**
+- [X] - `roguecollection.sh` - Retro Rogue Collection - six classic versions of Rogue in one package - **Installs, needs a keyboard**
 - [X] - `rott-darkwar.sh` - Rise of the Triad source port with joystick support - **Installs**
 - [X] - `rott-huntbgin.sh` - Rise of the Triad (shareware version) source port with joystick support. - **Installs, Plays great**
 - [X] - `rtcw.sh`- IORTCW source port of Return to Castle Wolfenstein. - **Installs, and plays great**
