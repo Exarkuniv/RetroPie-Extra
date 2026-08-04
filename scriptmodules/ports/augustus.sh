@@ -48,8 +48,8 @@ function install_augustus() {
 
 function game_data_augustus() {
         downloadAndExtract "https://github.com/Exarkuniv/augustus-assets/releases/download/test/assets-3.1.0-release.zip" "$romdir/ports/caesar3"
-	chown -R $user:$user "$romdir/ports/caesar3"
-	chown -R $user:$user "$romdir/ports/caesar3/assets"
+	chown -R $__user:$__group "$romdir/ports/caesar3"
+	chown -R $__user:$__group "$romdir/ports/caesar3/assets"
 }
 
 function configure_augustus() {
