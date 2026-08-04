@@ -33,7 +33,7 @@ function configure_dink() {
     moveConfigDir "$home/.dink" "$md_conf_root/$md_id"
     addEmulator 1 "$md_id" "dink" "freedink -S -game %BASENAME%"
     addSystem "dink" "Free Dink - Dink Smallwood Engine" ".dsm .DSM"
-    touch ${romdir}/${md_id}/dink.dsm
+    touch "${romdir}/${md_id}/dink.dsm"
 }
 
 function gui_dink() {
@@ -83,26 +83,32 @@ function _gui_dink_install() {
         return 0
     fi
 
-    wget "http://www.dinknetwork.com/download/${search}.dmod"
-    if ! [ -f ${search}.dmod ]
-    then
-        wget "http://www.dinknetwork.com/download/dmods/${search}.dmod"
+    # Sanitize input: allow only alphanumeric characters, hyphens, and underscores
+    if [[ ! "$search" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        printMsgs "dialog" "Invalid DMOD name. Only alphanumeric characters, hyphens, and underscores are allowed."
+        return 1
     fi
 
-    if [ -f ${search}.dmod ]
+    wget "https://www.dinknetwork.com/download/${search}.dmod"
+    if ! [ -f "${search}.dmod" ]
     then
-        bzip2 -dk ${search}.dmod
+        wget "https://www.dinknetwork.com/download/dmods/${search}.dmod"
+    fi
+
+    if [ -f "${search}.dmod" ]
+    then
+        bzip2 -dk "${search}.dmod"
         # A DMOD file is almost but not quite in zip/tar format. This step
         # converts the tar file into a format that can be expanded correctly.
-        dd if=/dev/zero bs=412 count=2 >> ${search}.dmod.out
-        tar -xvf ${search}.dmod.out
+        dd if=/dev/zero bs=412 count=2 >> "${search}.dmod.out"
+        tar -xvf "${search}.dmod.out"
 
         # Need to remove the version from the folder name so that the correct
         # folder can be moved and the matching dsm file created.
         folder=${search%-*}
-        sudo mv ${folder}/ /usr/share/games/dink
-        touch ${romdir}/${md_id}/${folder}.dsm
-        chown $user:$user "${romdir}/${md_id}/${folder}.dsm"
+        sudo mv "${folder}/" /usr/share/games/dink
+        touch "${romdir}/${md_id}/${folder}.dsm"
+        chown "$user:$user" "${romdir}/${md_id}/${folder}.dsm"
 
         rm "${search}.dmod.out"
         rm "${search}.dmod"
@@ -141,7 +147,7 @@ function _gui_dink_uninstall() {
     for choice in "${choices[@]}"; do
         choice="${options[choice*3-2]}"
         rmDirExists "/usr/share/games/dink/$choice"
-        rm $romdir/$md_id/$choice.dsm
+        rm "$romdir/$md_id/$choice.dsm"
         deleted+=" $choice"
         count++
     done
