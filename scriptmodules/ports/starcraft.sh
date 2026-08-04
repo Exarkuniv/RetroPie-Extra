@@ -1,66 +1,72 @@
 #!/usr/bin/env bash
 
-# This file is part of The RetroPie Project
+# Installation scriptmodule for RetroPie. This file is a work-in-progress.
+# For more information, please visit:
 #
-# The RetroPie Project is the legal property of its developers, whose names are
-# too numerous to list here. Please refer to the COPYRIGHT.md file distributed with this source.
+# https://github.com/RetroPie/RetroPie-Setup
+# https://github.com/Exarkuniv/RetroPie-Extra
 #
-# See the LICENSE.md file at the top-level directory of this distribution and
-# at https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/LICENSE.md
+# See the LICENSE file distributed with this source and at
+# https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/LICENSE.md
+# https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
 rp_module_id="starcraft"
-rp_module_desc="Starcraft"
-rp_module_help="Thanks to PI Labs, Notaz, and Blizzard for release free this game in 2017"
-rp_module_licence="MIT https://raw.githubusercontent.com/jmcerrejon/PiKISS/master/LICENSE.md"
-rp_module_repo="file https://archive.org/download/starcraft-rpi.7z/starcraft-rpi.7z"
+rp_module_desc="ARM recompiled exe of StarCraft"
+rp_module_help="Thanks to PI Labs, Notaz, and Blizzard for release free this game in 2017.\n\nCopy an installed Starcraft or Starcraft with Brood War folder (v1.16.1) into $romdir/ports/Starcraft\n\nFrom the Starcraft CD or ISO, copy 'install.exe' and rename it 'StarCraft.mpq'\n\nFrom the Brood War CD or ISO (optional), copy 'install.exe' and rename it 'BroodWar.mpq'"
+rp_module_repo="file https://notaz.gp2x.de/misc/starec/libscr.tar.xz"
 rp_module_section="exp"
-rp_module_flags="!armv6 !all rpi4 rpi3"
+rp_module_flags="!all arm"
 
 function depends_starcraft() {
-    getDepends xorg wine p7zip-full matchbox
+    getDepends xorg wine matchbox
 }
 
-function sources_starcraft() {
-    wget "$md_repo_url"
-    7z x "starcraft-rpi.7z" 
-    chown -R pi:pi "$md_build/$md_id"
-    rm "starcraft-rpi.7z"
-    mv -f "$md_build/starcraft/libscr_sa_arm.exe.so" "$md_build"
-    chmod 755 "$md_build/libscr_sa_arm.exe.so"
-
-}
-
-function install_starcraft() {
-    md_ret_files=('libscr_sa_arm.exe.so'
-)
+function install_bin_starcraft() {
+    rmDirExists "$md_inst"
+    mkdir -p "$md_inst"
+    downloadAndExtract "$md_repo_url" "$md_inst"
 }
 
 function configure_starcraft() {
-    mkRomDir "ports/$md_id"
-    mv -f "$md_build/starcraft" "$romdir/ports"
-    rm -f "$romdir/ports/starcraft/starcraft.sh"
-    ln -snf "$romdir/ports/starcraft" "$md_inst"
-    ln -sf "/opt/retropie/ports/starcraft/libscr_sa_arm.exe.so" "/home/pi/RetroPie/roms/ports/starcraft/libscr_sa_arm.exe.so"   
-     moveConfigDir "$romdir/ports/$md_id/save" "$md_conf_root/starcraft/save"
-
-    local script="$md_inst/starcraft.sh"
-    cat > "$script" << _EOF_
-#!/bin/bash
-LD_LIBRARY_PATH=. setarch linux32 -L wine $romdir/ports/$md_id/libscr_sa_arm.exe.so
-_EOF_
-
     local script="$md_inst/starcraftr.sh"
+    addPort "$md_id" "starcraft" "Starcraft" "XINIT:$script"
+
+    [[ "$md_mode" == "remove" ]] && return
+
+    mkRomDir "ports/Starcraft"
+
     cat > "$script" << _EOF_
 #!/bin/bash
 xset -dpms s off s noblank
 matchbox-window-manager -use_titlebar no &
-pushd "$md_inst/$md_id"
-cd $md_inst && ./starcraft.sh
+cd "$md_inst"
+LD_LIBRARY_PATH=. setarch linux32 -L wine libscr_sa_arm.exe.so
 _EOF_
+    chmod +x "$script"
 
-    chmod +x "$md_inst/starcraftr.sh"
-    chmod +x "$md_inst/starcraft.sh"
-    chmod 755 "$romdir/ports/starcraft"
-    addPort "$md_id" "starcraft" "Starcraft" "XINIT: $md_inst/starcraftr.sh"
+    local file
+    local rom_files=(
+        'BrooDat.mpq'
+        'BroodWar.mpq'
+        'Local.dll'
+        'patch_rt.mpq'
+        'StarCraft.mpq'
+        'StarDat.mpq'
+        'maps'
+    )
+    for file in "${rom_files[@]}"; do
+        ln -snf "$romdir/ports/Starcraft/$file" "$md_inst/$file"
+    done
+
+    local dir
+    local conf_dirs=(
+        'characters'
+        'Errors'
+        'save'
+    )
+    for dir in "${conf_dirs[@]}"; do
+        mkUserDir "$md_conf_root/starcraft/$dir"
+        ln -snf "$md_conf_root/starcraft/$dir" "$md_inst/$dir"
+    done
 }
