@@ -32,9 +32,16 @@ function _get_vars_sx2() {
 }
 
 function depends_aethersx2() {
-    local depends=(matchbox-window-manager xorg xserver-xorg-input-all mesa-vulkan-drivers pulseaudio)
+    local depends=(matchbox-window-manager xorg xserver-xorg-input-all mesa-vulkan-drivers)
 
-    getDepends ${depends[@]}
+    # pipewire-media-session-pulseaudio is only available on Bookworm, not Trixie
+    if isOsMatch "id=debian" && isOsMatch "version_codename=bookworm"; then
+        depends+=(pipewire-media-session-pulseaudio)
+    else
+        depends+=(pulseaudio)
+    fi
+
+    getDepends "${depends[@]}"
 }
 
 function sources_aethersx2() {
