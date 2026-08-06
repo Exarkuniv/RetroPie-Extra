@@ -32,7 +32,7 @@ function _get_vars_sx2() {
 }
 
 function depends_aethersx2() {
-    local depends=(matchbox-window-manager xorg xserver-xorg-input-all mesa-vulkan-drivers pulseaudio pipewire-media-session-pulseaudio)
+    local depends=(matchbox-window-manager xorg xserver-xorg-input-all mesa-vulkan-drivers pulseaudio)
 
     getDepends ${depends[@]}
 }
