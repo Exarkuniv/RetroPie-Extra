@@ -242,6 +242,7 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `lmarbles.sh` - Open Source Atomix game - **Installs Runs fine, screen is alitte off center**
 - [X] - `ltris.sh` - Open Source Tetris game - **Installs, Plays great**
 - [X] - `manaplus.sh` - manaplus - 2D MMORPG Client - **x86, cant test, was told it works**
+- [ ] - `mcpelauncher.sh` - mcpelauncher - Unofficial launcher for Minecraft: Bedrock Edition (Android) on Linux - **Untested, requires own copy of the game**
 - [X] - `meritous.sh` - Port of an action-adventure dungeon crawl game - **Installs, Plays great**
 - [X] - `nblood.sh` - Blood source port - **Installs, Plays great**
 - [ ] - `nkaruga.sh` - Ikaruga demake. - **Blocked from installing on Pi4**
