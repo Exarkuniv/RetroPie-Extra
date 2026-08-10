@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 # This file is part of RetroPie-Extra, a supplement to RetroPie.
@@ -21,12 +22,10 @@ rp_module_flags=""
 function _arch_rtcw() {
     # exact parsing from Makefile
     if isPlatform "rpi5"; then
-        echo arm
-    elif isPlatform "64bit"; then
-        echo aarch64
+        echo arch64
     else
         echo "$(uname -m | sed -e 's/i.86/x86/' | sed -e 's/^arm.*/arm/')"
-    fi
+   fi
 }
 
 function depends_rtcw() {
@@ -44,36 +43,13 @@ function sources_rtcw() {
 }
 
 function build_rtcw() {
-    local build_arch="arm"
-    
-    if isPlatform "64bit"; then
-        build_arch="aarch64"
-    fi
-
     cd "$md_build/SP"
 
     # Use Case switch to allow future expansion to other potential platforms
     if isPlatform "rpi"; then
-        USE_CODEC_VORBIS=0\
-            USE_CODEC_OPUS=0\
-            USE_CURL=0\
-            USE_CURL_DLOPEN=0\
-            USE_OPENAL=1\
-            USE_OPENAL_DLOPEN=1\
-            USE_RENDERER_DLOPEN=0\
-            USE_VOIP=0\
-            USE_LOCAL_HEADERS=1\
-            USE_INTERNAL_JPEG=1\
-            USE_INTERNAL_OPUS=1\
-            USE_INTERNAL_ZLIB=1\
-            USE_OPENGLES=1\
-            USE_BLOOM=0\
-            USE_MUMBLE=0\
-            BUILD_GAME_SO=1\
-            BUILD_RENDERER_REND2=0\
-            ARCH="$build_arch"\
+            ARCH=arch64\
             PLATFORM=linux\
-            COMPILE_ARCH="$build_arch"\
+            COMPILE_ARCH=arch64\
             COMPILE_PLATFORM=linux\
             make
     else
@@ -83,26 +59,9 @@ function build_rtcw() {
     cd "$md_build/MP"
 
     if isPlatform "rpi"; then
-        USE_CODEC_VORBIS=0 \
-            USE_CODEC_OPUS=0\
-            USE_CURL=1\
-            USE_CURL_DLOPEN=1\
-            USE_OPENAL=1\
-            USE_OPENAL_DLOPEN=1\
-            USE_RENDERER_DLOPEN=0\
-            USE_VOIP=0\
-            USE_LOCAL_HEADERS=1\
-            USE_INTERNAL_JPEG=1\
-            USE_INTERNAL_OPUS=1\
-            USE_INTERNAL_ZLIB=1\
-            USE_OPENGLES=1\
-            USE_BLOOM=0\
-            USE_MUMBLE=0\
-            BUILD_GAME_SO=1\
-            BUILD_RENDERER_REND2=0\
-            ARCH="$build_arch"\
+            ARCH=arch64\
             PLATFORM=linux\
-            COMPILE_ARCH="$build_arch"\
+            COMPILE_ARCH=arch64\
             COMPILE_PLATFORM=linux\
             make
     else
@@ -125,14 +84,15 @@ function install_rtcw() {
         "MP/build/release-linux-$(_arch_rtcw)/main/qagame.mp.$(_arch_rtcw).so"
         "MP/build/release-linux-$(_arch_rtcw)/main/ui.mp.$(_arch_rtcw).so"
         "MP/build/release-linux-$(_arch_rtcw)/main/vm/"
+        "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_opengl1_$(_arch_rtcw).so"
+        "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_rend2_$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_opengl1_$(_arch_rtcw).so"
+        "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_rend2_$(_arch_rtcw).so"
     )
 
     if isPlatform "x86"; then
         md_ret_files+=(
-            "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_opengl1_$(_arch_rtcw).so"
-            "SP/build/release-linux-$(_arch_rtcw)/renderer_sp_rend2_$(_arch_rtcw).so"
-            "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_opengl1_$(_arch_rtcw).so"
-            "MP/build/release-linux-$(_arch_rtcw)/renderer_mp_rend2_$(_arch_rtcw).so"
+
         )
     fi
 }
