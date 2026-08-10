@@ -9,28 +9,6 @@
 # See the LICENSE file distributed with this source and at
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
-# COMBINED MODULE: supports both
-#   - Raspberry Pi 4 running Buster  -> builds with RUNTIME=mono
-#   - Raspberry Pi 5 running Bookworm -> builds with RUNTIME=dotnet
-#
-# The correct path is chosen automatically at install time by checking
-# /etc/os-release for the "bookworm" codename. No user interaction needed.
-#
-# Notes on assumptions made while combining:
-#   - rp_module_flags now allows rpi4 and rpi5 (dropped rpi3 - untested/
-#     likely too weak for this engine; add it back if you want it).
-#   - apt-key is deprecated/removed on newer OS, so the Mono repo key is
-#     now added via a keyring file + signed-by= instead, on BOTH branches.
-#     This works fine on Buster too, so there's no reason to keep the old
-#     apt-key method.
-#   - sources_openra now uses `git clone` + latest release tag (from the
-#     Pi5 script) instead of a hardcoded tarball URL pinned to
-#     release-20230225, so the module doesn't go stale. If you specifically
-#     need release-20230225 on Buster, see the note in sources_openra().
-#   - install_openra uses the explicit file list from the Pi5 script
-#     (more precise than shipping the whole build dir).
-#   - Launch scripts auto-detect which DOTNET_ROOT was used at install
-#     time, so the same scripts work regardless of which board built them.
 
 rp_module_id="openra"
 rp_module_desc="Open RA - Real Time Strategy game engine supporting early Westwood classics"
