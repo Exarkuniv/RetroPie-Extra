@@ -33,7 +33,7 @@ function depends_openra() {
         libopenal-dev libfreetype6-dev liblua5.1-0-dev \
         libcurl4-openssl-dev zenity cmake build-essential libtool automake \
         autoconf gettext python3 python3-pip fuseiso libsdl2-dev curl \
-        ca-certificates apt-transport-https dirmngr gnupg
+        ca-certificates apt-transport-https dirmngr gnupg xorg
     )
     getDepends "${depends[@]}"
 
