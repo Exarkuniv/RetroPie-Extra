@@ -12,6 +12,7 @@
 #  Includes:
 #  - ES-X language files
 #  - Theme Browser previews
+#  - X-TRAS free games catalog
 #  - Skyscraper helper script
 #  - Optional Skyscraper configuration files
 #  - ES-X music folders
@@ -36,7 +37,7 @@ fi
 
 rp_module_id="emulationstation-es-x"
 rp_module_desc="EmulationStation-X (ES-X) - Experimental fork with .ini language and theme enhancements"
-rp_module_help="After installing, ES-X becomes the main frontend.\n\nIncludes:\n- .ini language support\n- Theme Browser previews\n- default ES-X theme\n- Skyscraper integration\n- background music folders\n\nMusic folders:\n$home/RetroPie/music\n$home/.emulationstation/music\n\nRecommended: back up $home/.emulationstation before installing."
+rp_module_help="After installing, ES-X becomes the main frontend.\n\nIncludes:\n- .ini language support\n- Theme Browser previews\n- X-TRAS free games catalog\n- default ES-X theme\n- Skyscraper integration\n- background music folders\n\nMusic folders:\n$home/RetroPie/music\n$home/.emulationstation/music\n\nRecommended: back up $home/.emulationstation before installing."
 rp_module_section="exp"
 rp_module_flags="frontend"
 
@@ -322,6 +323,34 @@ function esx_install_theme_previews() {
     fi
 }
 
+function esx_install_xtras_catalog() {
+    echo "Installing ES-X X-TRAS free games catalog..."
+
+    local esx_root="$home/.emulationstation/esx"
+    local catalog_dst="$esx_root/xtras-free-games.ini"
+    local catalog_src=""
+
+    catalog_src="$(esx_resolve_path \
+        "$md_build/esx/xtras-free-games.ini" \
+        "$md_build/resources/esx/xtras-free-games.ini" \
+        "$md_inst/esx/xtras-free-games.ini" \
+        "$md_inst/resources/esx/xtras-free-games.ini" \
+    )"
+
+    if [[ -n "$catalog_src" && -f "$catalog_src" ]]; then
+        mkUserDir "$esx_root"
+
+        # Catalog data belongs to ES-X. Refresh it on install/update.
+        cp -fv "$catalog_src" "$catalog_dst"
+        chmod 644 "$catalog_dst"
+        esx_chown "$catalog_dst"
+
+        echo "X-TRAS catalog installed/updated at $catalog_dst"
+    else
+        echo "WARNING: No 'esx/xtras-free-games.ini' catalog found in ES-X source."
+    fi
+}
+
 function esx_create_music_dirs() {
     echo "Ensuring ES-X music folders exist..."
 
@@ -474,6 +503,7 @@ function configure_emulationstation-es-x() {
     esx_install_skyscraper_helper
     esx_install_skyscraper_config
     esx_install_theme_previews
+    esx_install_xtras_catalog
     esx_create_music_dirs
     esx_install_default_themes
     esx_apply_default_settings
