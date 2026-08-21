@@ -25,7 +25,6 @@ function install_bin_barrage() {
 }
 
 function configure_barrage() {
-    mkRomDir "ports"
-    #moveConfigFile "$home/.lgames/barrage.conf" "$md_conf_root/barrage/barrage.conf"
+
     addPort "$md_id" "barrage" "barrage - Shooting Range action game" "XINIT: /usr/games/barrage"
 }

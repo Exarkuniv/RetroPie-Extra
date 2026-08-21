@@ -19,7 +19,13 @@ rp_module_section="exp"
 rp_module_flags=""
 
 function depends_augustus() {
-    getDepends cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev libsdl-mixer1.2-dev libmpg123-0 libsdl2-mixer-dev
+    local mpg123_pkg="libmpg123-0"
+
+    if [[ -n "$__os_debian_ver" ]] && [[ "$__os_debian_ver" -ge 13 ]]; then
+        mpg123_pkg="libmpg123-0t64"
+    fi
+
+    getDepends cmake libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev libsdl2-image-dev libsdl-mixer1.2-dev $mpg123_pkg
 }
 
 function sources_augustus() {
@@ -42,8 +48,8 @@ function install_augustus() {
 
 function game_data_augustus() {
         downloadAndExtract "https://github.com/Exarkuniv/augustus-assets/releases/download/test/assets-3.1.0-release.zip" "$romdir/ports/caesar3"
-	chown -R $user:$user "$romdir/ports/caesar3"
-	chown -R $user:$user "$romdir/ports/caesar3/assets"
+	chown -R $__user:$__group "$romdir/ports/caesar3"
+	chown -R $__user:$__group "$romdir/ports/caesar3/assets"
 }
 
 function configure_augustus() {

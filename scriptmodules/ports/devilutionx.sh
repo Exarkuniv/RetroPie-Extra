@@ -20,11 +20,11 @@ rp_module_flags="!x86 !mali"
 
 function _get_version_devilutionx() {
     # default DevilutionX version
-    local devilutionx_version="1.5.3"
+	local devilutionx_version=$(curl https://api.github.com/repos/diasurgical/devilutionX/releases/latest 2>&1 | grep -m 1 tag_name | cut -d\" -f4 | cut -dv -f2)
 
     # 32 bit
     isPlatform "32bit" && devilutionx_version="1.5.1"
-    echo $devilutionx_version
+    echo -ne $devilutionx_version
 }
 
 function depends_devilutionx() {
@@ -59,7 +59,7 @@ function game_data_diablo() {
     if [[ ! -f "$romdir/ports/devilutionx/diablo.exe" ]]; then
         downloadAndExtract "https://github.com/Exarkuniv/game-data/raw/main/diablo.zip" "$romdir/ports/devilutionx"
     mv "$romdir/ports/devilutionx/diablo"* "$romdir/ports/devilutionx/"
-    chown -R $user:$user "$romdir/ports/devilutionx"
+    chown -R $__user:$__group "$romdir/ports/devilutionx"
     fi
 }
 

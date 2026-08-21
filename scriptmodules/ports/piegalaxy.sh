@@ -23,10 +23,10 @@ function install_bin_piegalaxy() {
 	local innoversion="1.8-dev-2019-01-13"
 	local wyvernversion="1.4.1"
 	gitPullOrClone "$md_inst" https://github.com/sigboe/pie-galaxy.git master
-	isPlatform "x86" && (cd "$md_inst" && curl -o wyvern -O "https://github.com/sigboe/wyvern/releases/latest/download/wyvern-${wyvernversion}.arm")
-	isPlatform "arm" && (cd "$md_inst" && curl -o wyvern -O "https://github.com/sigboe/wyvern/releases/latest/download/wyvern-${wyvernversion}.x86")
-	isPlatform "x86" && downloadAndExtract "http://constexpr.org/innoextract/files/snapshots/innoextract-${innoversion}/innoextract-${innoversion}-linux.tar.xz" "$md_inst" --strip-components 3 innoextract-${innoversion}-linux/bin/amd64/innoextract
-	isPlatform "arm" && downloadAndExtract "http://constexpr.org/innoextract/files/snapshots/innoextract-${innoversion}/innoextract-${innoversion}-linux.tar.xz" "$md_inst" --strip-components 3 innoextract-${innoversion}-linux/bin/armv6j-hardfloat/innoextract
+	isPlatform "x86" && (cd "$md_inst" && curl -o wyvern -O "https://github.com/sigboe/wyvern/releases/latest/download/wyvern-${wyvernversion}.x86")
+	isPlatform "arm" && (cd "$md_inst" && curl -o wyvern -O "https://github.com/sigboe/wyvern/releases/latest/download/wyvern-${wyvernversion}.arm")
+	isPlatform "x86" && downloadAndExtract "https://constexpr.org/innoextract/files/snapshots/innoextract-${innoversion}/innoextract-${innoversion}-linux.tar.xz" "$md_inst" --strip-components 3 innoextract-${innoversion}-linux/bin/amd64/innoextract
+	isPlatform "arm" && downloadAndExtract "https://constexpr.org/innoextract/files/snapshots/innoextract-${innoversion}/innoextract-${innoversion}-linux.tar.xz" "$md_inst" --strip-components 3 innoextract-${innoversion}-linux/bin/armv6j-hardfloat/innoextract
 	chmod +x "$md_inst"/wyvern "$md_inst"/innoextract "$md_inst"/pie-galaxy.sh
 }
 

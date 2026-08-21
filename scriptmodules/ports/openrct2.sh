@@ -20,67 +20,73 @@ rp_module_flags="noinstclean !all rpi5"
 
 
 function depends_openrct2() {
-    local depends=(
-    xorg x11-xserver-utils libsdl2-dev libicu-dev gcc pkg-config 
-    libjansson-dev libspeex-dev libspeexdsp-dev libcurl4-openssl-dev libcrypto++-dev 
-    libfontconfig1-dev libfreetype6-dev libpng-dev libssl-dev libzip-dev build-essential 
-    make libbenchmark-dev libbenchmark-ocaml-dev duktape-dev 
-    libvorbis-dev libflac++-dev ccache nlohmann-json3-dev
-)
+    local depends=(xorg x11-xserver-utils libsdl2-dev libicu-dev gcc pkg-config libcurl4-openssl-dev libcrypto++-dev libfontconfig1-dev libfreetype6-dev libpng-dev libssl-dev libzip-dev build-essential make nlohmann-json3-dev libbenchmark-dev libvorbis-dev libflac-dev libzstd-dev)
 
-        isPlatform "64bit" && depends+=(libduktape207 libbenchmark1debian)
-        isPlatform "32bit"&& depends+=(libduktape203 libbenchmark1)
+    if isPlatform "64bit"; then
+		depends+=(libduktape207)
+		if [[ "$__os_debian_ver" -ge 13 ]]; then
+			depends+=(libbenchmark1.9.1)
+		else
+			depends+=(libbenchmark1debian)
+		fi
+	fi
+    isPlatform "32bit"&& depends+=(libduktape203 libbenchmark1)
 
 	getDepends "${depends[@]}"
 }
 
 
 function sources_openrct2() {
-    gitPullOrClone 
+    gitPullOrClone
 }
 
 function build_openrct2() {
-    mkdir $md_build/build
-    cd $md_build/build
-    cmake ../
-    make -j4
-    make install
+    mkdir build && cd build
+    cmake -DCMAKE_CXX_FLAGS="" ..
+    make -j3
+    DESTDIR=. make install
+	mkdir "$md_build/build/usr/local/data/"
+	mv "$md_build/build/usr/local/share/openrct2/"* "$md_build/build/usr/local/data/"
+	mv "$md_build/build/usr/local/bin/"* "$md_build/build/usr/local/"
 
     md_ret_require=( 
-	'openrct2'
-      )
+	"$md_build/build/usr/local/openrct2"
+    )
 }
 
 function game_data_openrct2() {
-      if [[ ! -f "/home/pi/.config/OpenRCT2/config.ini" ]]; then
-        git clone "https://github.com/Exarkuniv/RCTconfig.git" "/home/pi/.config/OpenRCT2"
+      if [[ ! -f "$home/.config/OpenRCT2/config.ini" ]]; then
+        git clone "https://github.com/Exarkuniv/RCTconfig.git" "$home/.config/OpenRCT2"
+		sed -i.bak "s|/home/pi|$home|g" "$home/.config/OpenRCT2/config.ini"
       fi
-     chown -R pi:pi "/home/pi/.config/OpenRCT2"
-     chmod +x "/home/pi/.config/OpenRCT2/config.ini"
+     chown -R "$__user":"$__group" "$home/.config/OpenRCT2"
+     chmod +x "$home/.config/OpenRCT2/config.ini"
 }
 
 function install_openrct2() {
     md_ret_files=(
-	'build'
-	'data'
-	'resources'
-        )
+	'build/usr/local/openrct2'
+	'build/usr/local/openrct2-cli'
+	'build/usr/local/data'
+    )
 }
 
 function configure_openrct2() {
+	mv "$md_inst/bin/"* "$md_inst"
+	rm "$md_inst/bin/"
+	
 	cat >"$md_inst/rct.sh" << _EOF_
 
 #!/bin/bash
-cd "/opt/retropie/ports/openrct2/build"
+cd "/opt/retropie/ports/openrct2"
 ./openrct2 
 _EOF_
 
- chmod +x "$md_inst/rct.sh"
+    chmod +x "$md_inst/rct.sh"
 
-    addPort "$md_id" "openrct2" "Rollercoaster tycoon 2" "XINIT:$md_inst/rct.sh"
+    addPort "$md_id" "openrct2" "RollerCoaster Tycoon 2" "XINIT:$md_inst/rct.sh"
     mkRomDir "ports/openrct2"
     mkRomDir "ports/openrct1"
 
    [[ "$md_mode" == "install" ]] && game_data_openrct2
-   chown -R pi:pi "/home/pi/.config/OpenRCT2"
 }

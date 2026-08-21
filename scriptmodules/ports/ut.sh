@@ -51,17 +51,19 @@ function depends_ut() {
 
 function install_bin_ut() {
     local version="$(_get_branch_ut)"
+	isPlatform "rpi5" && version="469d"
+	local trimversion=$(echo $version | sed 's/-.*//g')
+	
     local arch="$(dpkg --print-architecture)"
-
-    # For some reason, it failed when using "$rp_module_repo", this works perfectly.
-    local base_url="https://github.com/OldUnreal/UnrealTournamentPatches"
-    local dl_file="OldUnreal-UTPatch469e-Linux-amd64.tar.bz2"
-    local dl_url="${base_url}/releases/download/v${version}/${dl_file}"
-
     # The download files use "x86" for the i386 architecture
     [[ "${arch}" == "i386" ]] && arch="x86"
 
-    downloadAndExtract "https://github.com/OldUnreal/UnrealTournamentPatches/releases/download/v469e-rc8/OldUnreal-UTPatch469e-Linux-arm64.tar.bz2" "$md_inst" "--no-same-owner"
+    # For some reason, it failed when using "$rp_module_repo", this works perfectly.
+    local base_url="https://github.com/OldUnreal/UnrealTournamentPatches"
+    local dl_file="OldUnreal-UTPatch${trimversion}-Linux-${arch}.tar.bz2"
+    local dl_url="${base_url}/releases/download/v${version}/${dl_file}"
+
+    downloadAndExtract "$dl_url" "$md_inst" "--no-same-owner"
 }
 
 function __config_game_data() {
@@ -69,9 +71,9 @@ function __config_game_data() {
 
     if [[ ! -d "$romdir/ports/ut/$ut_game_dir" ]]; then
         mkdir -p "$romdir/ports/ut/$ut_game_dir"
-        chown -R "$__user":"$__group" "$romdir/ports/ut/$ut_game_dir"
+        chown -R $__user:$__group "$romdir/ports/ut/$ut_game_dir"
     else
-        chown "$__user":"$__group" "$romdir/ports/ut/$ut_game_dir"
+        chown $__user:$__group "$romdir/ports/ut/$ut_game_dir"
     fi
 
     if [[ -d "$md_inst/$ut_game_dir" ]]; then
@@ -100,7 +102,7 @@ function __config_game_data() {
 
 function game_data_ut() {
 
-    for dir in Help Maps Music Sounds Textures Web; do
+    for dir in Help Maps Music Sounds System Textures Web; do
 
         # Ensure we aren't moving files that are already in place.
         # Eliminates 'mv: '$src/$file' and '$dst/$file' are the same file' errors.
@@ -112,7 +114,7 @@ function game_data_ut() {
     local bonus_pack_4_url="https://unreal-archive-files-s3.s3.us-west-002.backblazeb2.com/patches-updates/Unreal%20Tournament/Bonus%20Packs/utbonuspack4-zip.zip"
     downloadAndExtract "$bonus_pack_4_url" "$romdir/ports/ut/"
 
-    chown -R "$__user":"$__group" "$romdir/ports/ut"
+    chown -R $__user:$__group "$romdir/ports/ut"
     find  "$romdir/ports/ut" -type f -exec chmod 644 {} \;
     find  "$romdir/ports/ut" -type d -exec chmod 755 {} \;
 
@@ -138,7 +140,7 @@ function configure_ut() {
     if [[ ! -f "$home/.utpg/System/UnrealTournament.ini" ]]; then
         mkdir "$home/.utpg/System/"
         cp "$md_data/UnrealTournament.ini" "$home/.utpg/System/UnrealTournament.ini"
-        chown "$__user":"$__group" "$home/.utpg/System/UnrealTournament.ini"
+        chown -R $__user:$__group "$home/.utpg/System"
         chmod 644 "$home/.utpg/System/UnrealTournament.ini"
     fi
 }
