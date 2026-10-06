@@ -106,6 +106,43 @@ function _cmake_borked3ds() {
     fi
 }
 
+################################
+# OWNERSHIP OF THE USER'S FOLDERS (v401)
+#
+# The scriptmodule runs as root. Every folder it creates in the user's home (the Sonic
+# network_id.dat under sdmc/, the Vulkan shader cache, qt-config.ini on the Pi4) used to be
+# owned by root, and on a fresh install mkdir -p also created ~/.local/share/borked3ds-emu
+# itself as root. The emulator, running as the user, could then write nothing there: no log
+# file, and the CECD service failed to format its system save data in nand/ and stopped on
+# "Tried to Unwrap empty ResultVal" (ASSERT -> __builtin_trap -> SIGILL on x86, SIGTRAP on
+# ARM). Seen by Folly on x86_64 (6 Oct. 2026); any fresh install was affected.
+# Fix: give the emulator folders back to the user, recursively, and the parent folders
+# (.local, .local/share, .config) too when root created them.
+################################
+function _own_borked3ds() {
+    local user_home="${home:-/home/${__user:-pi}}"
+    local owner="${__user:-pi}"
+    local group="${__group:-$owner}"
+    local d
+    for d in "$user_home/.local" "$user_home/.local/share" "$user_home/.config"; do
+        if [ -d "$d" ] && [ "$(stat -c %U "$d")" = "root" ]; then
+            chown "$owner:$group" "$d"
+        fi
+    done
+    for d in "$user_home/.local/share/borked3ds-emu" "$user_home/.config/borked3ds-emu"; do
+        if [ -d "$d" ]; then
+            chown -R "$owner:$group" "$d"
+        fi
+    done
+    local bad
+    bad="$(find "$user_home/.local/share/borked3ds-emu" "$user_home/.config/borked3ds-emu" ! -user "$owner" 2>/dev/null | wc -l)"
+    if [ "$bad" -ne 0 ]; then
+        echo "ATTENTION : $bad element(s) n'appartiennent pas a $owner dans les dossiers de l'emulateur."
+    else
+        echo "Dossiers de l'emulateur : proprietaire $owner (OK)."
+    fi
+}
+
 function depends_borked3ds() {
     local target codename
     target="$(_target_borked3ds)"
@@ -763,7 +800,7 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
     fi
     mkdir -p "$vk_cache"
     echo "$spirv_key" > "$vk_cache/.spirv_key"
-    chown -R "${__user:-pi}": "$user_home/.local/share/borked3ds-emu/shaders" 2>/dev/null
+    _own_borked3ds
     echo "=========================================================="
     echo ""
 }
@@ -866,9 +903,11 @@ for key, value in wanted:
 
 open(path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
 _EOF_
-        chown -R "${__user:-pi}": "$user_home/.config/borked3ds-emu" 2>/dev/null
         echo "Pi4 : reglages de depart OpenGL + GLES verifies dans $qtcfg"
     fi
+
+    # v401: every target (Pi4 returns early from install_borked3ds, so this runs here too).
+    _own_borked3ds
 
     echo ""
     echo "Ligne de lancement installee :"
