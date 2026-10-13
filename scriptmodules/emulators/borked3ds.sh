@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # This file is part of RetroPie-Extra, a supplement to RetroPie.
 # For more information, please visit:
 #
@@ -508,6 +509,15 @@ function build_borked3ds() {
         # PI5 / DTEAM-1: Clang, upstream notes that "Vulkan may crash if the executable was
         # compiled with GCC". -Werror is stripped in sources_borked3ds() above.
         # Bookworm: clang-16 (system clang 14 is too old), see _clang_borked3ds().
+        #
+        # Libraries (v402): the bundled submodules, like the x86_64 target, except Qt and SDL2
+        # which come from the system. Until v401 the Pi5 used USE_SYSTEM_LIBS=ON, which forces
+        # ~20 system libraries (dynarmic, glslang, fmt, cubeb, cpp-jwt, lodepng, OpenAL, VMA...)
+        # that the dependency list never installed: the build only worked on a Pi that already
+        # had them, and failed at CMake on a fresh Pi5 (reported on Trixie by roslof and
+        # RapidEdwin08, Oct. 2026; Bookworm is affected the same way and its versions are older).
+        # The bundled versions are the ones pinned by the repository, so every Pi builds the same
+        # emulator.
         ################################
         local cv cc="clang" cxx="clang++"
         cv="$(_clang_borked3ds)"
@@ -530,8 +540,10 @@ function build_borked3ds() {
             -DENABLE_QT=ON \
             -DENABLE_SDL2=ON \
             -DENABLE_TESTS=OFF \
+            -DBORKED3DS_WARNINGS_AS_ERRORS=OFF \
+            -DUSE_SYSTEM_LIBS=OFF \
             -DUSE_SYSTEM_QT=ON \
-            -DUSE_SYSTEM_LIBS=ON
+            -DUSE_SYSTEM_SDL2=ON
     fi
 
     if [ $? -ne 0 ]; then
@@ -678,6 +690,19 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
         return 0
     fi
 
+    ################################
+    # LIBRARIES CHECK (v402): the binary must not link a system copy of a library the
+    # repository bundles. Only direct dependencies (readelf NEEDED) are checked: ldd would
+    # also list what Qt or Mesa pull in themselves.
+    ################################
+    local sys_libs
+    sys_libs="$(readelf -d "$md_inst/borked3ds" 2>/dev/null | grep -F '(NEEDED)' | grep -oE '\[[^]]+\]' | tr -d '[]' | grep -E '^lib(dynarmic|glslang|SPIRV|fmt|cubeb|enet|inih|lodepng|SoundTouch|soundtouch|crypto\+\+|cryptopp|openal|zstd|usb-1)' | tr '\n' ' ')"
+    if [ -n "$sys_libs" ]; then
+        echo "Bibliotheques systeme liees (attendu : aucune) : $sys_libs"
+    else
+        echo "Bibliotheques : versions integrees au depot (dynarmic, glslang, fmt...) ; Qt et SDL2 du systeme."
+    fi
+
     local borked3ds_markers=(
         "TRACE_DISPLAY_TRANSFER src="
         "shifts the bottom screen"
@@ -786,7 +811,10 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
     ################################
     local vk_cache="$user_home/.local/share/borked3ds-emu/shaders/vulkan"
     local spirv_key
-    spirv_key="$(git -C "$md_build" rev-parse HEAD:externals/glslang 2>/dev/null)-$(md5sum "$md_build/src/video_core/renderer_vulkan/vk_shader_util.cpp" 2>/dev/null | cut -c1-32)"
+    # v402: "-bundled" records that the bundled glslang does the conversion (until v401 the Pi5
+    # linked Debian's glslang). The key changes once, so SPIR-V produced by the old glslang is
+    # purged on the first v402 install; the pipeline cache is kept (the driver validates it).
+    spirv_key="$(git -C "$md_build" rev-parse HEAD:externals/glslang 2>/dev/null)-$(md5sum "$md_build/src/video_core/renderer_vulkan/vk_shader_util.cpp" 2>/dev/null | cut -c1-32)-bundled"
     if [ -n "${BORKED3DS_PURGE_SHADER_CACHE:-}" ]; then
         rm -rf "$vk_cache"
         echo "Vulkan shader cache: full purge (BORKED3DS_PURGE_SHADER_CACHE)."
