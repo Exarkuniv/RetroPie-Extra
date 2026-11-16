@@ -160,6 +160,7 @@ I'll have a note at the end with some Info about it. if there is NO note or [X] 
 - [X] - `lr-gearcoleco.sh` - ColecoVision emulator - GearColeco port for libretro. - **Installs, Plays, Runs well**
 - [X] - `lr-lutro.sh` - Lua engine - lua game framework (WIP) for libretro following the LÖVE API - **Installs, Plays, Runs well**
 - [ ] - `lr-mame2003_midway.sh` - MAME 0.78 core with Midway games optimizations. - **Installs, doesnt start my games**
+- [ ] - `lr-mupen64plus-rearmed.sh` - Experimental Nintendo 64 libretro core with restored legacy-renderer frameskip. Separate from standalone `mupen64plus-frameskip`; save/load states confirmed by the contributor under RetroArch 1.19.1. Raspberry Pi validation pending.
 - [X] - `lr-melonds.sh` - NDS emu - MelonDS port for libretro - **Installs, Plays, Runs**
 - [X] - `lr-mesen-s.sh` - Super Nintendo emu - Mesen-S port for libretro - **Installs, Plays, Runs well**
 - [] - `lr-mess-jaguar.sh` - Add support for using lr-mess for Jaguar games, uses atarijaguar system name to match lr-virtualjaguar. - **did not test due to not having mess installed yet**
