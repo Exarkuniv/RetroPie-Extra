@@ -197,7 +197,19 @@ function depends_borked3ds() {
     else
         # Pi5: Vulkan driver (already present when Mesa comes from trixie-backports).
         depends+=(mesa-vulkan-drivers)
-        [ "$codename" = "bookworm" ] && depends+=(clang-16)
+        # v421: the llvm package, same version as the compiler, brings:
+        #   - llvm-profdata, which converts the PGO profile of the repository (_pgo_borked3ds);
+        #   - llvm-ar and llvm-ranlib, which Clang needs for LTO. Without them, CMake's
+        #     check_ipo_supported() test project failed at its archive step ("ninja: build
+        #     stopped" in the log, CMAKE_CXX_COMPILER_AR-NOTFOUND), printed "LTO enabled but is
+        #     unavailable, disabling" and built without LTO. RetroPie installs dependencies
+        #     without recommended packages, so clang alone never pulled llvm in.
+        # xz-utils: the profile is stored compressed.
+        if [ "$codename" = "bookworm" ]; then
+            depends+=(clang-16 llvm-16 xz-utils)
+        else
+            depends+=(llvm xz-utils)
+        fi
     fi
 
     getDepends "${depends[@]}"
@@ -405,7 +417,10 @@ function sources_borked3ds() {
 
     # Check: no bare -Werror may remain (-Werror=... is legitimate).
     local werror_left
-    werror_left="$(grep -rn -- "-Werror" "$md_build" --include="CMakeLists.txt" --include="*.cmake" 2>/dev/null | grep -v -- "-Werror=" | wc -l)"
+    # v421: the options come before the pattern. With "grep -rn -- -Werror dir --include=...",
+    # everything after "--" is a file name: --include was ignored and grep searched every file
+    # of the tree (comments, Android.mk, ChangeLog...), hence a false "181 occurrences" warning.
+    werror_left="$(grep -rn --include="CMakeLists.txt" --include="*.cmake" -e "-Werror" "$md_build" 2>/dev/null | grep -v -- "-Werror=" | wc -l)"
     if [ "$werror_left" -ne 0 ]; then
         echo "ATTENTION : $werror_left occurrence(s) de -Werror subsistent dans les fichiers cmake."
     else
@@ -452,6 +467,89 @@ function sources_borked3ds() {
         exit 1
     fi
     echo "Arbre source verifie : CMakeLists.txt et src/ presents."
+}
+
+################################
+# PGO PROFILE (v421, Pi5 only)
+#
+# The repository ships a profile of the emulator's hot code: dist/pgo/borked3ds.proftext.xz
+# (LLVM text format, so any recent llvm-profdata can read it), recorded on a Pi 5 with an
+# instrumented build (-fprofile-generate) over 7 play sessions (Luigi's Mansion 2 warm x2 and
+# cold, Castlevania Mirror of Fate, Kid Icarus Uprising, Smash Bros, Metroid Samus Returns).
+# Clang uses it (-fprofile-use) to lay out and optimize the code that games really run.
+# Measured on a Pi 5 at fixed work (16 Nov. 2026), CPU time of the emulation thread:
+#   Luigi's Mansion 2 -11 %, and on games that are NOT in the profile:
+#   Zelda -17 %, Sonic Lost World -8.5 %.
+# Build time is unchanged (no training on the user's machine).
+#
+# Profile and sources: the profile was made on commit 1a105e20b. Code changed later is simply
+# compiled without profile data for the changed functions (warnings silenced); the rest keeps
+# the gain. Regenerate the profile from time to time (see dist/pgo/PROFIL.txt).
+#
+# Any problem (file missing, wrong SHA-256, no llvm-profdata, conversion failure) prints the
+# reason and builds WITHOUT PGO, exactly like before: never a failed build because of it.
+# BORKED3DS_NO_PGO=1 forces a build without PGO.
+#
+# Prints the extra compiler flags on stdout (nothing = no PGO); messages go to stderr.
+################################
+function _pgo_borked3ds() {
+    local cxx="$1"
+    local dir="$md_build/dist/pgo"
+    local out="$md_build/build/borked3ds.profdata"
+    local state="$md_build/.borked3ds_pgo"
+
+    _pgo_off_borked3ds() {
+        echo "PGO : inactif -- $1 -> build sans PGO." >&2
+        echo "inactif ($1)" > "$state"
+    }
+
+    if [ -n "${BORKED3DS_NO_PGO:-}" ]; then
+        _pgo_off_borked3ds "BORKED3DS_NO_PGO"; return
+    fi
+    if [ ! -f "$dir/borked3ds.proftext.xz" ]; then
+        _pgo_off_borked3ds "profil absent du depot (dist/pgo/borked3ds.proftext.xz)"; return
+    fi
+    if [ -f "$dir/borked3ds.proftext.xz.sha256" ]; then
+        if ! (cd "$dir" && sha256sum -c --status borked3ds.proftext.xz.sha256); then
+            _pgo_off_borked3ds "somme SHA-256 du profil incorrecte"; return
+        fi
+    fi
+
+    # llvm-profdata of the same LLVM version as the compiler.
+    local major prof=""
+    major="$("$cxx" -dumpversion 2>/dev/null | cut -d. -f1)"
+    for prof in "llvm-profdata-$major" "/usr/lib/llvm-$major/bin/llvm-profdata" ""; do
+        [ -n "$prof" ] && command -v "$prof" >/dev/null 2>&1 && break
+    done
+    if [ -z "$prof" ]; then
+        _pgo_off_borked3ds "llvm-profdata $major introuvable (paquet llvm)"; return
+    fi
+
+    local txt="$md_build/build/borked3ds.proftext"
+    if ! xz -dc "$dir/borked3ds.proftext.xz" > "$txt" 2>/dev/null; then
+        rm -f "$txt"; _pgo_off_borked3ds "decompression du profil impossible"; return
+    fi
+    # Local functions (static, anonymous namespace, lambdas) are named "<source path>;<name>"
+    # in the profile, with the path of the tree where it was recorded. Clang looks them up with
+    # the path of THIS tree: without the rewrite below, ~10 % of the functions (6 % of the
+    # executed code, including dynarmic's register allocator) would get no profile data.
+    local src_prefix bld_prefix nloc
+    src_prefix="$(sed -n 's/^prefixe_sources=//p' "$dir/PROFIL.txt" 2>/dev/null)"
+    bld_prefix="$(sed -n 's/^prefixe_build=//p' "$dir/PROFIL.txt" 2>/dev/null)"
+    [ -n "$src_prefix" ] && sed -i "s|$src_prefix|$md_build/|g" "$txt"
+    [ -n "$bld_prefix" ] && sed -i "s|$bld_prefix|$md_build/build/|g" "$txt"
+    nloc="$(grep -c "^$md_build/" "$txt")"
+    echo "PGO : $nloc fonctions locales rattachees aux sources de $md_build" >&2
+
+    if ! "$prof" merge -o "$out" "$txt" >/dev/null 2>&1 || [ ! -s "$out" ]; then
+        rm -f "$txt" "$out"; _pgo_off_borked3ds "conversion du profil impossible avec $prof"; return
+    fi
+    rm -f "$txt"
+
+    local info="profil $(sed -n 's/^commit_profil=//p' "$dir/PROFIL.txt" 2>/dev/null)"
+    echo "PGO : actif -- $info, sources $(cat "$md_build/.borked3ds_commit" 2>/dev/null), $prof" >&2
+    echo "actif ($info, sources $(cat "$md_build/.borked3ds_commit" 2>/dev/null))" > "$state"
+    echo "-fprofile-use=$out -Wno-backend-plugin -Wno-profile-instr-out-of-date -Wno-profile-instr-unprofiled"
 }
 
 function build_borked3ds() {
@@ -530,13 +628,33 @@ function build_borked3ds() {
         fi
         echo "Compilateur : $cxx"
 
+        # v421: -mcpu=cortex-a76 (the Pi 5 core) instead of -march=armv8.2-a+crc+crypto: same
+        # extensions (crc, crypto, LSE atomics) plus dotprod, and scheduling for the A76.
+        # Measured: -2 % CPU on the emulation thread. Then the PGO profile, if usable.
+        local pi5_flags pgo_flags
+        pgo_flags="$(_pgo_borked3ds "$cxx")"
+        pi5_flags="-mcpu=cortex-a76+crypto -O3${pgo_flags:+ $pgo_flags}"
+        echo "Options Pi5 : $pi5_flags"
+
+        # v421: LTO (ThinLTO, enabled by the top CMakeLists.txt for Release builds) now really
+        # works, llvm-ar being installed with llvm. The reference and PGO measurements of
+        # 16 Nov. 2026 were all made with ThinLTO on (8 GB Pi 5: about 40 min, no swapping).
+        # Under 6 GB of RAM it is turned off to keep the build safe; PGO still applies.
+        local pi5_lto="ON" pi5_mem
+        pi5_mem="$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)"
+        if [ "$pi5_mem" -lt 6000 ]; then
+            pi5_lto="OFF"
+            echo "LTO : coupe (Pi 5 avec $pi5_mem Mo de RAM, moins de 6 Go) ; le PGO reste applique."
+        fi
+
         "$cmake_bin" .. \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_C_COMPILER="$cc" \
             -DCMAKE_CXX_COMPILER="$cxx" \
-            -DCMAKE_C_FLAGS="-march=armv8.2-a+crc+crypto -O3" \
-            -DCMAKE_CXX_FLAGS="-march=armv8.2-a+crc+crypto -O3" \
+            -DCMAKE_C_FLAGS="$pi5_flags" \
+            -DCMAKE_CXX_FLAGS="$pi5_flags" \
+            -DENABLE_LTO="$pi5_lto" \
             -DENABLE_QT=ON \
             -DENABLE_SDL2=ON \
             -DENABLE_TESTS=OFF \
@@ -664,6 +782,10 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
     #   V399_SVC_TIMING : per-SVC hardware cycle counts (gvx64 99a0d7e / Azahar #1093); escape hatch
     #     BORKED3DS_V3DV_V399_NO_SVC_TIMING=1 restores the old +150 ticks in GetSystemTick (v399)
     #   V400_ARCH= : the Pi5 runtime defaults (V389/V391) are compiled in on x86_64 too (v400)
+    #   V408_ACTIF / BORKED3DS_V3DV_V408_OFF : the invisible right eye is not drawn (3D off),
+    #     automatic, Vulkan only (v408-v412, on by default since v419)
+    #   V415_CADENCE / BORKED3DS_V3DV_V415_OFF : per-frame pacing for games that compute more
+    #     frames than they show (Castlevania character, Luigi's Mansion 2 speed) (v415-v419)
     # To add a marker, append it to borked3ds_markers.
     ################################
 
@@ -680,6 +802,11 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
         cp "$md_build/.borked3ds_commit" "$md_inst/.borked3ds_commit"
     else
         echo "Commit compile : INCONNU"
+    fi
+    rm -f "$md_inst/.borked3ds_pgo"
+    if [ -f "$md_build/.borked3ds_pgo" ]; then
+        echo "PGO : $(cat "$md_build/.borked3ds_pgo")"
+        cp "$md_build/.borked3ds_pgo" "$md_inst/.borked3ds_pgo"
     fi
 
     # The markers and the Vulkan cache below belong to the DTEAM-1 fork (Pi5, x86_64) only.
@@ -752,6 +879,10 @@ open('$sonic_eu_data/network_id.dat', 'wb').write(data)
         "V399_SVC_TIMING actif="
         "BORKED3DS_V3DV_V399_NO_SVC_TIMING"
         "V400_ARCH="
+        "V408_ACTIF r="
+        "BORKED3DS_V3DV_V408_OFF"
+        "V415_CADENCE v419 engage"
+        "BORKED3DS_V3DV_V415_OFF"
     )
 
     # strings runs once (the binary is ~90 MB) into a temporary file; grep reads the file,
@@ -862,7 +993,7 @@ function configure_borked3ds() {
     #   borked3ds          : game, OpenGL or Vulkan depending on the setting (default)
     #   borked3ds-ui       : Qt interface only
     #   borked3ds-ui-qt06  : Qt interface only, 0.6 scale (small screens)
-    # Old test lines (borked3ds_*) are removed.
+    # Old test lines (borked3ds_*, and borked3ds-pgo* of the PGO measurements) are removed.
     ################################
 
     addEmulator 1 "$md_id" "3ds" "XINIT-WM:$md_inst/borked3ds -f %ROM%"
@@ -871,7 +1002,7 @@ function configure_borked3ds() {
 
     local _emucfg="$configdir/3ds/emulators.cfg"
     if [[ -f "$_emucfg" ]]; then
-        sed -i '/^borked3ds_/d' "$_emucfg"
+        sed -i '/^borked3ds_/d; /^borked3ds-pgo/d' "$_emucfg"
     fi
 
     addSystem "3ds"
