@@ -10,15 +10,37 @@
 # https://raw.githubusercontent.com/Exarkuniv/RetroPie-Extra/master/LICENSE
 #
 
-#!/usr/bin/env bash
-
 rp_module_id="lr-colortvgame"
 rp_module_desc="Color TV-Game Simulator - Nintendo Color TV-Game 6/15 + Racing 112 (libretro)"
-rp_module_help="ROM Extension: .ctg\n\nNo ROMs needed: the games are built into the core. The 16 .ctg selectors from the project are copied to $romdir/colortvgame, plus \"Game Selector.ctg\", which opens the core's built-in game menu."
+rp_module_help="ROM Extension: .ctg
+
+No ROMs needed: the games are built into the core. The 16 .ctg selectors are copied to $romdir/colortvgame with standardized names (tennis_original_singles.ctg, ...), plus game_selector.ctg, which opens the core's built-in game menu. The gamelist.xml and media (images, logos, videos) come from https://github.com/DTEAM-1/test/tree/main/colortvgame.
+
+Supported: Raspberry Pi Zero / 1, Zero 2 / 3, 4 and 5 (32-bit or 64-bit), and x86 / x86_64 PCs. The core is built from source on the machine."
 rp_module_licence="MIT https://raw.githubusercontent.com/d-cglt/color-tv-game-simulator/master/LICENSE"
 rp_module_repo="git https://github.com/d-cglt/color-tv-game-simulator.git :_get_branch_lr-colortvgame"
 rp_module_section="exp"
 rp_module_flags=""
+
+################################
+# SUPPORTED SYSTEMS
+#
+# No platform flag on purpose: the core is plain C++17 built from source, so the
+# module is offered on every RetroPie platform: Raspberry Pi Zero / 1 (armv6),
+# Zero 2 / 3 (armv7 / armv8), 4 and 5 (32-bit or 64-bit) and x86 / x86_64.
+# Older images (Buster, used on the Pi Zero / Pi 3) are handled in sources and
+# build: CMake 3.13 and GCC 8.
+################################
+
+################################
+# MEDIA PACK
+#
+# gamelist.xml + media/emulationstation (<rom>.png, <rom>_logo.png, <rom>.mp4)
+# taken from the colortvgame folder of this repository and branch.
+################################
+_ctg_media_repo="https://github.com/DTEAM-1/test"
+_ctg_media_branch="main"
+_ctg_media_dir="colortvgame"
 
 ################################
 # SYSTEM SETTINGS
@@ -31,7 +53,10 @@ rp_module_flags=""
 _ctg_sys="colortvgame"
 _ctg_fullname="Nintendo Color TV-Game"
 _ctg_es_before="gameandwatch"
-_ctg_selector="Game Selector"
+_ctg_selector="game_selector"
+_ctg_selector_old="Game Selector"
+# standardized file name of each selector, indexed by its content ID (byte 4 of the file)
+_ctg_names=("tennis_variant_singles" "tennis_variant_doubles" "tennis_original_singles" "tennis_original_doubles" "hockey_variant_singles" "hockey_variant_doubles" "hockey_original_singles" "hockey_original_doubles" "volleyball_variant_singles" "volleyball_variant_doubles" "volleyball_original_singles" "volleyball_original_doubles" "pingpong_singles" "pingpong_doubles" "shooting" "racing112")
 
 ################################
 # VERSION TO BUILD
@@ -57,6 +82,33 @@ function depends_lr-colortvgame() {
 
 function sources_lr-colortvgame() {
     gitPullOrClone
+
+    # Buster (Pi Zero / Pi 3 images) ships CMake 3.13; the project asks for 3.16
+    # but uses nothing newer than 3.13, so lower the requirement only there.
+    local cmv
+    cmv="$(cmake --version 2>/dev/null | sed -n 's/^cmake version \([0-9]*\.[0-9]*\).*/\1/p')"
+    if [[ -n "$cmv" ]] && compareVersions "$cmv" lt 3.16; then
+        sed -i 's/^cmake_minimum_required(VERSION 3\.1[6-9][^)]*)/cmake_minimum_required(VERSION 3.13)/' CMakeLists.txt
+        echo "CMake $cmv: minimum version lowered to 3.13 in CMakeLists.txt"
+    fi
+
+    # media pack: only the colortvgame folder of the repository archive is extracted.
+    # Plain curl on purpose: RetroPie's download() records a failure as an install
+    # error, and a missing media pack must never stop the core from installing.
+    local url="${CTG_MEDIA_URL:-$_ctg_media_repo/archive/refs/heads/$_ctg_media_branch.tar.gz}"
+    local tgz="$md_build/media_pack.tar.gz"
+    rm -rf "$md_build/media_pack" "$tgz"
+    mkdir -p "$md_build/media_pack"
+    if curl -sSfL --connect-timeout 10 --retry 2 -o "$tgz" "$url" \
+        && tar -xzf "$tgz" -C "$md_build/media_pack" --strip-components=1 \
+            "${_ctg_media_repo##*/}-$_ctg_media_branch/$_ctg_media_dir" \
+        && [[ -f "$md_build/media_pack/$_ctg_media_dir/gamelist.xml" ]]; then
+        echo "Media pack: $(find "$md_build/media_pack/$_ctg_media_dir" -type f | wc -l) files from $_ctg_media_repo"
+    else
+        rm -rf "$md_build/media_pack"
+        echo "!! Media pack could not be downloaded ($url): the core installs without gamelist and media"
+    fi
+    rm -f "$tgz"
 }
 
 function build_lr-colortvgame() {
@@ -86,6 +138,7 @@ function install_lr-colortvgame() {
         'LICENSE'
         'README.md'
     )
+    [[ -d "$md_build/media_pack/$_ctg_media_dir" ]] && md_ret_files+=("media_pack/$_ctg_media_dir")
 }
 
 ################################
@@ -155,6 +208,16 @@ function _es_place_lr-colortvgame() {
     fi
 }
 
+# content ID of a .ctg selector (exactly 5 bytes, "CTG1" + ID 0-15); fails otherwise
+function _ctg_id_lr-colortvgame() {
+    local f="$1" id
+    [[ "$(stat -c %s "$f" 2>/dev/null)" == 5 ]] || return 1
+    [[ "$(head -c 4 "$f")" == "CTG1" ]] || return 1
+    id="$(od -An -tu1 -j4 -N1 "$f" | tr -d ' ')"
+    [[ "$id" =~ ^[0-9]+$ ]] && (( id <= 15 )) || return 1
+    echo "$id"
+}
+
 function configure_lr-colortvgame() {
     local sys="$_ctg_sys"
     local racfg="$md_conf_root/$sys/retroarch.cfg"
@@ -198,18 +261,65 @@ function configure_lr-colortvgame() {
     _es_place_lr-colortvgame
 
     ################################
-    # .ctg SELECTORS: 5 bytes each, not ROMs. An existing file is never
-    # overwritten. "Game Selector.ctg" is a copy of a valid selector: if the
-    # per-ROM key above is ever lost, it starts Tennis instead of failing.
+    # .ctg SELECTORS: 5 bytes each ("CTG1" + content ID), not ROMs.
+    # They are installed under standardized names chosen from the ID stored in
+    # the file, not from the upstream file name. Selectors already in the ROM
+    # folder under another name (e.g. the upstream long names installed by an
+    # earlier version of this module) are renamed, or removed when the
+    # standardized file already exists. An existing standardized file is never
+    # overwritten. game_selector.ctg is a copy of a valid selector (ID 2): if
+    # the per-ROM key below is ever lost, it starts Tennis instead of failing.
     ################################
-    local f
-    for f in "$md_inst"/content/*.ctg; do
-        [[ -e "$romdir/$sys/${f##*/}" ]] || cp "$f" "$romdir/$sys/"
+    local f id dst dir="$romdir/$sys"
+    [[ -f "$dir/$_ctg_selector_old.ctg" ]] && \
+        { [[ -e "$dir/$_ctg_selector.ctg" ]] && rm -f "$dir/$_ctg_selector_old.ctg" \
+          || mv "$dir/$_ctg_selector_old.ctg" "$dir/$_ctg_selector.ctg"; }
+    for f in "$dir"/*.ctg "$md_inst"/content/*.ctg; do
+        [[ -f "$f" ]] || continue
+        id="$(_ctg_id_lr-colortvgame "$f")" || continue
+        dst="$dir/${_ctg_names[$id]}.ctg"
+        [[ "$f" == "$dst" || "${f##*/}" == "$_ctg_selector.ctg" ]] && continue
+        if [[ "$f" == "$dir/"* ]]; then
+            [[ -e "$dst" ]] && rm -f "$f" || mv "$f" "$dst"
+        else
+            [[ -e "$dst" ]] || cp "$f" "$dst"
+        fi
     done
-    [[ -e "$romdir/$sys/$_ctg_selector.ctg" ]] || \
-        cp "$md_inst/content/Tennis Original - Singles (Color TV Game 6 + 15).ctg" \
-           "$romdir/$sys/$_ctg_selector.ctg"
-    chown -R "$__user":"$__group" "$romdir/$sys"
+    [[ -e "$dir/$_ctg_selector.ctg" ]] || cp "$dir/${_ctg_names[2]}.ctg" "$dir/$_ctg_selector.ctg"
+
+    ################################
+    # MEDIA PACK -> ROM folder
+    # media/emulationstation is synced from the pack (pack files replace older
+    # copies; extra files of your own are kept). gamelist.xml is installed when
+    # the ROM folder has none; an existing one is never overwritten (it holds
+    # EmulationStation data such as favorites): the new version is then written
+    # next to it as gamelist.xml.rp-dist. playcount / lastplayed are removed
+    # from the packaged gamelist.
+    ################################
+    local pack="$md_inst/$_ctg_media_dir"
+    if [[ -d "$pack" ]]; then
+        if [[ -d "$pack/media" ]]; then
+            cp -Rf "$pack/media" "$dir/"
+            echo "Media: $(find "$pack/media" -type f | wc -l) files synced to $dir/media"
+        fi
+        if [[ -f "$pack/gamelist.xml" ]]; then
+            local gl="$dir/gamelist.xml"
+            [[ -f "$gl" ]] && gl="$dir/gamelist.xml.rp-dist"
+            xmlstarlet ed -d '//game/playcount' -d '//game/lastplayed' "$pack/gamelist.xml" > "$gl"
+            if [[ "$gl" == *.rp-dist ]]; then
+                echo "gamelist.xml already present in $dir: left untouched, new version saved as gamelist.xml.rp-dist"
+            else
+                echo "gamelist.xml installed in $dir"
+            fi
+        fi
+    else
+        echo "No media pack installed: gamelist and media skipped"
+    fi
+    chown -R "$__user":"$__group" "$dir"
+
+    # per-ROM key of the old "Game Selector.ctg" name
+    [[ -f "$configdir/all/emulators.cfg" ]] && \
+        sed -i "/^${sys}_GameSelector[[:space:]]*=/d" "$configdir/all/emulators.cfg"
 
     iniConfig " = " '"' "$configdir/all/emulators.cfg"
     iniSet "$key" "$md_id-selector"
